@@ -1,0 +1,88 @@
+<div>
+  <mat-sidenav-container class="example-container">
+    
+    <!-- Barra Lateral -->
+    <mat-sidenav mode="side" opened class="sidenav">
+      
+      <!-- PARTE SUPERIOR: Logo y Eslogan -->
+      <div class="sidebar-top">
+        <div class="sidebar-logo">
+          <mat-icon color="warn">favorite</mat-icon>
+          <span class="logo-text">Latia</span>
+        </div>
+        <p class="logo-subtitle">Tu salud, cerca.</p>
+
+        <!-- Menú de Navegación Estático -->
+        <mat-nav-list class="nav-list">
+          <a mat-list-item routerLink="/inicio" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>home</mat-icon>
+            <span matListItemTitle>Inicio</span>
+          </a>
+
+          <a mat-list-item routerLink="/historial" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>folder_open</mat-icon>
+            <span matListItemTitle>Historial</span>
+          </a>
+
+          <a mat-list-item routerLink="/familia" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>account_tree</mat-icon>
+            <span matListItemTitle>Familia</span>
+          </a>
+
+          <a mat-list-item routerLink="/agenda" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>calendar_today</mat-icon>
+            <span matListItemTitle>Agenda</span>
+          </a>
+
+          <a mat-list-item routerLink="/medicamentos" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>medication</mat-icon>
+            <span matListItemTitle>Medicamentos</span>
+          </a>
+
+          <a mat-list-item routerLink="/evolucion" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>trending_up</mat-icon>
+            <span matListItemTitle>Evolución</span>
+          </a>
+
+          <a mat-list-item routerLink="/lati" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>favorite_border</mat-icon>
+            <span matListItemTitle>Lati</span>
+          </a>
+
+          <a mat-list-item routerLink="/ajustes" routerLinkActive="active-link">
+            <mat-icon matListItemIcon>settings</mat-icon>
+            <span matListItemTitle>Ajustes</span>
+          </a>
+        </mat-nav-list>
+      </div>
+
+      <!-- PARTE INFERIOR: Tarjeta Lati y Perfil de Usuario -->
+      <div class="sidebar-footer">
+        <!-- Tarjeta de Pregunta -->
+        <div class="lati-prompt-card">
+          <div class="prompt-header">
+            <mat-icon color="warn">favorite</mat-icon>
+            <span class="prompt-title">Aquí puedes preguntar</span>
+          </div>
+          <p class="prompt-subtitle">Lati te acompaña, paso a paso.</p>
+        </div>
+
+        <!-- Perfil de Usuario -->
+        <div class="user-profile">
+          <div class="user-avatar">ER</div>
+          <div class="user-info">
+            <span class="user-name">Elena Ruiz</span>
+            <span class="user-role">Cuenta personal</span>
+          </div>
+        </div>
+      </div>
+
+    </mat-sidenav>
+
+    <!-- Contenido Principal -->
+    <mat-sidenav-content class="main-content">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</div>

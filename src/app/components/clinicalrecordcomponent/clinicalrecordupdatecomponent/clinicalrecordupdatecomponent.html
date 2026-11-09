@@ -1,1 +1,104 @@
-<p>clinicalrecordupdatecomponent works!</p>
+<div class="form-card">
+
+    <header class="form-header">
+        <div class="form-icon"><mat-icon>edit_note</mat-icon></div>
+        <div>
+            <h2>Actualizar historial médico</h2>
+            <p>Modifica los datos del documento y guarda los cambios.</p>
+        </div>
+    </header>
+
+    @if (formClinicalRecord) {
+    <form [formGroup]="formClinicalRecord" (ngSubmit)="actualizarHistorial()">
+
+        <mat-form-field appearance="outline">
+            <mat-label>ID del historial</mat-label>
+            <input matInput formControlName="codigo" readonly>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Título</mat-label>
+            <input matInput placeholder="Hemograma completo" formControlName="titulo" maxlength="100">
+            @if (formClinicalRecord.get('titulo')?.hasError('required')) {
+            <mat-error>El título es obligatorio</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Tipo de documento</mat-label>
+            <mat-select formControlName="tipo">
+                @for (t of tiposDocumento; track t) {
+                <mat-option [value]="t">{{ t }}</mat-option>
+                }
+            </mat-select>
+            @if (formClinicalRecord.get('tipo')?.hasError('required')) {
+            <mat-error>Selecciona un tipo</mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput rows="4" placeholder="Detalle del documento o de la consulta"
+                formControlName="descripcion" maxlength="500"></textarea>
+            <mat-hint align="end">{{ formClinicalRecord.get('descripcion')?.value?.length || 0 }} / 500</mat-hint>
+            @if (formClinicalRecord.get('descripcion')?.hasError('required')) {
+            <mat-error>La descripción es obligatoria</mat-error>
+            }
+        </mat-form-field>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Fecha del evento</mat-label>
+                <input matInput [matDatepicker]="picker" [max]="hoy" formControlName="dia_evento">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                @if (formClinicalRecord.get('dia_evento')?.hasError('required')) {
+                <mat-error>Selecciona una fecha</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Profesional</mat-label>
+                <input matInput placeholder="Dra. Torres" formControlName="profesional">
+                @if (formClinicalRecord.get('profesional')?.hasError('required')) {
+                <mat-error>El profesional es obligatorio</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>ID perfil de salud</mat-label>
+                <input matInput type="number" min="1" formControlName="perfil_salud">
+                @if (formClinicalRecord.get('perfil_salud')?.invalid) {
+                <mat-error>Ingresa un ID válido</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>ID condición médica</mat-label>
+                <input matInput type="number" min="1" formControlName="condicion_medica">
+                @if (formClinicalRecord.get('condicion_medica')?.invalid) {
+                <mat-error>Ingresa un ID válido</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        @if (mensaje) {
+        <p class="mensaje">{{ mensaje }}</p>
+        }
+
+        <div class="actions">
+            <button matButton="outlined" class="cancel-btn" type="button" routerLink="/listar">
+                Cancelar
+            </button>
+            <button matButton="filled" class="submit-btn" type="submit">
+                <mat-icon>save</mat-icon>
+                Guardar cambios
+            </button>
+        </div>
+    </form>
+    } @else if (mensaje) {
+    <p class="mensaje">{{ mensaje }}</p>
+    }
+</div>

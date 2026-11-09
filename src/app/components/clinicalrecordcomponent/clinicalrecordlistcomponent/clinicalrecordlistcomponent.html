@@ -1,1 +1,106 @@
-<p>clinicalrecordlistcomponent works!</p>
+<div class="clinical-container">
+
+    <!-- Encabezado -->
+    <header class="header-section">
+        <div class="header-titles">
+            <h1>La historia de Elena, en un lugar</h1>
+            <p>Encuentra documentos, recetas y exámenes cuando los necesites.</p>
+        </div>
+
+        <div class="header-actions">
+            <button matButton="outlined" class="create-btn" type="button" routerLink="/insertar">
+                <mat-icon>note_add</mat-icon>
+                Crear historial
+            </button>
+
+            <button matButton="filled" class="upload-btn" type="button">
+                <mat-icon>upload</mat-icon>
+                Subir documento
+            </button>
+        </div>
+    </header>
+
+    <!-- Filtros -->
+    <div class="filters-bar">
+        <div class="filter-tabs">
+            <button matButton type="button" class="tab-btn" [class.active]="filtroActivo === 'todos'"
+                (click)="filtroActivo = 'todos'">
+                <mat-icon>folder_special</mat-icon>
+                Historial
+            </button>
+            <button matButton type="button" class="tab-btn" [class.active]="filtroActivo === 'examen'"
+                (click)="filtroActivo = 'examen'">
+                Exámenes
+            </button>
+            <button matButton type="button" class="tab-btn" [class.active]="filtroActivo === 'receta'"
+                (click)="filtroActivo = 'receta'">
+                Recetas
+            </button>
+
+            <label class="search-box">
+                <mat-icon>search</mat-icon>
+                <input type="text" placeholder="Buscar documento" [value]="busqueda"
+                    (input)="busqueda = $any($event.target).value" />
+            </label>
+        </div>
+
+        <button matButton="outlined" class="export-btn" type="button">
+            <mat-icon>download</mat-icon>
+            Exportar historial
+        </button>
+    </div>
+
+    <!-- Tarjeta con la lista -->
+    <section class="records-card">
+        <div class="records-header">
+            <h2>{{ historialesFiltrados.length }} documentos</h2>
+            <span class="sort-pill">Más recientes primero</span>
+        </div>
+
+        @if (historialesFiltrados.length > 0) {
+        <ul class="records-list">
+            @for (r of historialesFiltrados; track r.idClinicalRecord) {
+            <li class="record-item">
+                <div class="record-info">
+                    <div class="record-icon-box"><mat-icon>description</mat-icon></div>
+                    <div class="record-text">
+                        <h3>{{ r.title }}</h3>
+                        <p>{{ r.description }}</p>
+                    </div>
+                </div>
+
+                <div class="record-meta">
+                    <span class="patient-badge">{{ r.recordType }}</span>
+                    <span class="professional">{{ r.professionalName }}</span>
+                    <span class="record-date">{{ r.eventDate | date: 'dd MMM yyyy' }}</span>
+
+                    <div class="row-actions">
+                        <button matIconButton class="icon-btn" type="button" title="Actualizar"
+                            aria-label="Actualizar historial" [routerLink]="['/actualizar', r.idClinicalRecord]">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+
+                        <button matIconButton class="icon-btn danger" type="button" title="Eliminar"
+                            aria-label="Eliminar historial" (click)="eliminarHistorial(r.idClinicalRecord)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+
+                    <button matButton class="open-btn" type="button">
+                        <mat-icon>arrow_forward</mat-icon>
+                        Abrir
+                    </button>
+                </div>
+            </li>
+            }
+        </ul>
+        } @else {
+        <p class="empty-state">No hay historiales registrados.</p>
+        }
+
+        @if (mensaje) {
+        <p class="empty-state">{{ mensaje }}</p>
+        }
+    </section>
+
+</div>

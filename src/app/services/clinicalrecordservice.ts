@@ -20,8 +20,7 @@ export class Clinicalrecordservice {
   }
 
   insertClinicalRecord(cr: ClinicalrecordDTO): Observable<ClinicalrecordDTO> {
-    return this.http.post<ClinicalrecordDTO>(this.apiURL, cr)
-
+    return this.http.post<ClinicalrecordDTO>(this.apiURL, cr);
   }
   listId(id: number): Observable<ClinicalrecordDTO> {
     return this.http.get<ClinicalrecordDTO>(`${this.apiURL}/${id}`);

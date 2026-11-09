@@ -1,5 +1,5 @@
 export class ClinicalrecordDTO {
-  idClinicalRecord: number = 0;
+  idClinicalRecord?: number;
   idHealthProfile: number = 0;
   recordType: string = '';
   title: string = '';

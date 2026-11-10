@@ -6,7 +6,8 @@ import localeEs from '@angular/common/locales/es';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './components/interceptors/Authinterceptor';
+import { authInterceptor } from './interceptors/Authinterceptor';
+
 
 
  

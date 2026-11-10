@@ -1,0 +1,177 @@
+<div class="landing">
+
+  <!-- ============ BARRA SUPERIOR ============ -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" routerLink="/">
+        <mat-icon>monitor_heart</mat-icon>
+        <span>Latia</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Secciones">
+        <button type="button" (click)="irA('funciones')">Qué puedes hacer</button>
+        <button type="button" (click)="irA('como-funciona')">Cómo funciona</button>
+        <button type="button" (click)="irA('lati')">Lati</button>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="btn btn-ghost" routerLink="/login">Iniciar sesión</button>
+        <button type="button" class="btn btn-primary" routerLink="/login">Regístrate aquí</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="pill">Tu espacio de cuidado</span>
+      <h1>Tu salud, <em>cerca.</em></h1>
+      <p class="lead">
+        Un lugar para entender tu historia y acompañar a quienes quieres.
+        Reúne tus documentos, recetas y exámenes, y encuéntralos cuando los necesites.
+      </p>
+
+      <div class="hero-cta">
+        <button type="button" class="btn btn-primary btn-lg" routerLink="/login">
+          Regístrate aquí
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+        <button type="button" class="btn btn-outline btn-lg" (click)="irA('como-funciona')">
+          Ver cómo funciona
+        </button>
+      </div>
+
+      <p class="hero-tags">Documentos · Familia · Recordatorios · Lati</p>
+    </div>
+
+    <!-- Vista previa de la app -->
+    <div class="hero-visual" aria-hidden="true">
+      <div class="mock-card">
+        <div class="mock-head">
+          <strong>12 documentos</strong>
+          <span class="mock-sort">Más recientes primero</span>
+        </div>
+
+        <div class="mock-row">
+          <div class="mock-icon"><mat-icon>description</mat-icon></div>
+          <div class="mock-text"><b>Hemograma completo</b><small>Examen de laboratorio</small></div>
+          <span class="mock-badge">Elena</span>
+        </div>
+        <div class="mock-row">
+          <div class="mock-icon"><mat-icon>description</mat-icon></div>
+          <div class="mock-text"><b>Receta de consulta</b><small>Receta médica</small></div>
+          <span class="mock-badge">Elena</span>
+        </div>
+        <div class="mock-row">
+          <div class="mock-icon"><mat-icon>description</mat-icon></div>
+          <div class="mock-text"><b>Informe de radiografía</b><small>Imagen e informe</small></div>
+          <span class="mock-badge">Elena</span>
+        </div>
+      </div>
+
+      <div class="mock-lati">
+        <mat-icon>monitor_heart</mat-icon>
+        <div>
+          <b>Lati</b>
+          <span>Hola, soy Lati. ¿En qué te ayudo hoy?</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FUNCIONES ============ -->
+  <section class="section" id="funciones">
+    <div class="section-head">
+      <h2>Todo lo importante, en un solo lugar</h2>
+      <p>Pensado para que cuidar de ti y de tu familia sea más simple.</p>
+    </div>
+
+    <div class="features">
+      <article class="feature">
+        <div class="feature-icon"><mat-icon>folder_special</mat-icon></div>
+        <h3>Historial</h3>
+        <p>Guarda exámenes, recetas e informes y encuéntralos al instante, ordenados por fecha.</p>
+      </article>
+
+      <article class="feature">
+        <div class="feature-icon"><mat-icon>account_tree</mat-icon></div>
+        <h3>Familia</h3>
+        <p>Acompaña a quienes quieres: cada persona con su propia historia, en un mismo espacio.</p>
+      </article>
+
+      <article class="feature">
+        <div class="feature-icon"><mat-icon>calendar_today</mat-icon></div>
+        <h3>Agenda</h3>
+        <p>Ten a mano tus citas y recordatorios para no olvidar lo que importa.</p>
+      </article>
+
+      <article class="feature">
+        <div class="feature-icon"><mat-icon>medication</mat-icon></div>
+        <h3>Medicamentos</h3>
+        <p>Organiza tus medicamentos y sigue su evolución con claridad.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ CÓMO FUNCIONA ============ -->
+  <section class="section section-soft" id="como-funciona">
+    <div class="section-head">
+      <h2>Empieza en tres pasos</h2>
+      <p>Sin complicaciones, a tu ritmo.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="step-num">1</span>
+        <h3>Crea tu cuenta</h3>
+        <p>Regístrate con tu correo y entra a tu espacio personal.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">2</span>
+        <h3>Reúne tu historia</h3>
+        <p>Registra tus documentos, recetas y exámenes en un solo lugar.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">3</span>
+        <h3>Pregunta a Lati</h3>
+        <p>Cuando tengas dudas, Lati te acompaña paso a paso.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============ LATI ============ -->
+  <section class="section" id="lati">
+    <div class="lati-block">
+      <div class="lati-icon"><mat-icon>monitor_heart</mat-icon></div>
+      <div class="lati-copy">
+        <h2>Conoce a Lati</h2>
+        <p>
+          Lati es tu acompañante dentro de Latia. Está aquí para que no te sientas solo
+          con tus documentos: pregunta, explora y avanza paso a paso.
+        </p>
+        <p class="lati-note">Lati no reemplaza la consulta con tu profesional de salud.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LLAMADO FINAL ============ -->
+  <section class="cta">
+    <h2>Tu historia, siempre contigo</h2>
+    <p>Crea tu cuenta y empieza a reunir lo importante hoy.</p>
+    <button type="button" class="btn btn-light btn-lg" routerLink="/login">
+      Regístrate aquí
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+  </section>
+
+  <!-- ============ PIE ============ -->
+  <footer class="footer">
+    <div class="brand brand-small">
+      <mat-icon>monitor_heart</mat-icon>
+      <span>Latia</span>
+    </div>
+    <p>Tu salud, cerca.</p>
+    <small>© {{ anio }} Latia. Todos los derechos reservados.</small>
+  </footer>
+
+</div>

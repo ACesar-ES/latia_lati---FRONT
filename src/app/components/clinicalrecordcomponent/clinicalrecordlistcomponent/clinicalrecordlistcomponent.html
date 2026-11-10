@@ -8,7 +8,7 @@
         </div>
 
         <div class="header-actions">
-            <button matButton="outlined" class="create-btn" type="button" routerLink="/insertar">
+            <button matButton="outlined" class="create-btn" type="button" routerLink="/historial/insertar">
                 <mat-icon>note_add</mat-icon>
                 Crear historial
             </button>
@@ -76,12 +76,12 @@
 
                     <div class="row-actions">
                         <button matIconButton class="icon-btn" type="button" title="Actualizar"
-                            aria-label="Actualizar historial" [routerLink]="['/actualizar', r.idClinicalRecord]">
+                            aria-label="Actualizar historial" [routerLink]="['/historial/actualizar', r.idClinicalRecord]">
                             <mat-icon>edit</mat-icon>
                         </button>
 
                         <button matIconButton class="icon-btn danger" type="button" title="Eliminar"
-                            aria-label="Eliminar historial" (click)="eliminarHistorial(r.idClinicalRecord)">
+                            aria-label="Eliminar historial" (click)="eliminarHistorial(r.idClinicalRecord!)">
                             <mat-icon>delete</mat-icon>
                         </button>
                     </div>

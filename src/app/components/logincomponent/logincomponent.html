@@ -1,1 +1,62 @@
-<p>logincomponent works!</p>
+<main class="login-page">
+
+    <header class="login-header">
+        <h1>Te damos la bienvenida</h1>
+        <p>Vuelve a tu espacio de cuidado.</p>
+    </header>
+
+    <div class="login-grid">
+
+        <!-- Tarjeta del formulario -->
+        <section class="login-card">
+            <h2>Ingresar a Latia</h2>
+
+            <form [formGroup]="formLogin" (ngSubmit)="ingresar()" novalidate>
+
+                <div class="field">
+                    <label for="correo">Correo electrónico</label>
+                    <input id="correo" type="email" formControlName="correo" placeholder="elena@ejemplo.com"
+                        autocomplete="email" [class.invalid]="formLogin.get('correo')?.touched && formLogin.get('correo')?.invalid" />
+                    @if (formLogin.get('correo')?.touched && formLogin.get('correo')?.hasError('required')) {
+                    <small class="error">Ingresa tu correo electrónico.</small>
+                    } @else if (formLogin.get('correo')?.touched && formLogin.get('correo')?.hasError('email')) {
+                    <small class="error">Escribe un correo válido.</small>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="clave">Contraseña</label>
+                    <input id="clave" type="password" formControlName="clave" placeholder="••••••••"
+                        autocomplete="current-password" [class.invalid]="formLogin.get('clave')?.touched && formLogin.get('clave')?.invalid" />
+                    @if (formLogin.get('clave')?.touched && formLogin.get('clave')?.hasError('required')) {
+                    <small class="error">Ingresa tu contraseña.</small>
+                    }
+                </div>
+
+                @if (mensaje) {
+                <p class="form-error" role="alert">{{ mensaje }}</p>
+                }
+
+                <button type="submit" class="btn-primary" [disabled]="cargando">
+                    <mat-icon>arrow_forward</mat-icon>
+                    {{ cargando ? 'Ingresando...' : 'Ingresar' }}
+                </button>
+
+                <button type="button" class="btn-secondary" routerLink="/registro">
+                    Crear una cuenta
+                </button>
+
+                <a class="forgot-link" routerLink="/recuperar">Olvidé mi contraseña</a>
+            </form>
+        </section>
+
+        <!-- Panel de bienvenida -->
+        <aside class="brand-panel">
+            <mat-icon class="brand-icon">monitor_heart</mat-icon>
+            <h2>Tu salud, cerca.</h2>
+            <p class="brand-text">Un lugar para entender tu historia y acompañar a quienes quieres.</p>
+            <p class="brand-tags">Documentos · Familia · Recordatorios · Lati</p>
+        </aside>
+
+    </div>
+</main>

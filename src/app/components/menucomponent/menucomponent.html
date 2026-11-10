@@ -1,12 +1,12 @@
 <mat-sidenav-container class="example-container">
-  
+
   <!-- BARRA LATERAL (Izquierda) -->
   <mat-sidenav mode="side" opened class="sidenav">
-    
+
     <!-- Logo y Eslogan -->
     <div class="sidebar-top">
       <div class="sidebar-logo">
-        <mat-icon color="warn">favorite</mat-icon>
+        <mat-icon>monitor_heart</mat-icon>
         <span class="logo-text">Latia</span>
       </div>
       <p class="logo-subtitle">Tu salud, cerca.</p>
@@ -17,8 +17,8 @@
           <mat-icon matListItemIcon>home</mat-icon>
           <span matListItemTitle>Inicio</span>
         </a>
-        <a mat-list-item routerLink="/listar" routerLinkActive="active-link" class="active-link">
-          <mat-icon matListItemIcon>folder_open</mat-icon>
+        <a mat-list-item routerLink="/historial" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>folder_special</mat-icon>
           <span matListItemTitle>Historial</span>
         </a>
         <a mat-list-item routerLink="/familia" routerLinkActive="active-link">
@@ -52,7 +52,7 @@
     <div class="sidebar-footer">
       <div class="lati-prompt-card">
         <div class="prompt-header">
-          <mat-icon color="warn">favorite</mat-icon>
+          <mat-icon>monitor_heart</mat-icon>
           <span class="prompt-title">Aquí puedes preguntar</span>
         </div>
         <p class="prompt-subtitle">Lati te acompaña, paso a paso.</p>
@@ -71,7 +71,7 @@
 
   <!-- CONTENIDO PRINCIPAL -->
   <mat-sidenav-content class="main-content">
-    
+
     <!-- BARRA SUPERIOR GENERAL (Top Navbar) -->
     <div class="top-navbar">
       <div class="nav-breadcrumb">
@@ -81,30 +81,27 @@
       </div>
 
       <div class="top-nav-actions">
-        <!-- Buscador superior -->
         <div class="top-search-box">
           <mat-icon>search</mat-icon>
           <input type="text" placeholder="Buscar en Latia" />
         </div>
 
-        <!-- Perfil de usuario superior -->
         <div class="top-user-pill">
           <span class="top-user-avatar">ER</span>
           <span class="top-user-name">Elena Ruiz</span>
           <mat-icon>arrow_drop_down</mat-icon>
         </div>
 
-        <!-- Botones de Tema y Notificaciones -->
-        <button mat-icon-button class="icon-action-btn">
+        <button matIconButton class="icon-action-btn" aria-label="Cambiar tema">
           <mat-icon>dark_mode</mat-icon>
         </button>
-        <button mat-icon-button class="icon-action-btn">
+        <button matIconButton class="icon-action-btn" aria-label="Notificaciones">
           <mat-icon>notifications</mat-icon>
         </button>
       </div>
     </div>
 
-    <!-- Aquí se inyectan las vistas de las rutas hijas (Clinicalrecordcomponent) -->
+    <!-- Aquí se proyecta el contenido de la página (lo que pone el componente padre) -->
     <ng-content></ng-content>
 
   </mat-sidenav-content>

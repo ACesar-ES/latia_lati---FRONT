@@ -5,6 +5,11 @@ import { Clinicalrecordinsertcomponent } from './components/clinicalrecordcompon
 import { Clinicalrecordupdatecomponent } from './components/clinicalrecordcomponent/clinicalrecordupdatecomponent/clinicalrecordupdatecomponent';
 import { Logincomponent } from './components/logincomponent/logincomponent';
 import { Landingcomponent } from './components/landingcomponent/landingcomponent';
+import { RegistroComponent } from './components/registrocomponent/registrocomponent';
+import { RecuperarComponent } from './components/recuperarcomponent/recuperarcomponent';
+import { Healthprofilecomponent } from './components/healthprofilecomponent/healthprofilecomponent';
+import { Healthprofileupdatecomponent } from './components/healthprofilecomponent/healthprofileupdatecomponent/healthprofileupdatecomponent';
+import { Healthprofilelistcomponent } from './components/healthprofilecomponent/healthprofilelistcomponent/healthprofilelistcomponent';
 
 export const routes: Routes = [
   // 1. Landing: lo primero que se ve
@@ -19,8 +24,19 @@ export const routes: Routes = [
     path: 'login', 
     component: Logincomponent 
   },
+
+  // 3. Registro: la ruta a la que apunta tu botón "Crear una cuenta" / routerLink="/registro"
+  { 
+    path: 'registro', 
+    component: RegistroComponent
+  },
+
+  { 
+    path: 'recuperar', 
+    component: RecuperarComponent
+  },
  
-  // 3. Historial clínico (con menú lateral), protegido por sesión
+  // 4. Historial clínico (con menú lateral), protegido por sesión
   {
     path: 'historial',
     component: Clinicalrecordcomponent,
@@ -29,6 +45,16 @@ export const routes: Routes = [
       { path: 'listar', component: Clinicalrecordlistcomponent },
       { path: 'insertar', component: Clinicalrecordinsertcomponent },
       { path: 'actualizar/:id', component: Clinicalrecordupdatecomponent },
+    ],
+  },
+
+  {
+    path: 'perfil',
+    component: Healthprofilecomponent,
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Healthprofilelistcomponent },
+      { path: 'actualizar/:id', component: Healthprofileupdatecomponent },
     ],
   },
  

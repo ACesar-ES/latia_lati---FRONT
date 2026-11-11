@@ -1,0 +1,82 @@
+:host {
+  --primary: #b8324f;
+  --primary-dark: #a22b45;
+  --primary-soft: #fbe9ec;
+  --text: #1f2a37;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  display: block;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  color: var(--text);
+}
+
+.profile-page { padding: 28px 28px 40px; box-sizing: border-box; }
+
+/* Encabezado */
+.header-section { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.header-titles h1 { margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.2; }
+.header-titles p { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
+
+.tree-btn {
+  height: 44px; padding: 0 22px; border-radius: 10px; background: #fff;
+  font-family: inherit; font-size: 13px; font-weight: 800; letter-spacing: 0;
+  --mat-button-text-label-text-color: var(--text);
+}
+.tree-btn mat-icon, .link-btn mat-icon, .pdf-btn mat-icon, .complete-btn mat-icon,
+.action-btn mat-icon, .upload-btn mat-icon { width: 18px; height: 18px; font-size: 18px; margin-right: 8px; }
+
+.state-msg { margin: 48px 0; text-align: center; font-size: 14px; color: var(--muted); }
+
+/* Tarjeta de perfil */
+.profile-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  margin-top: 32px; padding: 40px 48px; background: #fff;
+  border: 1px solid var(--border); border-radius: 22px;
+}
+.profile-id { display: flex; align-items: center; gap: 36px; }
+.profile-id h2 { margin: 0; font-size: 30px; font-weight: 800; letter-spacing: -0.3px; }
+.avatar {
+  width: 78px; height: 78px; border-radius: 50%; background: var(--primary-soft); color: var(--primary);
+  display: inline-flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; flex-shrink: 0;
+}
+.main-badge { display: inline-block; margin-top: 8px; padding: 5px 14px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 12px; font-weight: 700; }
+
+.profile-actions { display: flex; align-items: center; gap: 28px; }
+.link-btn { height: 40px; font-family: inherit; font-size: 13px; font-weight: 800; letter-spacing: 0; --mat-button-text-label-text-color: #374151; }
+.pdf-btn {
+  height: 44px; padding: 0 28px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 800; letter-spacing: 0;
+  --mat-button-filled-container-color: var(--primary); --mat-button-filled-label-text-color: #fff;
+}
+.pdf-btn:hover { --mat-button-filled-container-color: var(--primary-dark); }
+
+/* Paneles */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; align-items: stretch; }
+.panel { background: #fff; border: 1px solid var(--border); border-radius: 22px; padding: 24px; box-sizing: border-box; min-height: 420px; }
+.panel h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.3px; }
+
+.facts { margin: 24px 0 0; }
+.facts > div { margin-bottom: 22px; }
+.facts dt { font-size: 12px; color: var(--muted); }
+.facts dd { margin: 6px 0 0; font-size: 17px; }
+
+.complete-btn { margin-top: 8px; margin-left: 12px; font-family: inherit; font-size: 13px; font-weight: 800; letter-spacing: 0; --mat-button-text-label-text-color: #6b7280; }
+
+.actions-list { display: flex; flex-direction: column; gap: 14px; margin-top: 26px; }
+.action-btn { height: 44px; font-family: inherit; font-size: 13px; font-weight: 800; letter-spacing: 0; --mat-button-text-label-text-color: #374151; }
+.action-btn.muted { --mat-button-text-label-text-color: #6b7280; }
+.upload-btn {
+  height: 46px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 800; letter-spacing: 0;
+  --mat-button-filled-container-color: var(--primary); --mat-button-filled-label-text-color: #fff;
+}
+.upload-btn:hover { --mat-button-filled-container-color: var(--primary-dark); }
+
+@media (max-width: 900px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .profile-card { padding: 24px; }
+  .profile-id { gap: 20px; }
+  .panel { min-height: 0; }
+}
+@media print {
+  .no-print { display: none !important; }
+  .profile-page { padding: 0; }
+}

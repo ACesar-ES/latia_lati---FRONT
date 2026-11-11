@@ -58,13 +58,13 @@
         <p class="prompt-subtitle">Lati te acompaña, paso a paso.</p>
       </div>
 
-      <div class="user-profile">
-        <div class="user-avatar">ER</div>
+      <a class="user-profile" routerLink="/perfil" routerLinkActive="active" aria-label="Ir a mi perfil">
+        <div class="user-avatar">{{ iniciales }}</div>
         <div class="user-info">
-          <span class="user-name">Elena Ruiz</span>
+          <span class="user-name">{{ nombre }}</span>
           <span class="user-role">Cuenta personal</span>
         </div>
-      </div>
+      </a>
     </div>
 
   </mat-sidenav>
@@ -86,11 +86,11 @@
           <input type="text" placeholder="Buscar en Latia" />
         </div>
 
-        <div class="top-user-pill">
-          <span class="top-user-avatar">ER</span>
-          <span class="top-user-name">Elena Ruiz</span>
+        <a class="top-user-pill" routerLink="/perfil">
+          <span class="top-user-avatar">{{ iniciales }}</span>
+          <span class="top-user-name">{{ nombre }}</span>
           <mat-icon>arrow_drop_down</mat-icon>
-        </div>
+        </a>
 
         <button matIconButton class="icon-action-btn" aria-label="Cambiar tema">
           <mat-icon>dark_mode</mat-icon>

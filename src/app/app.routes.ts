@@ -10,32 +10,36 @@ import { RecuperarComponent } from './components/recuperarcomponent/recuperarcom
 import { Healthprofilecomponent } from './components/healthprofilecomponent/healthprofilecomponent';
 import { Healthprofileupdatecomponent } from './components/healthprofilecomponent/healthprofileupdatecomponent/healthprofileupdatecomponent';
 import { Healthprofilelistcomponent } from './components/healthprofilecomponent/healthprofilelistcomponent/healthprofilelistcomponent';
+import { Medicationscomponent } from './components/medicationscomponent/medicationscomponent';
+import { Medicationslistcomponent } from './components/medicationscomponent/medicationslistcomponent/medicationslistcomponent';
+import { Medicationsinsertcomponent } from './components/medicationscomponent/medicationsinsertcomponent/medicationsinsertcomponent';
+import { Medicationsupdatecomponent } from './components/medicationscomponent/medicationsupdatecomponent/medicationsupdatecomponent';
 
 export const routes: Routes = [
   // 1. Landing: lo primero que se ve
-  { 
-    path: '', 
-    component: Landingcomponent, 
-    pathMatch: 'full' 
+  {
+    path: '',
+    component: Landingcomponent,
+    pathMatch: 'full'
   },
- 
+
   // 2. Login: al que lleva "Regístrate aquí"
-  { 
-    path: 'login', 
-    component: Logincomponent 
+  {
+    path: 'login',
+    component: Logincomponent
   },
 
   // 3. Registro: la ruta a la que apunta tu botón "Crear una cuenta" / routerLink="/registro"
-  { 
-    path: 'registro', 
+  {
+    path: 'registro',
     component: RegistroComponent
   },
 
-  { 
-    path: 'recuperar', 
+  {
+    path: 'recuperar',
     component: RecuperarComponent
   },
- 
+
   // 4. Historial clínico (con menú lateral), protegido por sesión
   {
     path: 'historial',
@@ -57,10 +61,21 @@ export const routes: Routes = [
       { path: 'actualizar/:id', component: Healthprofileupdatecomponent },
     ],
   },
- 
+
+  {
+    path: 'medicamentos',
+    component: Medicationscomponent,
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Medicationslistcomponent },
+      { path: 'insertar', component: Medicationsinsertcomponent },
+      { path: 'actualizar/:id', component: Medicationsupdatecomponent },
+    ],
+  },
+
   // 5. Cualquier URL desconocida vuelve a la landing (SIEMPRE al final)
-  { 
-    path: '**', 
+  {
+    path: '**',
     redirectTo: '/historial'
   },
 ];

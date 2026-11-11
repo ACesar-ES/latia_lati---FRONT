@@ -1,0 +1,109 @@
+<main class="login-page">
+
+    <header class="login-header">
+        <h1>Recuperemos tu acceso</h1>
+        <p>Un paso sencillo para volver a tu espacio.</p>
+    </header>
+
+    <div class="login-grid">
+
+        <!-- Tarjeta del formulario -->
+        <section class="login-card">
+            
+            <!-- Selector de modo: Recuperar o Cambiar directamente -->
+            <div class="mode-selector">
+                <button type="button" 
+                        [class.active]="modo === 'recuperar'" 
+                        (click)="cambiarModo('recuperar')">
+                    Recuperar por correo
+                </button>
+                <button type="button" 
+                        [class.active]="modo === 'cambiar'" 
+                        (click)="cambiarModo('cambiar')">
+                    Cambiar directamente
+                </button>
+            </div>
+
+            <!-- OPINIÓN A: Formulario para Recuperar por correo -->
+            @if (modo === 'recuperar') {
+                <div class="form-section">
+                    <div class="icon-container">
+                        <mat-icon class="mail-icon">mail_outline</mat-icon>
+                    </div>
+                    <h2>¿Con qué correo te registraste?</h2>
+
+                    <form [formGroup]="formRecuperar" (ngSubmit)="enviarInstrucciones()" novalidate>
+                        <div class="field">
+                            <label for="correo">Correo electrónico</label>
+                            <input id="correo" type="email" formControlName="email" placeholder="elena@ejemplo.com"
+                                autocomplete="email" [class.invalid]="formRecuperar.get('email')?.touched && formRecuperar.get('email')?.invalid" />
+                            @if (formRecuperar.get('email')?.touched && formRecuperar.get('email')?.hasError('required')) {
+                                <small class="error">Ingresa tu correo electrónico.</small>
+                            } @else if (formRecuperar.get('email')?.touched && formRecuperar.get('email')?.hasError('email')) {
+                                <small class="error">Escribe un correo válido.</small>
+                            }
+                        </div>
+
+                        @if (mensajeRecuperar) {
+                            <p class="form-error" role="alert">{{ mensajeRecuperar }}</p>
+                        }
+
+                        <button type="submit" class="btn-primary" [disabled]="cargando">
+                            <mat-icon>mail</mat-icon>
+                            {{ cargando ? 'Enviando...' : 'Enviar instrucciones' }}
+                        </button>
+                    </form>
+                </div>
+            }
+
+            <!-- OPCIÓN B: Formulario para Cambiar Contraseña Directamente -->
+            @if (modo === 'cambiar') {
+                <div class="form-section">
+                    <div class="icon-container">
+                        <mat-icon class="mail-icon">lock_reset</mat-icon>
+                    </div>
+                    <h2>Actualiza tu contraseña</h2>
+
+                    <form [formGroup]="formCambiar" (ngSubmit)="cambiarPasswordDirecto()" novalidate>
+                        <div class="field">
+                            <label for="emailCambio">Correo electrónico</label>
+                            <input id="emailCambio" type="email" formControlName="email" placeholder="elena@ejemplo.com"
+                                [class.invalid]="formCambiar.get('email')?.touched && formCambiar.get('email')?.invalid" />
+                        </div>
+
+                        <div class="field">
+                            <label for="nuevaClave">Nueva contraseña</label>
+                            <input id="nuevaClave" type="password" formControlName="newPassword" placeholder="••••••••"
+                                [class.invalid]="formCambiar.get('newPassword')?.touched && formCambiar.get('newPassword')?.invalid" />
+                            @if (formCambiar.get('newPassword')?.touched && formCambiar.get('newPassword')?.hasError('required')) {
+                                <small class="error">Ingresa la nueva contraseña.</small>
+                            }
+                        </div>
+
+                        @if (mensajeCambiar) {
+                            <p class="form-error" role="alert">{{ mensajeCambiar }}</p>
+                        }
+
+                        <button type="submit" class="btn-primary" [disabled]="cargando">
+                            <mat-icon>vpn_key</mat-icon>
+                            {{ cargando ? 'Actualizando...' : 'Cambiar contraseña' }}
+                        </button>
+                    </form>
+                </div>
+            }
+
+            <button type="button" class="btn-secondary" routerLink="/login">
+                Volver a ingresar
+            </button>
+        </section>
+
+        <!-- Panel de bienvenida lateral (El que ya tienes) -->
+        <aside class="brand-panel">
+            <mat-icon class="brand-icon">monitor_heart</mat-icon>
+            <h2>Tu salud, cerca.</h2>
+            <p class="brand-text">Un lugar para entender tu historia y acompañar a quienes quieres.</p>
+            <p class="brand-tags">Documentos · Familia · Recordatorios · Lati</p>
+        </aside>
+
+    </div>
+</main>

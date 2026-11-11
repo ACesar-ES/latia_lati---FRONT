@@ -1,0 +1,230 @@
+:host {
+  --latia-primary: #b8324f;
+  --latia-primary-dark: #a22b45;
+  --latia-primary-soft: #f8eaed;
+  --latia-bg: #f6f7f9;
+  --latia-text: #1f2a37;
+  --latia-muted: #6b7280;
+  --latia-border: #e5e7eb;
+  display: block;
+  min-height: 100vh;
+  background: var(--latia-bg);
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  color: var(--latia-text);
+}
+
+.login-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 56px 48px;
+  box-sizing: border-box;
+}
+
+/* Encabezado */
+.login-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.login-header p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--latia-muted);
+}
+
+/* Grid de dos columnas */
+.login-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 36px;
+  align-items: stretch;
+}
+
+/* Tarjeta del formulario */
+.login-card {
+  background: #ffffff;
+  border: 1px solid var(--latia-border);
+  border-radius: 20px;
+  padding: 24px;
+  min-height: 600px;
+  box-sizing: border-box;
+}
+.login-card h2 {
+  margin: 0 0 24px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px; /* Ligeramente más compacto para acomodar campos adicionales */
+}
+.field label {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 800;
+}
+.field input {
+  height: 44px; /* Ajustado proporcionalmente para múltiples campos */
+  padding: 0 16px;
+  border: 1px solid var(--latia-border);
+  border-radius: 12px;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--latia-text);
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.field input::placeholder {
+  color: #9ca3af;
+}
+.field input:focus {
+  border-color: var(--latia-primary);
+  box-shadow: 0 0 0 3px rgba(184, 50, 79, 0.12);
+}
+.field input.invalid {
+  border-color: #c62828;
+}
+.error {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #c62828;
+}
+
+.form-error {
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fdecec;
+  color: #c62828;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Botones */
+.btn-primary,
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn-primary {
+  margin-top: 4px;
+  border: 0;
+  background: var(--latia-primary);
+  color: #ffffff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--latia-primary-dark);
+}
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.btn-primary mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.btn-secondary {
+  margin-top: 14px;
+  border: 1px solid var(--latia-border);
+  background: #ffffff;
+  color: var(--latia-text);
+}
+.btn-secondary:hover {
+  background: #f9fafb;
+}
+
+.forgot-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #6b7280;
+  text-decoration: none;
+}
+.forgot-link:hover {
+  color: var(--latia-primary);
+}
+
+/* Panel de bienvenida */
+.brand-panel {
+  background: var(--latia-primary-soft);
+  border: 1px solid #efd9de;
+  border-radius: 20px;
+  padding: 48px 40px;
+  min-height: 600px;
+  box-sizing: border-box;
+}
+.brand-icon {
+  width: 76px;
+  height: 76px;
+  font-size: 76px;
+  color: var(--latia-primary);
+}
+.brand-panel h2 {
+  margin: 40px 0 0;
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--latia-primary);
+}
+.brand-text {
+  margin: 32px 0 0;
+  max-width: 420px;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+.brand-tags {
+  margin: 32px 0 0;
+  font-size: 15px;
+  color: var(--latia-muted);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .login-page {
+    padding: 24px 20px 40px;
+  }
+  .login-grid {
+    grid-template-columns: 1fr;
+  }
+  .login-card,
+  .brand-panel {
+    min-height: 0;
+  }
+  .brand-panel {
+    padding: 32px 24px;
+  }
+  .brand-panel h2 {
+    margin-top: 24px;
+    font-size: 34px;
+  }
+  .brand-text {
+    font-size: 18px;
+    margin-top: 20px;
+  }
+}

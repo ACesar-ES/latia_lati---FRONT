@@ -1,0 +1,144 @@
+<main class="login-page">
+  <header class="login-header">
+    <h1>Tu historia empieza contigo</h1>
+    <p>Crea tu cuenta para reunir lo que importa.</p>
+  </header>
+
+  <div class="login-grid">
+    <!-- Tarjeta del formulario de registro -->
+    <section class="login-card">
+      <h2>Crear mi cuenta</h2>
+
+      <form [formGroup]="formRegistro" (ngSubmit)="registrar()" novalidate>
+        <div class="field">
+          <label for="firstName">Nombre</label>
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            placeholder="Elena"
+            autocomplete="given-name"
+            [class.invalid]="
+              formRegistro.get('firstName')?.touched && formRegistro.get('firstName')?.invalid
+            "
+          />
+          @if (
+            formRegistro.get('firstName')?.touched &&
+            formRegistro.get('firstName')?.hasError('required')
+          ) {
+            <small class="error">Ingresa tu nombre.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="lastName">Apellido</label>
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            placeholder="Ruiz"
+            autocomplete="family-name"
+            [class.invalid]="
+              formRegistro.get('lastName')?.touched && formRegistro.get('lastName')?.invalid
+            "
+          />
+          @if (
+            formRegistro.get('lastName')?.touched &&
+            formRegistro.get('lastName')?.hasError('required')
+          ) {
+            <small class="error">Ingresa tu apellido.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="username">Nombre de usuario</label>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            placeholder="elena.ruiz"
+            autocomplete="username"
+            [class.invalid]="
+              formRegistro.get('username')?.touched && formRegistro.get('username')?.invalid
+            "
+          />
+          @if (
+            formRegistro.get('username')?.touched &&
+            formRegistro.get('username')?.hasError('required')
+          ) {
+            <small class="error">Elige un nombre de usuario.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="correo">Correo electrónico</label>
+          <input
+            id="correo"
+            type="email"
+            formControlName="email"
+            placeholder="elena@ejemplo.com"
+            autocomplete="email"
+            [class.invalid]="
+              formRegistro.get('email')?.touched && formRegistro.get('email')?.invalid
+            "
+          />
+          @if (
+            formRegistro.get('email')?.touched && formRegistro.get('email')?.hasError('required')
+          ) {
+            <small class="error">Ingresa tu correo electrónico.</small>
+          } @else if (
+            formRegistro.get('email')?.touched && formRegistro.get('email')?.hasError('email')
+          ) {
+            <small class="error">Escribe un correo válido.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="clave">Contraseña</label>
+          <input
+            id="clave"
+            type="password"
+            formControlName="passwordHash"
+            placeholder="••••••••"
+            autocomplete="new-password"
+            [class.invalid]="
+              formRegistro.get('passwordHash')?.touched && formRegistro.get('passwordHash')?.invalid
+            "
+          />
+          @if (
+            formRegistro.get('passwordHash')?.touched &&
+            formRegistro.get('passwordHash')?.hasError('required')
+          ) {
+            <small class="error">Ingresa una contraseña.</small>
+          } @else if (
+            formRegistro.get('passwordHash')?.touched &&
+            formRegistro.get('passwordHash')?.hasError('minlength')
+          ) {
+            <small class="error">Mínimo 6 caracteres.</small>
+          }
+        </div>
+
+        @if (mensaje) {
+          <p class="form-error" role="alert">{{ mensaje }}</p>
+        }
+
+        <button type="submit" class="btn-primary" [disabled]="cargando">
+          <mat-icon>arrow_forward</mat-icon>
+          {{ cargando ? 'Creando cuenta...' : 'Crear cuenta' }}
+        </button>
+
+        <button type="button" class="btn-secondary" routerLink="/login">Ya tengo una cuenta</button>
+
+        <a class="forgot-link" routerLink="/recuperar">Olvidé mi contraseña</a>
+      </form>
+    </section>
+
+    <!-- Panel de bienvenida lateral -->
+    <aside class="brand-panel">
+      <mat-icon class="brand-icon">monitor_heart</mat-icon>
+      <h2>Tu salud, cerca.</h2>
+      <p class="brand-text">Un lugar para entender tu historia y acompañar a quienes quieres.</p>
+      <p class="brand-tags">Documentos · Familia · Recordatorios · Lati</p>
+    </aside>
+  </div>
+</main>

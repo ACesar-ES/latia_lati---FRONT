@@ -1,0 +1,60 @@
+<div class="form-card">
+  <header class="form-header">
+    <div class="form-icon"><mat-icon>note_add</mat-icon></div>
+    <div>
+      <h2>Crear medicamento</h2>
+      <p>Registra un nuevo medicamento.</p>
+    </div>
+  </header>
+
+  <form [formGroup]="formMedication" (ngSubmit)="insertarMedicamento()">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre del Medicamento</mat-label>
+      <input matInput placeholder="Hemograma completo" formControlName="nombre" maxlength="100" />
+      @if (formMedication.get('nombre')?.hasError('required')) {
+        <mat-error>El nombre del medicamento es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Forma de dosaje</mat-label>
+      <mat-select formControlName="forma">
+        @for (f of formaDosaje; track f) {
+          <mat-option [value]="f">{{ f }}</mat-option>
+        }
+      </mat-select>
+      @if (formMedication.get('forma')?.hasError('required')) {
+        <mat-error>Selecciona una forma</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fuerza</mat-label>
+      <mat-select formControlName="fuerza">
+        @for (fu of fuerza; track fu) {
+          <mat-option [value]="fu">{{ fu }}</mat-option>
+        }
+      </mat-select>
+      @if (formMedication.get('fuerza')?.hasError('required')) {
+        <mat-error>Selecciona una fuerza</mat-error>
+      }
+    </mat-form-field>
+
+    @if (mensaje) {
+      <p class="mensaje">{{ mensaje }}</p>
+    }
+
+    <div class="actions">
+      <button matButton="outlined" class="cancel-btn" type="button" routerLink="/historial/listar">
+        Cancelar
+      </button>
+      <button matButton="outlined" class="clear-btn" type="button" (click)="limpiar()">
+        Limpiar
+      </button>
+      <button matButton="filled" class="submit-btn" type="submit">
+        <mat-icon>save</mat-icon>
+        Registrar medicamento
+      </button>
+    </div>
+  </form>
+</div>

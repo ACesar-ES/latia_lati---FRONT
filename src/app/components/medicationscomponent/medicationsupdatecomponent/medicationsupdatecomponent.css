@@ -1,0 +1,71 @@
+:host {
+  --latia-primary: #b8324f;
+  --latia-primary-dark: #a22b45;
+  --latia-primary-soft: #fbe9ec;
+  --latia-border: #e5e7eb;
+  --latia-muted: #6b7280;
+  display: block;
+  padding: 32px 36px 40px;
+  box-sizing: border-box;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  color: #1f2a37;
+}
+
+.form-card {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 28px 32px 24px;
+  background: #ffffff;
+  border: 1px solid var(--latia-border);
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+
+.form-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.form-icon {
+  width: 46px; height: 46px; border-radius: 12px; background: var(--latia-primary-soft);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.form-icon mat-icon { color: var(--latia-primary); }
+.form-header h2 { margin: 0; font-size: 22px; font-weight: 800; }
+.form-header p { margin: 4px 0 0; font-size: 13px; color: var(--latia-muted); }
+
+form { display: flex; flex-direction: column; }
+mat-form-field { width: 100%; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Colores del campo (primario de Latia) */
+mat-form-field {
+  --mat-form-field-outlined-focus-outline-color: var(--latia-primary);
+  --mat-form-field-outlined-focus-label-text-color: var(--latia-primary);
+  --mat-form-field-focus-select-arrow-color: var(--latia-primary);
+  --mat-form-field-outlined-caret-color: var(--latia-primary);
+  --mdc-outlined-text-field-focus-outline-color: var(--latia-primary);
+  --mdc-outlined-text-field-caret-color: var(--latia-primary);
+}
+
+.mensaje { margin: 0 0 12px; font-size: 13px; font-weight: 700; color: var(--latia-primary); text-align: center; }
+
+.actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+.actions button { height: 40px; border-radius: 10px; font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: 0; }
+
+.cancel-btn, .clear-btn {
+  --mat-button-outlined-outline-color: var(--latia-border);
+  --mat-button-outlined-label-text-color: #374151;
+}
+
+.submit-btn {
+  padding: 0 22px;
+  --mat-button-filled-container-color: var(--latia-primary);
+  --mat-button-filled-label-text-color: #ffffff;
+}
+.submit-btn:hover { --mat-button-filled-container-color: var(--latia-primary-dark); }
+.submit-btn mat-icon { width: 18px; height: 18px; font-size: 18px; margin-right: 8px; }
+
+@media (max-width: 640px) {
+  :host { padding: 16px; }
+  .form-card { padding: 20px; }
+  .row { grid-template-columns: 1fr; gap: 0; }
+  .actions { justify-content: stretch; }
+  .actions button { flex: 1; }
+}

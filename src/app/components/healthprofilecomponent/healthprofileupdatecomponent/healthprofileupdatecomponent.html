@@ -1,0 +1,101 @@
+<div class="form-card">
+
+    <header class="form-header">
+        <div class="form-icon"><mat-icon>person</mat-icon></div>
+        <div>
+            <h2>Completar información</h2>
+            <p>Mantén al día lo importante de {{ usuario?.firstName || 'tu perfil' }}.</p>
+        </div>
+    </header>
+
+    @if (formPerfil) {
+    <form [formGroup]="formPerfil" (ngSubmit)="guardar()">
+
+        <h3 class="section-title">Datos de salud</h3>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Fecha de nacimiento</mat-label>
+                <input matInput [matDatepicker]="picker" [max]="hoy" formControlName="fecha_nacimiento">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                @if (formPerfil.get('fecha_nacimiento')?.hasError('required')) {
+                <mat-error>Selecciona una fecha</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Sexo</mat-label>
+                <mat-select formControlName="sexo">
+                    @for (s of sexos; track s) {
+                    <mat-option [value]="s">{{ s }}</mat-option>
+                    }
+                </mat-select>
+                @if (formPerfil.get('sexo')?.hasError('required')) {
+                <mat-error>Selecciona una opción</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Grupo sanguíneo</mat-label>
+                <mat-select formControlName="grupo_sanguineo">
+                    @for (g of gruposSanguineos; track g) {
+                    <mat-option [value]="g">{{ g }}</mat-option>
+                    }
+                </mat-select>
+                @if (formPerfil.get('grupo_sanguineo')?.hasError('required')) {
+                <mat-error>Selecciona tu grupo sanguíneo</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Teléfono</mat-label>
+                <input matInput formControlName="telefono" placeholder="999 999 999">
+                @if (formPerfil.get('telefono')?.hasError('required')) {
+                <mat-error>El teléfono es obligatorio</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <h3 class="section-title">Contacto de emergencia <small>(opcional)</small></h3>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Nombre del contacto</mat-label>
+            <input matInput formControlName="contacto_nombre" maxlength="150">
+        </mat-form-field>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Teléfono del contacto</mat-label>
+                <input matInput formControlName="contacto_telefono" placeholder="+51 999 999 999">
+                @if (formPerfil.get('contacto_telefono')?.hasError('pattern')) {
+                <mat-error>Debe tener entre 7 y 15 dígitos</mat-error>
+                }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Parentesco</mat-label>
+                <input matInput formControlName="contacto_parentesco" placeholder="Madre, hermano, amiga..." maxlength="80">
+            </mat-form-field>
+        </div>
+
+        @if (mensaje) {
+        <p class="mensaje">{{ mensaje }}</p>
+        }
+
+        <div class="actions">
+            <button matButton="outlined" class="cancel-btn" type="button" routerLink="/perfil/ver">
+                Cancelar
+            </button>
+            <button matButton="filled" class="submit-btn" type="submit">
+                <mat-icon>save</mat-icon>
+                Guardar cambios
+            </button>
+        </div>
+    </form>
+    } @else if (mensaje) {
+    <p class="mensaje">{{ mensaje }}</p>
+    }
+</div>

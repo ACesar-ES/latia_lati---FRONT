@@ -1,0 +1,107 @@
+<div class="profile-page">
+
+    <!-- Encabezado -->
+    <header class="header-section">
+        <div class="header-titles">
+            <h1>Un espacio para {{ usuario?.firstName }}</h1>
+            <p>Su información está reunida aquí, con el contexto de su familia.</p>
+        </div>
+
+        <button matButton class="tree-btn no-print" type="button" routerLink="/familia">
+            <mat-icon>account_tree</mat-icon>
+            Volver al árbol
+        </button>
+    </header>
+
+    @if (cargando) {
+    <p class="state-msg">Cargando tu información...</p>
+    } @else if (mensaje) {
+    <div class="state-msg">
+        <p>{{ mensaje }}</p>
+        <button matButton="outlined" type="button" (click)="cargarDatos()">Reintentar</button>
+    </div>
+    } @else {
+
+    <!-- Tarjeta de perfil -->
+    <section class="profile-card">
+        <div class="profile-id">
+            <span class="avatar">{{ iniciales }}</span>
+            <div>
+                <h2>{{ nombreCompleto }}</h2>
+                <span class="main-badge">Tú · perfil principal</span>
+            </div>
+        </div>
+
+        <div class="profile-actions no-print">
+            <button matButton class="link-btn" type="button" routerLink="/perfil/actualizar">
+                <mat-icon>person</mat-icon>
+                Editar perfil
+            </button>
+            <button matButton="filled" class="pdf-btn" type="button" (click)="imprimirResumen()">
+                <mat-icon>download</mat-icon>
+                Resumen PDF
+            </button>
+        </div>
+    </section>
+
+    <div class="grid-2">
+
+        <!-- Lo importante, a mano -->
+        <section class="panel">
+            <h2>Lo importante, a mano</h2>
+
+            <dl class="facts">
+                <div>
+                    <dt>Alergias</dt>
+                    <dd>Sin información confirmada</dd>
+                </div>
+                <div>
+                    <dt>Grupo sanguíneo</dt>
+                    <dd>{{ grupoSanguineo }}</dd>
+                </div>
+                <div>
+                    <dt>Contacto de emergencia</dt>
+                    <dd>{{ contactoEmergencia }}</dd>
+                </div>
+                <div>
+                    <dt>Última actualización</dt>
+                    <dd>{{ ultimaActualizacion ? (ultimaActualizacion | date: 'dd MMM yyyy') : 'Sin registros' }}</dd>
+                </div>
+            </dl>
+
+            <button matButton class="complete-btn no-print" type="button" routerLink="/perfil/actualizar">
+                <mat-icon>arrow_forward</mat-icon>
+                Completar información
+            </button>
+        </section>
+
+        <!-- ¿Qué te gustaría hacer? -->
+        <section class="panel no-print">
+            <h2>¿Qué te gustaría hacer?</h2>
+
+            <div class="actions-list">
+                <button matButton class="action-btn" type="button" routerLink="/historial">
+                    <mat-icon>folder_special</mat-icon>
+                    Ver historial
+                </button>
+                <button matButton class="action-btn" type="button" routerLink="/lati">
+                    <mat-icon>monitor_heart</mat-icon>
+                    Conversar con Lati
+                </button>
+                <button matButton class="action-btn" type="button" routerLink="/agenda">
+                    <mat-icon>calendar_today</mat-icon>
+                    Programar una cita
+                </button>
+                <button matButton="filled" class="upload-btn" type="button" routerLink="/historial/insertar">
+                    <mat-icon>upload</mat-icon>
+                    Subir un documento
+                </button>
+                <button matButton class="action-btn muted" type="button" routerLink="/familia">
+                    <mat-icon>account_tree</mat-icon>
+                    Ver antecedentes familiares
+                </button>
+            </div>
+        </section>
+    </div>
+    }
+</div>

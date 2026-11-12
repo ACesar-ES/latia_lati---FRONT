@@ -127,7 +127,7 @@ export class Healthprofileupdatecomponent implements OnInit {
     const perfilDto: HealthprofileDTO = {
       idHealthProfile: this.perfil?.idHealthProfile ?? 0,
       idOwnerUser: this.usuario.idUser,
-      idHolderUser: this.perfil?.idHolderUser ?? null,
+      idHolderUser: this.perfil?.idHolderUser ?? this.usuario.idUser,
       birthDate: toIsoDate(v.fecha_nacimiento), // LocalDate -> "yyyy-MM-dd"
       sex: v.sexo,
       bloodType: v.grupo_sanguineo,

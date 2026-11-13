@@ -86,11 +86,11 @@
 .top-nav-actions { display: flex; align-items: center; gap: 14px; }
 .top-search-box {
   display: flex; align-items: center; gap: 8px; width: 177px; height: 36px;
-  padding: 0 12px; background: var(--latia-bg); border-radius: 10px;
+  padding: 0 12px; background: var(--latia-bg); border-radius: 10px; border: 1px solid #000000;
 }
 .top-search-box mat-icon { width: 18px; height: 18px; font-size: 18px; color: #4b5563; }
 .top-search-box input {
-  flex: 1; min-width: 0; border: 0; outline: 0; background: transparent;
+  flex: 1; min-width: 0; border: 0; outline: 0; background-color: transparent;
   font-family: inherit; font-size: 12px; color: var(--latia-text);
 }
 .top-search-box input::placeholder { color: var(--latia-muted); }

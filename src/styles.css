@@ -5,3 +5,467 @@ html, body {
   background: #f6f7f9;
   font-family: 'Nunito', sans-serif;
 }
+
+html.dark-theme {
+  color-scheme: dark;
+  --app-bg: #111827;
+  --app-surface: #1f2937;
+  --app-surface-raised: #273449;
+  --app-text: #f3f4f6;
+  --app-muted: #aab4c2;
+  --app-border: #374151;
+  --app-primary-soft: #472632;
+  background: var(--app-bg);
+  --mat-sys-surface: var(--app-surface);
+  --mat-sys-on-surface: var(--app-text);
+  --mat-sys-surface-container: var(--app-surface);
+  --mat-sys-surface-container-high: var(--app-surface-raised);
+  --mat-sys-outline: var(--app-border);
+}
+
+html.dark-theme body {
+  color-scheme: dark;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+html.dark-theme app-menucomponent {
+  --latia-bg: var(--app-bg);
+  --latia-surface: var(--app-surface);
+  --latia-text: var(--app-text);
+  --latia-muted: var(--app-muted);
+  --latia-border: var(--app-border);
+  --latia-primary-soft: var(--app-primary-soft);
+  color: var(--app-text);
+}
+
+html.dark-theme app-clinicalrecordlistcomponent {
+  --latia-bg: var(--app-bg);
+  --latia-surface: var(--app-surface);
+  --latia-text: var(--app-text);
+  --latia-muted: var(--app-muted);
+  --latia-border: var(--app-border);
+  --latia-primary-soft: var(--app-primary-soft);
+  --latia-lilac: #342d43;
+  --latia-lilac-text: #c4b5fd;
+  color: var(--app-text);
+}
+
+html.dark-theme app-healthprofilelistcomponent {
+  --text: var(--app-text);
+  --muted: var(--app-muted);
+  --border: var(--app-border);
+  --primary-soft: var(--app-primary-soft);
+  color: var(--app-text);
+}
+
+html.dark-theme app-healthprofileupdatecomponent,
+html.dark-theme app-clinicalrecordinsertcomponent,
+html.dark-theme app-clinicalrecordupdatecomponent {
+  --latia-border: var(--app-border);
+  --latia-muted: var(--app-muted);
+  color: var(--app-text);
+}
+
+html.dark-theme app-logincomponent,
+html.dark-theme app-registrocomponent,
+html.dark-theme app-recuperarcomponent {
+  --latia-bg: var(--app-bg);
+  --latia-text: var(--app-text);
+  --latia-muted: var(--app-muted);
+  --latia-border: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-landingcomponent {
+  --bg: var(--app-bg);
+  --text: var(--app-text);
+  --muted: var(--app-muted);
+  --border: var(--app-border);
+  --primary-soft: var(--app-primary-soft);
+  color: var(--app-text);
+}
+
+html.dark-theme app-root .example-container,
+html.dark-theme app-root .main-content,
+html.dark-theme app-root .clinical-container,
+html.dark-theme app-root .profile-page,
+html.dark-theme app-root .login-page {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+}
+
+html.dark-theme app-root .sidenav,
+html.dark-theme app-root .top-navbar,
+html.dark-theme app-root .records-card,
+html.dark-theme app-root .profile-card,
+html.dark-theme app-root .panel,
+html.dark-theme app-root .form-card,
+html.dark-theme app-root .login-card,
+html.dark-theme app-root .top-search-box {
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+  color: var(--app-text);
+
+}
+
+html.dark-theme app-root .lati-prompt-card {
+  background-color: var(--app-primary-soft);
+  border-color: var(--app-border);
+}
+
+html.dark-theme app-root .sort-pill,
+html.dark-theme app-root .mode-selector {
+  background-color: var(--app-surface-raised);
+  color: var(--app-muted);
+}
+
+html.dark-theme app-root .nav-list .mat-mdc-list-item:hover,
+html.dark-theme app-root .icon-action-btn:hover,
+html.dark-theme app-root .btn-secondary:hover,
+html.dark-theme app-root .btn-outline:hover,
+html.dark-theme app-root .nav-links button:hover {
+  background-color: var(--app-surface-raised);
+}
+
+html.dark-theme app-root .nav-list .mat-mdc-list-item,
+html.dark-theme app-root .nav-list .mat-mdc-list-item .mat-icon,
+html.dark-theme app-root .search-box mat-icon,
+html.dark-theme app-root .icon-btn,
+html.dark-theme app-root .icon-action-btn,
+html.dark-theme app-root .top-user-pill mat-icon {
+  color: var(--app-muted);
+}
+
+html.dark-theme app-root .header-titles p,
+html.dark-theme app-root .form-header p,
+html.dark-theme app-root .record-text p,
+html.dark-theme app-root .record-date,
+html.dark-theme app-root .professional,
+html.dark-theme app-root .user-role,
+html.dark-theme app-root .breadcrumb-muted {
+  color: var(--app-muted) !important;
+}
+
+html.dark-theme app-root .nav-list a.active-link,
+html.dark-theme app-root a.user-profile:hover,
+html.dark-theme app-root a.user-profile.active {
+  background-color: var(--app-primary-soft);
+}
+
+html.dark-theme app-root .nav-list .mat-mdc-list-item.active-link,
+html.dark-theme app-root .nav-list a.active-link {
+  color: #fda4af;
+}
+
+html.dark-theme app-root .feature,
+html.dark-theme app-root .mock-card,
+html.dark-theme app-root .mock-lati {
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-root .step {
+  background: transparent;
+  border: 0;
+  color: var(--app-text);
+}
+
+html.dark-theme app-root .nav {
+  background-color: rgb(31 41 55 / 92%);
+  border-color: var(--app-border);
+}
+
+html.dark-theme app-root .section-soft,
+html.dark-theme app-root .hero-visual,
+html.dark-theme app-root .lati-block {
+  background-color: var(--app-surface-raised);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-root .cta {
+  background-color: #922b43;
+  border-color: #aa354f;
+  color: #fff;
+}
+
+html.dark-theme app-root .footer {
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-root .mock-sort,
+html.dark-theme app-root .feature-icon,
+html.dark-theme app-root .step-num {
+  background-color: var(--app-surface-raised);
+  border-color: var(--app-border);
+}
+
+html.dark-theme app-root .mock-row {
+  background-color: transparent;
+  border-top-color: var(--app-border);
+}
+
+html.dark-theme app-root .mock-badge {
+  background-color: #342d43;
+  color: #ddd6fe;
+}
+
+html.dark-theme app-root .lati-icon {
+  background-color: #fff;
+}
+
+html.dark-theme app-root .lead,
+html.dark-theme app-root .nav-links button,
+html.dark-theme app-root .feature p,
+html.dark-theme app-root .step p,
+html.dark-theme app-root .cta p,
+html.dark-theme app-root .footer p {
+  color: var(--app-muted) !important;
+}
+
+html.dark-theme app-root .cta p {
+  color: #fff !important;
+}
+
+html.dark-theme app-root .footer small {
+  color: #aab4c2 !important;
+}
+
+html.dark-theme app-root input,
+html.dark-theme app-root textarea,
+html.dark-theme app-root select {
+  background-color: var(--app-surface-raised) !important;
+  border-color: var(--app-border) !important;
+  color: var(--app-text) !important;
+}
+
+html.dark-theme app-root input::placeholder,
+html.dark-theme app-root textarea::placeholder {
+  color: var(--app-muted) !important;
+}
+
+html.dark-theme app-root mat-form-field {
+  --mdc-outlined-text-field-input-text-color: var(--app-text);
+  --mdc-outlined-text-field-label-text-color: var(--app-muted);
+  --mdc-outlined-text-field-outline-color: var(--app-border);
+  --mat-select-enabled-trigger-text-color: var(--app-text);
+}
+
+html.dark-theme .mat-mdc-select-panel,
+html.dark-theme .mat-datepicker-content {
+  --mat-select-panel-background-color: var(--app-surface);
+  --mat-datepicker-calendar-container-background-color: var(--app-surface);
+  --mat-datepicker-calendar-date-text-color: var(--app-text);
+  --mat-datepicker-calendar-date-hover-state-background-color: var(--app-surface-raised);
+  --mat-datepicker-calendar-date-selected-state-background-color: #b8324f;
+  --mat-datepicker-calendar-date-selected-state-text-color: #fff;
+  background-color: var(--app-surface);
+  color: var(--app-text);
+}
+
+html.dark-theme app-root .tree-btn,
+html.dark-theme app-root .create-btn,
+html.dark-theme app-root .export-btn,
+html.dark-theme app-root .btn-secondary,
+html.dark-theme app-root .btn-outline,
+html.dark-theme app-root .btn-light {
+  background-color: var(--app-surface);
+  color: var(--app-text);
+}
+
+html.dark-theme app-logincomponent,
+html.dark-theme app-registrocomponent,
+html.dark-theme app-recuperarcomponent {
+  --latia-primary-soft: #352531;
+}
+
+html.dark-theme app-logincomponent .login-card,
+html.dark-theme app-registrocomponent .login-card,
+html.dark-theme app-recuperarcomponent .login-card {
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-logincomponent .brand-panel,
+html.dark-theme app-registrocomponent .brand-panel,
+html.dark-theme app-recuperarcomponent .brand-panel {
+  background-color: #352531;
+  border-color: #593442;
+  color: var(--app-text);
+}
+
+html.dark-theme app-logincomponent .brand-icon,
+html.dark-theme app-logincomponent .brand-panel h2,
+html.dark-theme app-registrocomponent .brand-icon,
+html.dark-theme app-registrocomponent .brand-panel h2,
+html.dark-theme app-recuperarcomponent .brand-icon,
+html.dark-theme app-recuperarcomponent .brand-panel h2 {
+  color: #f07a92;
+}
+
+html.dark-theme app-logincomponent .field input,
+html.dark-theme app-registrocomponent .field input,
+html.dark-theme app-recuperarcomponent .field input {
+  background-color: var(--app-surface-raised);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-logincomponent .field input::placeholder,
+html.dark-theme app-registrocomponent .field input::placeholder,
+html.dark-theme app-recuperarcomponent .field input::placeholder {
+  color: #aab4c2;
+}
+
+html.dark-theme app-logincomponent .forgot-link,
+html.dark-theme app-registrocomponent .forgot-link,
+html.dark-theme app-recuperarcomponent .forgot-link {
+  color: #c0cad6;
+}
+
+html.dark-theme app-logincomponent .form-error,
+html.dark-theme app-registrocomponent .form-error,
+html.dark-theme app-recuperarcomponent .form-error {
+  background-color: #4a2028;
+  color: #ffb4b4;
+}
+
+html.dark-theme app-logincomponent .error,
+html.dark-theme app-registrocomponent .error,
+html.dark-theme app-recuperarcomponent .error {
+  color: #ff9a9a;
+}
+
+html.dark-theme app-logincomponent .btn-secondary,
+html.dark-theme app-registrocomponent .btn-secondary,
+html.dark-theme app-recuperarcomponent .btn-secondary {
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-logincomponent .btn-secondary:hover,
+html.dark-theme app-registrocomponent .btn-secondary:hover,
+html.dark-theme app-recuperarcomponent .btn-secondary:hover {
+  background-color: var(--app-surface-raised);
+}
+
+html.dark-theme app-recuperarcomponent .mode-selector {
+  background-color: var(--app-surface-raised);
+}
+
+html.dark-theme app-recuperarcomponent .mode-selector button {
+  color: var(--app-muted);
+}
+
+html.dark-theme app-recuperarcomponent .mode-selector button.active {
+  background-color: var(--app-surface) !important;
+  color: #fda4af !important;
+}
+
+html.dark-theme app-landingcomponent .lead,
+html.dark-theme app-landingcomponent .lati-copy p {
+  color: #c0cad6 !important;
+}
+
+html.dark-theme app-landingcomponent .nav-links button {
+  color: #c0cad6 !important;
+}
+
+html.dark-theme app-landingcomponent .mock-lati span {
+  color: #c0cad6 !important;
+}
+
+html.dark-theme app-landingcomponent .footer {
+  background-color: var(--app-surface);
+}
+
+html.dark-theme app-landingcomponent .theme-toggle {
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-landingcomponent .brand,
+html.dark-theme app-landingcomponent .hero h1 em,
+html.dark-theme app-landingcomponent .pill,
+html.dark-theme app-landingcomponent .mock-icon mat-icon,
+html.dark-theme app-landingcomponent .mock-lati b,
+html.dark-theme app-landingcomponent .lati-icon mat-icon,
+html.dark-theme app-landingcomponent .lati-copy h2 {
+  color: #f07a92 !important;
+}
+
+html.dark-theme app-menucomponent .sidebar-logo mat-icon,
+html.dark-theme app-menucomponent .logo-text,
+html.dark-theme app-menucomponent .prompt-title,
+html.dark-theme app-menucomponent .prompt-header mat-icon,
+html.dark-theme app-menucomponent .user-avatar,
+html.dark-theme app-menucomponent .top-user-avatar {
+  color: #f07a92 !important;
+}
+html.dark-theme app-menucomponent .top-search-box  {
+  background-color: var(--app-surface-raised);
+}
+
+html.dark-theme app-healthprofilelistcomponent .link-btn,
+html.dark-theme app-healthprofilelistcomponent .action-btn,
+html.dark-theme app-healthprofilelistcomponent .complete-btn,
+html.dark-theme app-healthprofilelistcomponent .tree-btn {
+  --mat-button-text-label-text-color: var(--app-text);
+  color: var(--app-text);
+}
+
+html.dark-theme app-healthprofilelistcomponent .facts dd,
+html.dark-theme app-healthprofilelistcomponent .profile-id h2 {
+  color: var(--app-text);
+}
+
+html.dark-theme app-healthprofilelistcomponent .avatar,
+html.dark-theme app-healthprofilelistcomponent .main-badge {
+  color: #f07a92 !important;
+}
+
+html.dark-theme app-healthprofileupdatecomponent .form-card,
+html.dark-theme app-clinicalrecordinsertcomponent .form-card,
+html.dark-theme app-clinicalrecordupdatecomponent .form-card {
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-healthprofileupdatecomponent .cancel-btn,
+html.dark-theme app-clinicalrecordinsertcomponent .cancel-btn,
+html.dark-theme app-clinicalrecordinsertcomponent .clear-btn,
+html.dark-theme app-clinicalrecordupdatecomponent .cancel-btn {
+  --mat-button-outlined-label-text-color: var(--app-text);
+}
+
+html.dark-theme app-settingscomponent {
+  --settings-bg: var(--app-bg);
+  --settings-surface: var(--app-surface);
+  --settings-surface-alt: var(--app-surface-raised);
+  --settings-text: var(--app-text);
+  --settings-muted: var(--app-muted);
+  --settings-border: var(--app-border);
+}
+
+html.dark-theme app-clinicalrecordlistcomponent .search-box mat-icon,
+html.dark-theme app-clinicalrecordlistcomponent .icon-btn {
+  color: var(--app-muted) !important;
+}
+
+html.dark-theme app-clinicalrecordlistcomponent .tab-btn,
+html.dark-theme app-clinicalrecordlistcomponent .open-btn {
+  --mat-button-text-label-text-color: var(--app-text);
+  color: var(--app-text) !important;
+}
+
+html.dark-theme app-clinicalrecordlistcomponent .tab-btn.active {
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+}

@@ -1,4 +1,4 @@
-Disponible en [latia.click](latia.click)
+Disponible en [latia.click](https://latia.click)
 
 # LatiaLati
 

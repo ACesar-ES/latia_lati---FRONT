@@ -77,7 +77,7 @@
       <div class="nav-breadcrumb">
         <span class="breadcrumb-muted">Mi espacio</span>
         <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
-        <span class="breadcrumb-active">Historial · Elena</span>
+        <span class="breadcrumb-active">{{ seccionActual }} · {{ primerNombre }}</span>
       </div>
 
       <div class="top-nav-actions">
@@ -92,8 +92,15 @@
           <mat-icon>arrow_drop_down</mat-icon>
         </a>
 
-        <button matIconButton class="icon-action-btn" aria-label="Cambiar tema">
-          <mat-icon>dark_mode</mat-icon>
+        <button
+          matIconButton
+          class="icon-action-btn"
+          type="button"
+          (click)="toggleTheme()"
+          [attr.aria-pressed]="modoOscuro"
+          [attr.aria-label]="modoOscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+          [title]="modoOscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+          <mat-icon>{{ modoOscuro ? 'light_mode' : 'dark_mode' }}</mat-icon>
         </button>
         <button matIconButton class="icon-action-btn" aria-label="Notificaciones">
           <mat-icon>notifications</mat-icon>

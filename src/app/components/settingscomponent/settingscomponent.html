@@ -1,0 +1,106 @@
+<app-menucomponent>
+  <main class="settings-page">
+    <header class="settings-header">
+      <h1>Haz de Latia tu espacio</h1>
+      <p>Ajusta la apariencia y la forma en que quieres recibir avisos.</p>
+    </header>
+
+    <div class="settings-grid">
+      <section class="settings-card appearance-card" aria-labelledby="appearance-heading">
+        <h2 id="appearance-heading">Apariencia</h2>
+        <p class="settings-description">Elige la opción más cómoda para ti.</p>
+
+        <div class="appearance-options" role="radiogroup" aria-label="Apariencia">
+          <button
+            type="button"
+            class="appearance-option light-option"
+            [class.selected]="!modoOscuro"
+            role="radio"
+            [attr.aria-checked]="!modoOscuro"
+            (click)="seleccionarApariencia(false)">
+            <mat-icon>light_mode</mat-icon>
+            <span class="option-title">Claro</span>
+            <span class="option-description">Aplicar apariencia</span>
+          </button>
+
+          <button
+            type="button"
+            class="appearance-option dark-option"
+            [class.selected]="modoOscuro"
+            role="radio"
+            [attr.aria-checked]="modoOscuro"
+            (click)="seleccionarApariencia(true)">
+            <mat-icon>dark_mode</mat-icon>
+            <span class="option-title">Oscuro</span>
+            <span class="option-description">Aplicar apariencia</span>
+          </button>
+        </div>
+
+        <div class="personal-settings">
+          <h3>Tus datos personales</h3>
+          <a class="settings-link" routerLink="/perfil/actualizar">
+            <mat-icon>person</mat-icon>
+            <span>Editar perfil</span>
+          </a>
+          <a class="settings-link" routerLink="/familia">
+            <mat-icon>account_tree</mat-icon>
+            <span>Gestionar familiares</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="settings-card reminders-card" aria-labelledby="reminders-heading">
+        <h2 id="reminders-heading">A tu ritmo</h2>
+
+        <div class="reminder-list">
+          <label class="reminder-option">
+            <input
+              type="checkbox"
+              [checked]="recordatorios.medicamentos"
+              (change)="cambiarRecordatorio('medicamentos', $event)">
+            <span class="checkmark" aria-hidden="true"><mat-icon>check</mat-icon></span>
+            <span class="reminder-copy">
+              <span class="reminder-title">Recordatorios de medicamentos</span>
+              <span class="reminder-description">Activos · según tu horario</span>
+            </span>
+          </label>
+
+          <label class="reminder-option">
+            <input
+              type="checkbox"
+              [checked]="recordatorios.citas"
+              (change)="cambiarRecordatorio('citas', $event)">
+            <span class="checkmark" aria-hidden="true"><mat-icon>check</mat-icon></span>
+            <span class="reminder-copy">
+              <span class="reminder-title">Avisos de citas</span>
+              <span class="reminder-description">Un día y una hora antes</span>
+            </span>
+          </label>
+
+          <label class="reminder-option">
+            <input
+              type="checkbox"
+              [checked]="recordatorios.historial"
+              (change)="cambiarRecordatorio('historial', $event)">
+            <span class="checkmark" aria-hidden="true"><mat-icon>check</mat-icon></span>
+            <span class="reminder-copy">
+              <span class="reminder-title">Novedades del historial</span>
+              <span class="reminder-description">Solo información importante</span>
+            </span>
+          </label>
+        </div>
+
+        <button class="save-preferences" type="button" (click)="guardarPreferencias()">
+          <mat-icon>{{ guardado ? 'check_circle' : 'check' }}</mat-icon>
+          {{ guardado ? 'Preferencias guardadas' : 'Guardar preferencias' }}
+        </button>
+        <p class="save-message" aria-live="polite">{{ mensaje }}</p>
+
+        <a class="help-link" routerLink="/lati">
+          <mat-icon>info</mat-icon>
+          Centro de ayuda
+        </a>
+      </section>
+    </div>
+  </main>
+</app-menucomponent>

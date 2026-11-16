@@ -8,7 +8,7 @@ import { MedicalconditionDTO } from '../model/MedicalconditionDTO';
   providedIn: 'root',
 })
 export class Medicalconditionservice {
-  private apiURL = `${environment.base}/apis/medicalconditions`;
+  private apiURL = `${environment.base}/api/medicalconditions`;
 
   constructor(private http: HttpClient) {}
 

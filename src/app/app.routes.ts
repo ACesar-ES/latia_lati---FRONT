@@ -14,6 +14,14 @@ import { Medicationscomponent } from './components/medicationscomponent/medicati
 import { Medicationslistcomponent } from './components/medicationscomponent/medicationslistcomponent/medicationslistcomponent';
 import { Medicationsinsertcomponent } from './components/medicationscomponent/medicationsinsertcomponent/medicationsinsertcomponent';
 import { Medicationsupdatecomponent } from './components/medicationscomponent/medicationsupdatecomponent/medicationsupdatecomponent';
+import { Settingscomponent } from './components/settingscomponent/settingscomponent';
+import { Laticomponent } from './components/laticomponent/laticomponent';
+import { Homecomponent } from './components/homecomponent/homecomponent';
+import { Familycomponent } from './components/familycomponent/familycomponent';
+import { Schedulecomponent } from './components/schedulecomponent/schedulecomponent';
+import { Medicamentoscomponents } from './components/medicamentoscomponents/medicamentoscomponents';
+import { Evolutioncomponent } from './components/evolutioncomponent/evolutioncomponent';
+
 
 export const routes: Routes = [
   // 1. Landing: lo primero que se ve
@@ -40,6 +48,11 @@ export const routes: Routes = [
     component: RecuperarComponent
   },
 
+  {
+    path: 'inicio',
+    component: Homecomponent,
+  },
+ 
   // 4. Historial clínico (con menú lateral), protegido por sesión
   {
     path: 'historial',
@@ -53,12 +66,42 @@ export const routes: Routes = [
   },
 
   {
+    path: "familia",
+    component: Familycomponent,
+  },
+
+  {
+    path: "agenda",
+    component: Schedulecomponent,
+  },
+
+  {
+    path: "medicamentos",
+    component: Medicamentoscomponents,
+  },
+
+  {
+    path: "evolucion",
+    component: Evolutioncomponent, 
+  },
+
+  {
+    path: "lati",
+    component: Laticomponent
+  },
+
+  {
+    path: 'ajustes',
+    component: Settingscomponent
+  },
+ 
+  {
     path: 'perfil',
     component: Healthprofilecomponent,
     children: [
       { path: '', redirectTo: 'listar', pathMatch: 'full' },
       { path: 'listar', component: Healthprofilelistcomponent },
-      { path: 'actualizar/:id', component: Healthprofileupdatecomponent },
+      { path: 'actualizar', component: Healthprofileupdatecomponent },
     ],
   },
 
@@ -77,5 +120,11 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: '/historial'
+  // 5. Cualquier URL desconocida vuelve al inicio (SIEMPRE al final)
+  
+  { 
+    path: '**', 
+    redirectTo: '/inicio'
   },
+
 ];

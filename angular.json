@@ -29,7 +29,11 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              "allowedHosts": [
+                "latia-lati-front.onrender.com",
+                "latia.click",
+                "www.latia.click"
+              ]
             },
             "ssr": {
               "entry": "src/server.ts"

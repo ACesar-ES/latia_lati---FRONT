@@ -15,6 +15,15 @@
       </nav>
 
       <div class="nav-actions">
+        <button
+          type="button"
+          class="theme-toggle"
+          (click)="toggleTheme()"
+          [attr.aria-pressed]="modoOscuro"
+          [attr.aria-label]="modoOscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+          [title]="modoOscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+          <mat-icon>{{ modoOscuro ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
         <button type="button" class="btn btn-ghost" routerLink="/login">Iniciar sesión</button>
         <button type="button" class="btn btn-primary" routerLink="/login">Regístrate aquí</button>
       </div>

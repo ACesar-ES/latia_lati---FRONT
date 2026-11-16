@@ -76,11 +76,6 @@ export const routes: Routes = [
   },
 
   {
-    path: "medicamentos",
-    component: Medicamentoscomponents,
-  },
-
-  {
     path: "evolucion",
     component: Evolutioncomponent, 
   },
@@ -120,6 +115,7 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: '/historial'
+  },
   // 5. Cualquier URL desconocida vuelve al inicio (SIEMPRE al final)
   
   { 

@@ -9,7 +9,7 @@ import { MedicationsDTO } from '../model/MedicationsDTO';
   providedIn: 'root',
 })
 export class Medicationsservice {
-  private apiURL=`${environment.base}/apis/medications`;
+  private apiURL=`${environment.base}/api/medications`;
 
   constructor(private http: HttpClient) {}
 

@@ -19,7 +19,6 @@ import { Laticomponent } from './components/laticomponent/laticomponent';
 import { Homecomponent } from './components/homecomponent/homecomponent';
 import { Familycomponent } from './components/familycomponent/familycomponent';
 import { Schedulecomponent } from './components/schedulecomponent/schedulecomponent';
-import { Medicamentoscomponents } from './components/medicamentoscomponents/medicamentoscomponents';
 import { Evolutioncomponent } from './components/evolutioncomponent/evolutioncomponent';
 
 

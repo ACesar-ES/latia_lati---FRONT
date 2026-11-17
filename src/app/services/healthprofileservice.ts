@@ -12,23 +12,34 @@ export class Healthprofileservice {
 
   constructor(private http: HttpClient) {}
 
-  listOwned(): Observable<HealthprofileDTO[]> {
-    return this.http.get<HealthprofileDTO[]>(this.apiURL + '/consulta-nativa');
-  }
+  /**
+   * Perfil de salud PRINCIPAL del usuario con sesión (el suyo propio).
+   *
+   * Usa GET /api/healthprofiles/consulta-nativa, que el backend ya filtra por el
+   * propietario autenticado. Ese listado incluye también los perfiles de sus familiares,
+   * así que el principal es el que tiene como titular (holder) al mismo usuario.
+   * Si el usuario solo tiene un perfil, se toma ese. Si no hay ninguno, devuelve null.
+   */
   getByOwner(idUser: number): Observable<HealthprofileDTO | null> {
-    return this.listOwned().pipe(
+    return this.http.get<HealthprofileDTO[]>(`${this.apiURL}/consulta-nativa`).pipe(
       map(
-        (rows) =>
-          rows.find((p) => p.active && p.idOwnerUser === idUser && p.idHolderUser === idUser) ??
-          null,
+        (perfiles) =>
+          perfiles.find((p) => p.idHolderUser === idUser) ??
+          (perfiles.length === 1 ? perfiles[0] : null),
       ),
     );
   }
-  insertHealthProfile(
-    dto: Omit<HealthprofileDTO, 'idHealthProfile'> & { idHealthProfile?: number },
-  ): Observable<HealthprofileDTO> {
-    const { idHealthProfile, ...body } = dto;
-    return this.http.post<HealthprofileDTO>(this.apiURL, body);
+
+  // Todos los perfiles del usuario con sesión (el suyo y los de sus familiares)
+  listPropios(): Observable<HealthprofileDTO[]> {
+    return this.http.get<HealthprofileDTO[]>(`${this.apiURL}/consulta-nativa`);
+  }
+
+  // POST /api/healthprofiles
+  // Se envía sin idHealthProfile: si llega con id 0, el backend responde 500
+  insertHealthProfile(dto: HealthprofileDTO): Observable<HealthprofileDTO> {
+    const { idHealthProfile, ...perfil } = dto;
+    return this.http.post<HealthprofileDTO>(this.apiURL, perfil);
   }
 
   // PUT /api/healthprofiles  (el backend recibe el DTO completo con su id)

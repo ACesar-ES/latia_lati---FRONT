@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter, Router } from '@angular/router';
-import { NEVER } from 'rxjs';
 import { App } from './app';
 import { routes } from './app.routes';
 import { Loginservice } from './services/loginservice';
@@ -17,7 +16,7 @@ describe('App', () => {
         provideHttpClientTesting(),
         {
           provide: Loginservice,
-          useValue: { getToken: () => null, getEmail: () => null, sessionChanged$: NEVER },
+          useValue: { getToken: () => null, getEmail: () => null },
         },
       ],
     }).compileComponents();

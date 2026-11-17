@@ -7,7 +7,7 @@
     </div>
   </header>
 
-  @if(!family.activeId()) { <p class="mensaje"><a routerLink="/cambiar-perfil" [queryParams]="{volver:'historial'}">Elegir perfil de salud</a></p> }
+  @if(!fcS.idActivo()) { <p class="mensaje"><a routerLink="/cambiar-perfil" [queryParams]="{volver:'historial'}">Elegir perfil de salud</a></p> }
   <form [formGroup]="formClinicalRecord" (ngSubmit)="insertarHistorial()">
     <mat-form-field appearance="outline">
       <mat-label>Título</mat-label>
@@ -68,7 +68,7 @@
 
     <div class="row">
       <mat-form-field appearance="outline"><mat-label>Perfil del historial</mat-label>
-            <input matInput readonly [value]="family.activeId() ? family.label(family.activeId()!) : 'Sin perfil seleccionado'"/>
+            <input matInput readonly [value]="fcS.idActivo() ? fcS.nombre(fcS.idActivo()!) : 'Sin perfil seleccionado'"/>
           </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -91,7 +91,7 @@
       <button matButton="outlined" class="clear-btn" type="button" (click)="limpiar()">
         Limpiar
       </button>
-      <button matButton="filled" class="submit-btn" type="submit" [disabled]="!family.activeId() || family.activeId()!==draftProfile || saving()">
+      <button matButton="filled" class="submit-btn" type="submit" [disabled]="!fcS.idActivo()">
         <mat-icon>save</mat-icon>
         Registrar historial
       </button>

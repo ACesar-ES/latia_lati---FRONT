@@ -8,7 +8,7 @@
         </div>
     </header>
 
-    @if (formClinicalRecord && loadedId()!==null && loadedId()===family.activeId()) {
+    @if (formClinicalRecord && perfilCargado !== null && perfilCargado === fcS.idActivo()) {
     <form [formGroup]="formClinicalRecord" (ngSubmit)="actualizarHistorial()">
 
         <mat-form-field appearance="outline">
@@ -68,7 +68,7 @@
 
         <div class="row">
             <mat-form-field appearance="outline"><mat-label>Perfil del historial</mat-label>
-            <input matInput readonly [value]="family.activeId() ? family.label(family.activeId()!) : 'Sin perfil seleccionado'"/>
+            <input matInput readonly [value]="fcS.idActivo() ? fcS.nombre(fcS.idActivo()!) : 'Sin perfil seleccionado'"/>
           </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -88,7 +88,7 @@
             <button matButton="outlined" class="cancel-btn" type="button" routerLink="/historial/listar">
                 Cancelar
             </button>
-            <button matButton="filled" class="submit-btn" type="submit" [disabled]="saving()">
+            <button matButton="filled" class="submit-btn" type="submit" [disabled]="guardando">
                 <mat-icon>save</mat-icon>
                 Guardar cambios
             </button>

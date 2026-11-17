@@ -1,12 +1,11 @@
-import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Clinicalrecordservice } from '../../../services/clinicalrecordservice';
-import { FamilyContextService } from '../../../services/familycontextservice';
 import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
+import { Familycontextservice } from '../../../services/familycontextservice';
 
 @Component({
   imports: [DatePipe, RouterLink, MatIconModule, MatButtonModule],
@@ -14,87 +13,95 @@ import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
   styleUrl: './clinicalrecordlistcomponent.css',
   templateUrl: './clinicalrecordlistcomponent.html',
 })
-export class Clinicalrecordlistcomponent {
-  readonly family = inject(FamilyContextService);
-  private readonly records = inject(Clinicalrecordservice);
-  private readonly destroy = inject(DestroyRef);
-  private readonly revision = signal(0);
-  private readonly result = signal<{
-    owner: number;
-    profile: number;
-    rows: ClinicalrecordDTO[];
-  } | null>(null);
-  readonly loading = signal(false);
-  readonly notice = signal('');
-  filtroActivo = 'todos';
-  busqueda = '';
-  constructor() {
-    this.family.load();
-    effect((cleanup) => {
-      this.revision();
-      const profile = this.family.activeId(),
-        owner = this.family.account()?.idUser;
-      this.result.set(null);
-      this.notice.set('');
-      this.loading.set(!!profile && !!owner);
-      if (!profile || !owner) return;
-      const req = this.records.forProfile(profile).subscribe({
-        next: (rows) => {
-          if (this.family.activeId() === profile && this.family.account()?.idUser === owner) {
-            this.result.set({ owner, profile, rows });
-            this.loading.set(false);
-          }
-        },
-        error: () => {
-          this.loading.set(false);
-          this.notice.set('No pudimos abrir este historial.');
-        },
-      });
-      cleanup(() => req.unsubscribe());
+export class Clinicalrecordlistcomponent implements OnInit {
+  dataSource: ClinicalrecordDTO[] = [];
+  filtroActivo: string = 'todos';
+  busqueda: string = '';
+  aviso: string = '';
+  cargando: boolean = false;
+ 
+  constructor(
+    private crS: Clinicalrecordservice,
+    private cdr: ChangeDetectorRef,
+    public fcS: Familycontextservice,
+  ) {}
+ 
+  ngOnInit(): void {
+    this.cargarPerfiles();
+  }
+
+  // Primero se cargan los perfiles para saber cuál está elegido
+  cargarPerfiles(forzar: boolean = false): void {
+    this.fcS.cargar(forzar).subscribe({
+      next: () => {
+        this.cdr.detectChanges();
+        this.listarHistoriales();
+      },
+      error: (err) => {
+        console.log('Ocurrió un error al cargar los perfiles', err);
+        this.cdr.detectChanges();
+      },
     });
   }
+
+  recargar(): void {
+    this.cargarPerfiles(true);
+  }
+
+  // Nombre del perfil elegido, para el título
   get primerNombre(): string {
-    const id = this.family.activeId();
-    return id ? this.family.label(id) : '';
+    const id = this.fcS.idActivo();
+    return id ? this.fcS.nombre(id) : '';
   }
-  get dataSource(): ClinicalrecordDTO[] {
-    const r = this.result();
-    return r && r.profile === this.family.activeId() && r.owner === this.family.account()?.idUser
-      ? r.rows
-      : [];
+
+  // Solo los registros del perfil elegido
+  listarHistoriales(): void {
+    const idPerfil = this.fcS.idActivo();
+    this.dataSource = [];
+    this.aviso = '';
+    if (!idPerfil) return;
+    this.cargando = true;
+    this.crS.getClinicalRecord().subscribe({
+      next: (data) => {
+        this.dataSource = data.filter((r) => r.idHealthProfile === idPerfil);
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log('Ocurrió un error al obtener los registros', err);
+        this.aviso = 'Error al obtener los registros!!';
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
+
+  // Filtro por pestaña + buscador, más recientes primero
   get historialesFiltrados(): ClinicalrecordDTO[] {
     const q = this.busqueda.trim().toLowerCase();
     return this.dataSource
-      .filter(
-        (r) =>
-          this.filtroActivo === 'todos' ||
-          (r.recordType ?? '').toLowerCase().includes(this.filtroActivo),
-      )
+      .filter((r) => this.filtroActivo === 'todos' || (r.recordType ?? '').toLowerCase().includes(this.filtroActivo))
       .filter(
         (r) =>
           !q ||
-          [r.title, r.recordType, r.professionalName].some((v) =>
-            (v ?? '').toLowerCase().includes(q),
-          ),
+          (r.title ?? '').toLowerCase().includes(q) ||
+          (r.recordType ?? '').toLowerCase().includes(q) ||
+          (r.professionalName ?? '').toLowerCase().includes(q),
       )
       .sort((a, b) => String(b.eventDate).localeCompare(String(a.eventDate)));
   }
-  reload(): void {
-    this.revision.update((n) => n + 1);
-  }
+ 
   eliminarHistorial(id: number): void {
-    if (
-      !this.dataSource.some((r) => r.idClinicalRecord === id) ||
-      !confirm('¿Eliminar este registro del perfil seleccionado?')
-    )
-      return;
-    this.records
-      .deleteClinicalRecord(id)
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: () => this.reload(),
-        error: () => this.notice.set('No pudimos eliminar el registro.'),
-      });
+    if (!confirm('¿Eliminar este historial?')) return;
+    this.crS.deleteClinicalRecord(id).subscribe({
+      next: () => {
+        this.listarHistoriales();
+      },
+      error: (err) => {
+        console.log('Ocurrió un error al eliminar el registro', err);
+        this.aviso = 'Error al eliminar!!';
+        this.cdr.detectChanges();
+      },
+    });
   }
 }

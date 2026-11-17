@@ -8,25 +8,25 @@
         <p>Elige un perfil para ver su información y continuar desde ahí.</p>
       </div>
     </header>
-    @if (family.phase() !== 'ready' || !family.profiles().length) {
-      <app-family-state />
+    @if (fcS.fase !== 'listo' || !fcS.perfiles.length) {
+      <app-familystatecomponent (reintentar)="recargar()" />
     } @else {
       <section class="cards" aria-label="Perfiles de salud">
-        @for (p of family.sorted(); track p.idHealthProfile) {
-          <article class="panel card" [class.current]="p.idHealthProfile === family.activeId()">
+        @for (p of fcS.ordenados(); track p.idHealthProfile) {
+          <article class="panel card" [class.current]="p.idHealthProfile === fcS.idActivo()">
             <div class="card-top">
-              <span class="avatar large">{{ family.initials(p.idHealthProfile) }}</span>
-              @if (p.idHealthProfile === family.activeId()) {
+              <span class="avatar large">{{ fcS.iniciales(p.idHealthProfile) }}</span>
+              @if (p.idHealthProfile === fcS.idActivo()) {
                 <span class="tag">✓ En uso</span>
               }
             </div>
-            <h2>{{ family.label(p.idHealthProfile) }}</h2>
-            <p>{{ family.role(p.idHealthProfile) }}</p>
+            <h2>{{ fcS.nombre(p.idHealthProfile) }}</h2>
+            <p>{{ fcS.parentesco(p.idHealthProfile) }}</p>
             <button
               type="button"
               class="secondary"
-              (click)="open(p.idHealthProfile)"
-              [attr.aria-label]="'Abrir perfil de ' + family.label(p.idHealthProfile)"
+              (click)="abrir(p.idHealthProfile)"
+              [attr.aria-label]="'Abrir perfil de ' + fcS.nombre(p.idHealthProfile)"
             >
               Abrir perfil<i class="fi arrow"></i>
             </button>
@@ -34,12 +34,12 @@
         }
         <a
           class="panel card add"
-          [routerLink]="family.root() ? '/familia/agregar' : '/perfil/actualizar'"
+          [routerLink]="fcS.raiz() ? '/familia/agregar' : '/perfil/actualizar'"
           ><span class="avatar large"><i class="fi plus"></i></span>
-          <h2>{{ family.root() ? 'Agregar otra persona' : 'Completar mi perfil' }}</h2>
+          <h2>{{ fcS.raiz() ? 'Agregar otra persona' : 'Completar mi perfil' }}</h2>
           <p>
             {{
-              family.root()
+              fcS.raiz()
                 ? 'Amplía tu círculo de cuidado.'
                 : 'Empieza tu árbol con tu propio perfil.'
             }}

@@ -1,32 +1,33 @@
-import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { of, switchMap, throwError } from 'rxjs';
 import { Menucomponent } from '../../menucomponent/menucomponent';
-import { FamilyStateComponent } from '../familystatecomponent';
-import { FamilyContextService } from '../../../services/familycontextservice';
-import { FamilyRelationshipService } from '../../../services/familyrelationshipservice';
+import { Familystatecomponent } from '../familystatecomponent';
+import { Familycontextservice, PARENTESCOS } from '../../../services/familycontextservice';
+import { Familyrelationshipservice } from '../../../services/familyrelationshipservice';
 import { Healthprofileservice } from '../../../services/healthprofileservice';
-import { KINSHIPS, Kinship, relationshipProblem } from '../../../utils/family-tree';
+import { FamilyrelationshipDTO } from '../../../model/FamilyrelationshipDTO';
+import { HealthprofileDTO } from '../../../model/HealthprofileDTO';
 import { toIsoDate } from '../../../utils/datehelpers';
 
-interface PendingLink {
-  origin: number;
-  relative: number;
-  type: Kinship;
-  owner: number;
+// Vínculo que falta guardar (por ejemplo, si se creó el perfil pero falló la relación)
+interface VinculoPendiente {
+  origen: number;
+  familiar: number;
+  tipo: string;
+  idDueno: number;
 }
+
 @Component({
-  selector: 'app-family-add',
+  selector: 'app-familyaddcomponent',
   imports: [
     Menucomponent,
-    FamilyStateComponent,
+    Familystatecomponent,
     RouterLink,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -38,187 +39,228 @@ interface PendingLink {
   templateUrl: './familyaddcomponent.html',
   styleUrl: './familyaddcomponent.css',
 })
-export class FamilyAddComponent {
-  readonly family = inject(FamilyContextService);
-  private readonly fb = inject(FormBuilder);
-  private readonly health = inject(Healthprofileservice);
-  private readonly edges = inject(FamilyRelationshipService);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
-  private readonly destroy = inject(DestroyRef);
-  readonly kinds = KINSHIPS;
-  readonly groups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-  readonly today = new Date();
-  readonly mode = signal<'new' | 'existing'>('new');
-  readonly busy = signal(false);
-  readonly message = signal('');
-  readonly pending = signal<PendingLink | null>(null);
-  readonly uncertain = signal(false);
-  readonly link = this.fb.group({
-    origin: this.fb.control<number | null>(null, Validators.required),
-    type: this.fb.nonNullable.control<Kinship>('Madre', Validators.required),
-    relative: this.fb.control<number | null>(null),
-  });
-  readonly person = this.fb.group({
-    alias: this.fb.nonNullable.control('', Validators.maxLength(80)),
-    birth: this.fb.control<Date | null>(null, Validators.required),
-    sex: this.fb.nonNullable.control('', Validators.required),
-    blood: this.fb.nonNullable.control('', Validators.required),
-    phone: this.fb.nonNullable.control('', [
-      Validators.required,
-      Validators.pattern(/^\+?[0-9]( ?[0-9]){6,14}$/),
-    ]),
-  });
-  private initialized = false;
-  constructor() {
-    this.family.load();
-    effect(() => {
-      const root = this.family.root();
-      if (!root || this.initialized || this.family.phase() !== 'ready') return;
-      this.initialized = true;
-      const q = this.route.snapshot.queryParamMap,
-        id = Number(q.get('origen'));
-      this.link.patchValue({
-        origin: this.family.owns(id) ? id : root.idHealthProfile,
-        type: this.kinds.find((k) => k === q.get('tipo')) ?? 'Madre',
-      });
+export class Familyaddcomponent implements OnInit {
+  parentescos: string[] = PARENTESCOS;
+  gruposSangre: string[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+  hoy: Date = new Date();
+  modo: 'nuevo' | 'existente' = 'nuevo';
+  ocupado: boolean = false;
+  mensaje: string = '';
+  pendiente: VinculoPendiente | null = null;
+  incierto: boolean = false; // no se sabe si el perfil llegó a crearse
+  formVinculo: FormGroup;
+  formPersona: FormGroup;
+
+  constructor(
+    public fcS: Familycontextservice,
+    private frS: Familyrelationshipservice,
+    private hpS: Healthprofileservice,
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+  ) {
+    this.formVinculo = this.fb.group({
+      origen: [null, Validators.required],
+      tipo: ['Madre', Validators.required],
+      familiar: [null],
+    });
+    this.formPersona = this.fb.group({
+      alias: ['', Validators.maxLength(80)],
+      nacimiento: [null, Validators.required],
+      sexo: ['', Validators.required],
+      sangre: ['', Validators.required],
+      telefono: ['', [Validators.required, Validators.pattern(/^\+?[0-9]( ?[0-9]){6,14}$/)]],
     });
   }
-  get candidates() {
-    return this.family
-      .sorted()
-      .filter((p) => p.idHealthProfile !== this.link.controls.origin.value);
+
+  ngOnInit(): void {
+    this.cargarPerfiles();
   }
-  changeMode(mode: 'new' | 'existing'): void {
-    if (this.busy() || this.pending() || (mode === 'new' && this.uncertain())) return;
-    this.mode.set(mode);
-    this.message.set('');
-    this.link.controls.relative.reset();
+
+  cargarPerfiles(forzar: boolean = false): void {
+    this.fcS.cargar(forzar).subscribe({
+      next: () => {
+        this.iniciarFormulario();
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log('Ocurrió un error al cargar los perfiles', err);
+        this.cdr.detectChanges();
+      },
+    });
   }
-  save(): void {
-    if (this.busy() || this.family.phase() !== 'ready') return;
-    const pending = this.pending();
-    if (pending) {
-      this.connect(pending, true);
+
+  recargar(): void {
+    this.cargarPerfiles(true);
+  }
+
+  // El árbol puede mandar el perfil de origen y el tipo: /familia/agregar?origen=3&tipo=Hijo
+  private iniciarFormulario(): void {
+    const raiz = this.fcS.raiz();
+    if (!raiz) return;
+    const params = this.route.snapshot.queryParamMap;
+    const idOrigen = Number(params.get('origen'));
+    const tipo = params.get('tipo');
+    this.formVinculo.patchValue({
+      origen: this.fcS.esPropio(idOrigen) ? idOrigen : raiz.idHealthProfile,
+      tipo: tipo && this.parentescos.includes(tipo) ? tipo : 'Madre',
+    });
+  }
+
+  // Perfiles que se pueden vincular (todos menos el de origen)
+  get candidatos(): HealthprofileDTO[] {
+    return this.fcS.ordenados().filter((p) => p.idHealthProfile !== this.formVinculo.value.origen);
+  }
+
+  cambiarModo(modo: 'nuevo' | 'existente'): void {
+    if (this.ocupado || this.pendiente || (modo === 'nuevo' && this.incierto)) return;
+    this.modo = modo;
+    this.mensaje = '';
+    this.formVinculo.controls['familiar'].reset();
+  }
+
+  guardar(): void {
+    if (this.ocupado || this.fcS.fase !== 'listo') return;
+    // Si el perfil ya se creó, solo se reintenta el vínculo
+    if (this.pendiente) {
+      this.registrarVinculo(this.pendiente, true);
       return;
     }
-    this.message.set('');
-    const { origin, relative, type } = this.link.getRawValue(),
-      owner = this.family.account()?.idUser;
-    if (!owner || !origin || !this.family.owns(origin) || !this.kinds.includes(type)) {
-      this.message.set('Elige un perfil de tu cuenta.');
+    this.mensaje = '';
+    const { origen, familiar, tipo } = this.formVinculo.value;
+    const idDueno = this.fcS.cuenta?.idUser;
+    if (!idDueno || !origen || !this.fcS.esPropio(origen) || !this.parentescos.includes(tipo)) {
+      this.mensaje = 'Elige un perfil de tu cuenta.';
       return;
     }
-    if (this.mode() === 'existing') {
-      if (!relative || !this.family.owns(relative)) {
-        this.message.set('Selecciona el perfil que quieres vincular.');
+
+    // Vincular un perfil que ya existe
+    if (this.modo === 'existente') {
+      if (!familiar || !this.fcS.esPropio(familiar)) {
+        this.mensaje = 'Selecciona el perfil que quieres vincular.';
         return;
       }
-      const problem = relationshipProblem(this.family.links(), origin, relative, type);
-      if (problem) {
-        this.message.set(problem);
+      const problema = this.fcS.problemaVinculo(origen, familiar, tipo);
+      if (problema) {
+        this.mensaje = problema;
         return;
       }
-      this.connect({ origin, relative, type, owner }, true);
+      this.registrarVinculo({ origen, familiar, tipo, idDueno }, true);
       return;
     }
-    if (this.uncertain()) return;
-    this.person.markAllAsTouched();
-    const v = this.person.getRawValue();
-    if (this.person.invalid || !v.birth || v.birth > this.today) {
-      this.message.set('Revisa los campos marcados.');
+
+    // Crear un perfil nuevo y luego el vínculo
+    if (this.incierto) return;
+    this.formPersona.markAllAsTouched();
+    const v = this.formPersona.value;
+    if (this.formPersona.invalid || !v.nacimiento || v.nacimiento > this.hoy) {
+      this.mensaje = 'Revisa los campos marcados.';
       return;
     }
-    this.busy.set(true);
-    this.health
-      .insertHealthProfile({
-        idOwnerUser: owner,
-        idHolderUser: null,
-        birthDate: toIsoDate(v.birth),
-        sex: v.sex,
-        bloodType: v.blood,
-        phone: v.phone.trim(),
-        active: true,
-      })
-      .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe({
-        next: (p) => {
-          if (!this.family.acceptCreated(p, owner, v.alias)) {
-            this.recover();
-            return;
-          }
-          const job = { origin, relative: p.idHealthProfile, type, owner };
-          this.pending.set(job);
-          this.connect(job, false);
-        },
-        error: (e) => {
-          if (!e.status || e.status >= 500) {
-            this.recover();
-            return;
-          }
-          this.busy.set(false);
-          this.message.set('No se creó el perfil. Revisa los datos.');
-        },
-      });
-  }
-  private recover(): void {
-    this.busy.set(false);
-    this.uncertain.set(true);
-    this.mode.set('existing');
-    this.message.set('No pudimos confirmar la creación. Revisa tus perfiles antes de crear otro.');
-    this.family.load(true);
-  }
-  private connect(job: PendingLink, check: boolean): void {
-    if (
-      this.family.account()?.idUser !== job.owner ||
-      !this.family.owns(job.origin) ||
-      !this.family.owns(job.relative)
-    ) {
-      this.busy.set(false);
-      return;
-    }
-    this.busy.set(true);
-    const request = check
-      ? this.edges.byProfile(job.origin).pipe(
-          switchMap((rows) => {
-            const same = rows.find(
-              (e) =>
-                e.idOriginProfile === job.origin &&
-                e.idRelativeProfile === job.relative &&
-                e.relationshipType === job.type,
-            );
-            if (same) return of(same);
-            if (
-              relationshipProblem(
-                [...this.family.links(), ...rows],
-                job.origin,
-                job.relative,
-                job.type,
-              )
-            )
-              return throwError(() => new Error('Vínculo incompatible'));
-            return this.edges.create(job.origin, job.relative, job.type);
-          }),
-        )
-      : this.edges.create(job.origin, job.relative, job.type);
-    request.pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: (edge) => {
-        this.busy.set(false);
-        if (this.family.account()?.idUser !== job.owner) return;
-        this.family.acceptLink(edge);
-        if (this.family.select(job.relative)) {
-          this.pending.set(null);
-          void this.router.navigate(['/familia']);
+    const perfil: HealthprofileDTO = {
+      idHealthProfile: 0,
+      idOwnerUser: idDueno,
+      idHolderUser: null,
+      birthDate: toIsoDate(v.nacimiento),
+      sex: v.sexo,
+      bloodType: v.sangre,
+      phone: v.telefono.trim(),
+      active: true,
+    };
+    this.ocupado = true;
+    this.hpS.insertHealthProfile(perfil).subscribe({
+      next: (creado) => {
+        if (!this.fcS.agregarPerfil(creado, idDueno, v.alias)) {
+          this.recuperar();
+          return;
         }
+        this.pendiente = { origen, familiar: creado.idHealthProfile, tipo, idDueno };
+        this.registrarVinculo(this.pendiente, false);
       },
-      error: () => {
-        this.busy.set(false);
-        this.message.set(
-          this.pending()
-            ? 'El perfil ya está creado. Reintenta solo el vínculo; no se creará otro perfil.'
-            : 'No se pudo guardar el vínculo. Revisa el parentesco y vuelve a intentar.',
-        );
+      error: (err) => {
+        console.log('Ocurrió un error al crear el perfil', err);
+        // Sin respuesta o error del servidor: no se sabe si el perfil se creó
+        if (!err.status || err.status >= 500) {
+          this.recuperar();
+          return;
+        }
+        this.ocupado = false;
+        this.mensaje = 'No se creó el perfil. Revisa los datos.';
+        this.cdr.detectChanges();
       },
     });
+  }
+
+  // Pasa a "vincular existente" para no crear el mismo perfil dos veces
+  private recuperar(): void {
+    this.ocupado = false;
+    this.incierto = true;
+    this.modo = 'existente';
+    this.mensaje = 'No pudimos confirmar la creación. Revisa tus perfiles antes de crear otro.';
+    this.cargarPerfiles(true);
+  }
+
+  // revisar = true: antes de crear, mira si el vínculo ya existe en el backend
+  private registrarVinculo(v: VinculoPendiente, revisar: boolean): void {
+    if (this.fcS.cuenta?.idUser !== v.idDueno || !this.fcS.esPropio(v.origen) || !this.fcS.esPropio(v.familiar)) {
+      this.ocupado = false;
+      return;
+    }
+    this.ocupado = true;
+    if (!revisar) {
+      this.crearVinculo(v);
+      return;
+    }
+    this.frS.listByProfile(v.origen).subscribe({
+      next: (lista) => {
+        const igual = lista.find(
+          (x) => x.idOriginProfile === v.origen && x.idRelativeProfile === v.familiar && x.relationshipType === v.tipo,
+        );
+        if (igual) {
+          this.vinculoGuardado(igual, v);
+          return;
+        }
+        if (this.fcS.problemaVinculo(v.origen, v.familiar, v.tipo, [...this.fcS.vinculos, ...lista])) {
+          this.errorVinculo('Vínculo incompatible');
+          return;
+        }
+        this.crearVinculo(v);
+      },
+      error: (err) => this.errorVinculo(err),
+    });
+  }
+
+  private crearVinculo(v: VinculoPendiente): void {
+    const fr: FamilyrelationshipDTO = {
+      idFamilyRelationship: 0,
+      idOriginProfile: v.origen,
+      idRelativeProfile: v.familiar,
+      relationshipType: v.tipo,
+    };
+    this.frS.insert(fr).subscribe({
+      next: (creado) => this.vinculoGuardado(creado, v),
+      error: (err) => this.errorVinculo(err),
+    });
+  }
+
+  private vinculoGuardado(creado: FamilyrelationshipDTO, v: VinculoPendiente): void {
+    this.ocupado = false;
+    if (this.fcS.cuenta?.idUser !== v.idDueno) return;
+    this.fcS.agregarVinculo(creado);
+    if (this.fcS.seleccionar(v.familiar)) {
+      this.pendiente = null;
+      this.router.navigate(['/familia']);
+    }
+    this.cdr.detectChanges();
+  }
+
+  private errorVinculo(err: unknown): void {
+    console.log('Ocurrió un error al guardar el vínculo', err);
+    this.ocupado = false;
+    this.mensaje = this.pendiente
+      ? 'El perfil ya está creado. Reintenta solo el vínculo; no se creará otro perfil.'
+      : 'No se pudo guardar el vínculo. Revisa el parentesco y vuelve a intentar.';
+    this.cdr.detectChanges();
   }
 }

@@ -1,7 +1,7 @@
 <mat-sidenav-container class="example-container">
 
   <!-- BARRA LATERAL (Izquierda) -->
-  <mat-sidenav #drawer id="latia-navigation" [mode]="smallScreen() ? 'over' : 'side'" [opened]="!smallScreen()" class="sidenav">
+  <mat-sidenav #drawer id="latia-navigation" [mode]="pantallaChica ? 'over' : 'side'" [opened]="!pantallaChica" class="sidenav">
 
     <!-- Logo y Eslogan -->
     <div class="sidebar-top">
@@ -74,7 +74,7 @@
 
     <!-- BARRA SUPERIOR GENERAL (Top Navbar) -->
     <div class="top-navbar">
-      @if (smallScreen()) {
+      @if (pantallaChica) {
         <button matIconButton type="button" aria-label="Abrir menú principal" aria-controls="latia-navigation" [attr.aria-expanded]="drawer.opened" (click)="drawer.toggle()"><mat-icon>menu</mat-icon></button>
       }
       <div class="nav-breadcrumb">
@@ -90,8 +90,8 @@
         </div>
 
         <a class="top-user-pill" routerLink="/cambiar-perfil" [queryParams]="{ volver: seccionActual === 'Historial' ? 'historial' : 'familia' }" aria-label="Cambiar perfil de salud" title="Cambiar perfil">
-          <span class="top-user-avatar">{{ family.activeId() ? family.initials(family.activeId()!) : iniciales }}</span>
-          <span class="top-user-name">{{ family.activeId() ? family.label(family.activeId()!) : 'Elegir perfil' }}</span>
+          <span class="top-user-avatar">{{ fcS.idActivo() ? fcS.iniciales(fcS.idActivo()!) : iniciales }}</span>
+          <span class="top-user-name">{{ fcS.idActivo() ? fcS.nombre(fcS.idActivo()!) : 'Elegir perfil' }}</span>
           <mat-icon>arrow_drop_down</mat-icon>
         </a>
 

@@ -3,24 +3,22 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { FamilyrelationshipDTO } from '../model/FamilyrelationshipDTO';
-import type { Kinship } from '../utils/family-tree';
 
-@Injectable({ providedIn: 'root' })
-export class FamilyRelationshipService {
-  private readonly url = environment.base + '/api/familyrelationships';
+@Injectable({
+  providedIn: 'root',
+})
+export class Familyrelationshipservice {
+  private apiURL = `${environment.base}/api/familyrelationships`;
+
   constructor(private http: HttpClient) {}
-  byProfile(id: number): Observable<FamilyrelationshipDTO[]> {
-    return this.http.get<FamilyrelationshipDTO[]>(this.url + '/perfil/' + id);
+
+  // HU46: POST /api/familyrelationships
+  insert(fr: FamilyrelationshipDTO): Observable<FamilyrelationshipDTO> {
+    return this.http.post<FamilyrelationshipDTO>(this.apiURL, fr);
   }
-  create(
-    origin: number,
-    relative: number,
-    relationship: Kinship,
-  ): Observable<FamilyrelationshipDTO> {
-    return this.http.post<FamilyrelationshipDTO>(this.url, {
-      idOriginProfile: origin,
-      idRelativeProfile: relative,
-      relationshipType: relationship,
-    });
+
+  // HU73: GET /api/familyrelationships/perfil/{healthProfileId}
+  listByProfile(idHealthProfile: number): Observable<FamilyrelationshipDTO[]> {
+    return this.http.get<FamilyrelationshipDTO[]>(`${this.apiURL}/perfil/${idHealthProfile}`);
   }
 }

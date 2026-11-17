@@ -75,6 +75,7 @@ export class Menucomponent implements OnInit, OnDestroy {
       inicio: 'Inicio',
       historial: 'Historial',
       familia: 'Familia',
+      contactos: 'Contactos',
       agenda: 'Agenda',
       medicamentos: 'Medicamentos',
       evolucion: 'Evolución',

@@ -1,0 +1,10 @@
+.generaciones { display: flex; flex-direction: column; align-items: center; padding: 48px 32px; overflow-x: auto; }
+.ramas { display: flex; justify-content: space-around; gap: 48px; width: 100%; }
+.rama { display: flex; flex-direction: column; align-items: center; }
+.pareja { display: flex; gap: 32px; }
+.nodo { width: 240px; }
+/* Conector en forma de llave: baja de los dos de arriba y se une al de abajo */
+.llave { position: relative; display: block; width: 272px; height: 56px; }
+.llave::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 28px; border: 2px solid #cfd8dc; border-top: none; }
+.llave::after { content: ''; position: absolute; top: 28px; left: 50%; width: 2px; height: 28px; background: #cfd8dc; }
+.llave.ancha { width: 50%; min-width: 300px; }

@@ -1,0 +1,59 @@
+<div class="pagina">
+  <header class="cabecera">
+    <div>
+      <h1>Las raíces de tu historia</h1>
+      <p>Amplía el árbol y registra los antecedentes de cada generación.</p>
+    </div>
+    <a class="btn-borde" routerLink="/familia/listar"><mat-icon>arrow_back</mat-icon> Volver al árbol</a>
+  </header>
+
+  <section class="tarjeta generaciones">
+    <div class="ramas">
+      @for (rama of ramas; track rama.padre) {
+        <div class="rama">
+          <div class="pareja">
+            @for (tipo of rama.abuelos; track tipo) {
+              @if (ocupante(tipo); as p) {
+                <a class="nodo" [routerLink]="['/familia/perfil', p.idHealthProfile]">
+                  <span class="avatar">{{ p.iniciales }}</span>
+                  <span><strong>{{ p.nombre }}</strong><small>{{ tipo }}</small></span>
+                </a>
+              } @else {
+                <a class="nodo vacio" routerLink="/familia/insertar" [queryParams]="{ tipo: tipo }">
+                  <strong><mat-icon>add</mat-icon> {{ tipo }}</strong>
+                  <small>Completa tu círculo</small>
+                </a>
+              }
+            }
+          </div>
+          <span class="llave"></span>
+          @if (ocupante(rama.padre); as p) {
+            <a class="nodo" [routerLink]="['/familia/perfil', p.idHealthProfile]">
+              <span class="avatar">{{ p.iniciales }}</span>
+              <span><strong>{{ p.nombre }}</strong><small>{{ rama.padre }}</small></span>
+            </a>
+          } @else {
+            <a class="nodo vacio" routerLink="/familia/insertar" [queryParams]="{ tipo: rama.padre }">
+              <strong><mat-icon>add</mat-icon> {{ rama.padre }}</strong>
+              <small>Completa tu círculo</small>
+            </a>
+          }
+        </div>
+      }
+    </div>
+
+    <span class="llave ancha"></span>
+
+    @if (datos?.miPerfil; as yo) {
+      <div class="nodo principal">
+        <span class="avatar">{{ yo.iniciales }}</span>
+        <span><strong>{{ yo.nombre }}</strong><small>Tú · perfil principal</small></span>
+        <span class="resumen">Tu árbol empieza contigo</span>
+      </div>
+    }
+
+    @if (mensaje) {
+      <p class="mensaje">{{ mensaje }}</p>
+    }
+  </section>
+</div>

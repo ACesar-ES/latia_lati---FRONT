@@ -20,6 +20,18 @@ import { Homecomponent } from './components/homecomponent/homecomponent';
 import { Familycomponent } from './components/familycomponent/familycomponent';
 import { Schedulecomponent } from './components/schedulecomponent/schedulecomponent';
 import { Evolutioncomponent } from './components/evolutioncomponent/evolutioncomponent';
+import { Familylistcomponent } from './components/familycomponent/familylistcomponent/familylistcomponent';
+import { Familyinsertcomponent } from './components/familycomponent/familyinsertcomponent/familyinsertcomponent';
+import { Familyupdatecomponent } from './components/familycomponent/familyupdatecomponent/familyupdatecomponent';
+import { Familyprofilecomponent } from './components/familycomponent/familyprofilecomponent/familyprofilecomponent';
+import { Familygenerationcomponent } from './components/familycomponent/familygenerationcomponent/familygenerationcomponent';
+import { Familybackgroundcomponent } from './components/familycomponent/familybackgroundcomponent/familybackgroundcomponent';
+import { Familyhelpcomponent } from './components/familycomponent/familyhelpcomponent/familyhelpcomponent';
+import { Emergencycontactcomponent } from './components/emergencycontactcomponent/emergencycontactcomponent';
+import { Emergencycontactlistcomponent } from './components/emergencycontactcomponent/emergencycontactlistcomponent/emergencycontactlistcomponent';
+import { Emergencycontactinsertcomponent } from './components/emergencycontactcomponent/emergencycontactinsertcomponent/emergencycontactinsertcomponent';
+import { Emergencycontactupdatecomponent } from './components/emergencycontactcomponent/emergencycontactupdatecomponent/emergencycontactupdatecomponent';
+import { Emergencycardcomponent } from './components/emergencycontactcomponent/emergencycardcomponent/emergencycardcomponent';
 
 
 export const routes: Routes = [
@@ -64,9 +76,33 @@ export const routes: Routes = [
     ],
   },
 
+  // Relaciones familiares (HU46-HU50, HU73)
   {
-    path: "familia",
+    path: 'familia',
     component: Familycomponent,
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Familylistcomponent },
+      { path: 'insertar', component: Familyinsertcomponent },
+      { path: 'actualizar/:id', component: Familyupdatecomponent },
+      { path: 'perfil/:id', component: Familyprofilecomponent },
+      { path: 'generaciones', component: Familygenerationcomponent },
+      { path: 'antecedentes', component: Familybackgroundcomponent },
+      { path: 'ayuda', component: Familyhelpcomponent },
+    ],
+  },
+
+  // Contactos de emergencia (HU11-HU15, HU68, HU69)
+  {
+    path: 'contactos',
+    component: Emergencycontactcomponent,
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Emergencycontactlistcomponent },
+      { path: 'insertar', component: Emergencycontactinsertcomponent },
+      { path: 'actualizar/:id', component: Emergencycontactupdatecomponent },
+      { path: 'fichas', component: Emergencycardcomponent },
+    ],
   },
 
   {

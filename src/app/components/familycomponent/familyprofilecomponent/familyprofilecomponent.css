@@ -1,0 +1,12 @@
+.perfil-cabecera { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; }
+.avatar.grande { width: 64px; height: 64px; font-size: 18px; }
+.perfil-nombre h2 { margin: 0 0 8px; font-size: 34px; }
+.perfil-acciones { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.perfil-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.datos { margin: 0 0 16px; }
+.datos dt { font-size: 13px; color: var(--latia-muted); margin-top: 18px; }
+.datos dt:first-child { margin-top: 0; }
+.datos dd { margin: 6px 0 0; font-size: 18px; }
+.acciones { display: flex; flex-direction: column; gap: 10px; }
+.gris { color: var(--latia-muted); }
+@media (max-width: 900px) { .perfil-grid { grid-template-columns: 1fr; } .perfil-acciones { margin-left: 0; } }

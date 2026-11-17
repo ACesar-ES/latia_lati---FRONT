@@ -1,0 +1,87 @@
+<div class="clinical-container">
+  <!-- Encabezado -->
+  <header class="header-section">
+    <div class="header-titles">
+      <h1>Contactos de emergencia</h1>
+      <p>Las personas a las que avisar si a alguien de tu familia le pasa algo.</p>
+    </div>
+
+    <div class="header-actions">
+      <button matButton="outlined" class="create-btn" type="button" routerLink="/contactos/fichas">
+        <mat-icon>badge</mat-icon>
+        Fichas de emergencia
+      </button>
+
+      <button matButton="filled" class="upload-btn" type="button" routerLink="/contactos/insertar">
+        <mat-icon>contact_phone</mat-icon>
+        Agregar contacto
+      </button>
+    </div>
+  </header>
+
+  <!-- Filtros -->
+  <div class="filters-bar">
+    <div class="filter-tabs">
+      <button matButton type="button" class="tab-btn" [class.active]="filtroActivo === 'todos'" (click)="listarContactos('todos')">
+        <mat-icon>contacts</mat-icon>
+        Todos
+      </button>
+      <button matButton type="button" class="tab-btn" [class.active]="filtroActivo === 'principales'" (click)="listarContactos('principales')">
+        <mat-icon>star</mat-icon>
+        Principales
+      </button>
+
+      <label class="search-box">
+        <mat-icon>search</mat-icon>
+        <input type="text" placeholder="Buscar contacto" [value]="busqueda" (input)="busqueda = $any($event.target).value" />
+      </label>
+    </div>
+  </div>
+
+  <!-- Tarjeta con la lista -->
+  <section class="records-card">
+    <div class="records-header">
+      <h2>{{ contactosFiltrados.length }} contactos</h2>
+      <span class="sort-pill">Más recientes primero</span>
+    </div>
+
+    @if (contactosFiltrados.length > 0) {
+      <ul class="records-list">
+        @for (c of contactosFiltrados; track c.idEmergencyContact) {
+          <li class="record-item">
+            <div class="record-info">
+              <div class="record-icon-box"><mat-icon>{{ c.primaryContact ? 'star' : 'person' }}</mat-icon></div>
+              <div class="record-text">
+                <h3>{{ c.name }}</h3>
+                <p>{{ c.phone }} · contacto de {{ nombrePerfil(c.idHealthProfile) }}</p>
+              </div>
+            </div>
+
+            <div class="record-meta">
+              <span class="patient-badge">{{ c.relationship }}</span>
+              @if (c.primaryContact) {
+                <span class="professional">Principal</span>
+              }
+
+              <div class="row-actions">
+                <button matIconButton class="icon-btn" type="button" title="Actualizar" aria-label="Actualizar contacto" [routerLink]="['/contactos/actualizar', c.idEmergencyContact]">
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                <button matIconButton class="icon-btn danger" type="button" title="Eliminar" aria-label="Eliminar contacto" (click)="eliminarContacto(c.idEmergencyContact)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="empty-state">No hay contactos de emergencia registrados.</p>
+    }
+
+    @if (mensaje) {
+      <p class="empty-state">{{ mensaje }}</p>
+    }
+  </section>
+</div>

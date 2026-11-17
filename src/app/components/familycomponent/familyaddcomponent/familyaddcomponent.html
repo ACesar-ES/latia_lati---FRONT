@@ -1,0 +1,173 @@
+<app-menucomponent
+  ><main class="latia-family">
+    <a class="back" routerLink="/familia"><i class="fi arrow"></i>Volver a Familia</a>
+    <header class="page-head">
+      <div>
+        <span class="eyebrow">Tu círculo de cuidado</span>
+        <h1>Agregar familiar</h1>
+        <p>Elige cómo se relaciona esta persona contigo o con otro miembro de tu árbol.</p>
+      </div>
+    </header>
+    @if (family.phase() !== 'ready' || !family.root()) {
+      <app-family-state />
+    } @else {
+      <div class="layout">
+        <section class="panel editor">
+          <h2>Vínculo familiar</h2>
+          <div class="modes" role="group" aria-label="Origen del perfil">
+            <button
+              type="button"
+              [attr.aria-pressed]="mode() === 'new'"
+              [disabled]="busy() || !!pending() || uncertain()"
+              (click)="changeMode('new')"
+            >
+              Crear perfil
+            </button>
+            <button
+              type="button"
+              [attr.aria-pressed]="mode() === 'existing'"
+              [disabled]="busy() || !!pending()"
+              (click)="changeMode('existing')"
+            >
+              Vincular uno existente
+            </button>
+          </div>
+          <form [formGroup]="link" (ngSubmit)="save()">
+            <fieldset [disabled]="busy() || !!pending()">
+              <legend>1. ¿Dónde va esta rama?</legend>
+              <div class="grid">
+                <mat-form-field appearance="outline"
+                  ><mat-label>Perfil de referencia</mat-label
+                  ><mat-select
+                    formControlName="origin"
+                    (selectionChange)="link.controls.relative.reset()"
+                  >
+                    @for (p of family.sorted(); track p.idHealthProfile) {
+                      <mat-option [value]="p.idHealthProfile">{{
+                        family.label(p.idHealthProfile)
+                      }}</mat-option>
+                    }
+                  </mat-select></mat-form-field
+                >
+                <mat-form-field appearance="outline"
+                  ><mat-label>La persona que agregas es su…</mat-label
+                  ><mat-select formControlName="type">
+                    @for (k of kinds; track k) {
+                      <mat-option [value]="k">{{ k }}</mat-option>
+                    }
+                  </mat-select></mat-form-field
+                >
+              </div>
+              @if (mode() === 'existing') {
+                <mat-form-field appearance="outline"
+                  ><mat-label>Perfil que quieres vincular</mat-label
+                  ><mat-select formControlName="relative">
+                    @for (p of candidates; track p.idHealthProfile) {
+                      <mat-option [value]="p.idHealthProfile">{{
+                        family.label(p.idHealthProfile)
+                      }}</mat-option>
+                    }
+                  </mat-select></mat-form-field
+                >
+                @if (!candidates.length) {
+                  <p class="note">No tienes otro perfil disponible para vincular.</p>
+                }
+              }
+            </fieldset>
+            @if (mode() === 'new') {
+              <fieldset [formGroup]="person" [disabled]="busy() || !!pending()">
+                <legend>2. Datos de la persona</legend>
+                <mat-form-field appearance="outline"
+                  ><mat-label>Nombre de uso (opcional)</mat-label
+                  ><input
+                    matInput
+                    formControlName="alias"
+                    maxlength="80"
+                    placeholder="Por ejemplo, Mamá"
+                /></mat-form-field>
+                <p class="field-note">
+                  El nombre de uso solo se recuerda en esta pestaña hasta que cierres sesión. El
+                  parentesco sí queda guardado.
+                </p>
+                <div class="grid">
+                  <mat-form-field appearance="outline"
+                    ><mat-label>Fecha de nacimiento</mat-label
+                    ><input
+                      matInput
+                      [matDatepicker]="picker"
+                      [max]="today"
+                      formControlName="birth"
+                    /><mat-datepicker-toggle matIconSuffix [for]="picker" /><mat-datepicker
+                      #picker
+                    /><mat-error>Ingresa una fecha válida, hasta hoy.</mat-error></mat-form-field
+                  >
+                  <mat-form-field appearance="outline"
+                    ><mat-label>Sexo registrado</mat-label
+                    ><mat-select formControlName="sex">
+                      @for (s of ['Femenino', 'Masculino', 'Otro']; track s) {
+                        <mat-option [value]="s">{{ s }}</mat-option>
+                      }</mat-select
+                    ><mat-error>Selecciona una opción.</mat-error></mat-form-field
+                  >
+                  <mat-form-field appearance="outline"
+                    ><mat-label>Grupo sanguíneo</mat-label
+                    ><mat-select formControlName="blood">
+                      @for (g of groups; track g) {
+                        <mat-option [value]="g">{{ g }}</mat-option>
+                      }</mat-select
+                    ><mat-error>Selecciona el grupo confirmado.</mat-error></mat-form-field
+                  >
+                  <mat-form-field appearance="outline"
+                    ><mat-label>Teléfono de contacto</mat-label
+                    ><input matInput type="tel" formControlName="phone" /><mat-error
+                      >Ingresa entre 7 y 15 dígitos.</mat-error
+                    ></mat-form-field
+                  >
+                </div>
+              </fieldset>
+            }
+            @if (message()) {
+              <p class="notice" role="status">{{ message() }}</p>
+            }
+            @if (uncertain()) {
+              <button
+                class="secondary"
+                type="button"
+                (click)="uncertain.set(false); changeMode('new')"
+              >
+                Ya revisé mis perfiles; volver a crear
+              </button>
+            }
+            <div class="actions">
+              <a class="secondary" routerLink="/familia">Volver al árbol</a>
+              <button
+                class="primary"
+                type="submit"
+                [disabled]="
+                  busy() || (mode() === 'existing' && !link.controls.relative.value && !pending())
+                "
+              >
+                {{
+                  busy()
+                    ? 'Guardando…'
+                    : pending()
+                      ? 'Reintentar vínculo'
+                      : mode() === 'existing'
+                        ? 'Guardar vínculo'
+                        : 'Agregar a mi árbol'
+                }}
+              </button>
+            </div>
+          </form>
+        </section>
+        <aside class="care">
+          <h2><i class="fi shield"></i>Un perfil por persona</h2>
+          <p>
+            Si tu familiar ya aparece en Cambiar perfil, vincúlalo sin volver a ingresar sus datos.
+            Para un perfil nuevo, usa un grupo sanguíneo confirmado.
+          </p>
+        </aside>
+      </div>
+    }
+  </main></app-menucomponent
+>

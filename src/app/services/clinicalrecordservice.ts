@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
+import { onlyProfileRecords } from '../utils/family-tree';
 import { ClinicalrecordDTO } from '../model/ClinicalrecordDTO';
 
 @Injectable({
@@ -15,6 +16,11 @@ export class Clinicalrecordservice {
   getClinicalRecord(): Observable<ClinicalrecordDTO[]> {
     return this.http.get<ClinicalrecordDTO[]>(this.apiURL);
   }
+  // The current backend provides a global collection; only filtered rows reach screen state.
+  forProfile(id: number | null): Observable<ClinicalrecordDTO[]> {
+    return id ? this.getClinicalRecord().pipe(map((rows) => onlyProfileRecords(rows, id))) : of([]);
+  }
+
   deleteClinicalRecord(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiURL}/${id}`);
   }

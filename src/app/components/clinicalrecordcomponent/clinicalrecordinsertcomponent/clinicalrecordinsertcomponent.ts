@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +8,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { FamilyContextService } from '../../../services/familycontextservice';
 import { Clinicalrecordservice } from '../../../services/clinicalrecordservice';
 import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
 
@@ -29,8 +30,10 @@ import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
 })
 export class Clinicalrecordinsertcomponent {
   formClinicalRecord: any;
+  draftProfile: number | null = null;
+  readonly saving = signal(false);
   mensaje: string = '';
-  hoy: Date = new Date(); 
+  hoy: Date = new Date();
 
   tiposDocumento: string[] = [
     'Examen de laboratorio',
@@ -41,13 +44,13 @@ export class Clinicalrecordinsertcomponent {
   ];
 
   constructor(
+    readonly family: FamilyContextService,
     private crS: Clinicalrecordservice,
     private fb: FormBuilder,
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {
     this.formClinicalRecord = this.fb.group({
-      perfil_salud: [null, [Validators.required, Validators.min(1)]],
       tipo: ['', Validators.required],
       titulo: ['', [Validators.required, Validators.maxLength(100)]],
       descripcion: ['', [Validators.required, Validators.maxLength(500)]],
@@ -55,9 +58,22 @@ export class Clinicalrecordinsertcomponent {
       profesional: ['', Validators.required],
       condicion_medica: [null, [Validators.required, Validators.min(1)]],
     });
+    this.family.load();
+    effect(() => {
+      const id = this.family.activeId();
+      if (id !== this.draftProfile) {
+        this.draftProfile = id;
+        this.limpiar();
+      }
+    });
   }
 
   insertarHistorial(): void {
+    const id = this.family.activeId();
+    if (this.saving() || !id || id !== this.draftProfile) {
+      this.mensaje = 'Elige un perfil antes de guardar.';
+      return;
+    }
     if (this.formClinicalRecord.invalid) {
       this.formClinicalRecord.markAllAsTouched();
       this.mensaje = 'Por favor, complete todos los campos correctamente!!';
@@ -65,7 +81,7 @@ export class Clinicalrecordinsertcomponent {
     }
 
     const dto: ClinicalrecordDTO = {
-      idHealthProfile: this.formClinicalRecord.value.perfil_salud,
+      idHealthProfile: id,
       recordType: this.formClinicalRecord.value.tipo,
       title: this.formClinicalRecord.value.titulo,
       description: this.formClinicalRecord.value.descripcion,
@@ -74,14 +90,16 @@ export class Clinicalrecordinsertcomponent {
       idCondition: this.formClinicalRecord.value.condicion_medica,
     };
 
+    this.saving.set(true);
     this.crS.insertClinicalRecord(dto).subscribe({
       next: () => {
         this.mensaje = 'Historial registrado correctamente!!';
         this.cdr.detectChanges();
-        this.router.navigate(['/listar']);
+        this.saving.set(false);
+        this.router.navigate(['/historial/listar']);
       },
       error: (error) => {
-        console.error(error);
+        this.saving.set(false);
         this.mensaje = 'Error al registrar el historial!!';
         this.cdr.detectChanges();
       },

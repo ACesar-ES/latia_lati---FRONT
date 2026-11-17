@@ -1,0 +1,82 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.1fr) minmax(210px, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.editor {
+  padding: clamp(14px, 2vw, 28px);
+  min-width: 0;
+}
+.modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: fit-content;
+  padding: 4px;
+  margin: 18px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.modes button {
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  padding: 9px 12px;
+}
+.modes button[aria-pressed='true'] {
+  background: var(--tint);
+  color: var(--wine);
+  font-weight: 750;
+}
+fieldset {
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  margin: 20px 0;
+}
+fieldset:disabled {
+  pointer-events: none;
+  opacity: 0.8;
+}
+legend {
+  margin-bottom: 14px;
+  font-weight: 800;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px 14px;
+}
+mat-form-field {
+  width: 100%;
+  min-width: 0;
+}
+.field-note {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: -8px 0 16px !important;
+}
+.notice {
+  padding: 10px;
+  background: var(--tint);
+  border-radius: 10px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+@media (max-width: 950px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 680px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

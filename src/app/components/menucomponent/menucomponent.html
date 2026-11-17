@@ -1,7 +1,7 @@
 <mat-sidenav-container class="example-container">
 
   <!-- BARRA LATERAL (Izquierda) -->
-  <mat-sidenav mode="side" opened class="sidenav">
+  <mat-sidenav #drawer id="latia-navigation" [mode]="smallScreen() ? 'over' : 'side'" [opened]="!smallScreen()" class="sidenav">
 
     <!-- Logo y Eslogan -->
     <div class="sidebar-top">
@@ -78,10 +78,13 @@
 
     <!-- BARRA SUPERIOR GENERAL (Top Navbar) -->
     <div class="top-navbar">
+      @if (smallScreen()) {
+        <button matIconButton type="button" aria-label="Abrir menú principal" aria-controls="latia-navigation" [attr.aria-expanded]="drawer.opened" (click)="drawer.toggle()"><mat-icon>menu</mat-icon></button>
+      }
       <div class="nav-breadcrumb">
         <span class="breadcrumb-muted">Mi espacio</span>
         <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
-        <span class="breadcrumb-active">{{ seccionActual }} · {{ primerNombre }}</span>
+        <span class="breadcrumb-active">{{ seccionActual }}</span>
       </div>
 
       <div class="top-nav-actions">
@@ -90,9 +93,9 @@
           <input type="text" placeholder="Buscar en Latia" />
         </div>
 
-        <a class="top-user-pill" routerLink="/perfil">
-          <span class="top-user-avatar">{{ iniciales }}</span>
-          <span class="top-user-name">{{ nombre }}</span>
+        <a class="top-user-pill" routerLink="/cambiar-perfil" [queryParams]="{ volver: seccionActual === 'Historial' ? 'historial' : 'familia' }" aria-label="Cambiar perfil de salud" title="Cambiar perfil">
+          <span class="top-user-avatar">{{ family.activeId() ? family.initials(family.activeId()!) : iniciales }}</span>
+          <span class="top-user-name">{{ family.activeId() ? family.label(family.activeId()!) : 'Elegir perfil' }}</span>
           <mat-icon>arrow_drop_down</mat-icon>
         </a>
 

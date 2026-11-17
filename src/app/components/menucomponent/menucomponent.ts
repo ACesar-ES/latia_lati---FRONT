@@ -1,7 +1,20 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  signal,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { FamilyContextService } from '../../services/familycontextservice';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -17,12 +30,17 @@ import { Themeservice } from '../../services/themeservice';
     MatSidenavModule,
     MatListModule,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
   ],
   templateUrl: './menucomponent.html',
   styleUrl: './menucomponent.css',
 })
 export class Menucomponent implements OnInit, OnDestroy {
+  readonly smallScreen = signal(false);
+  private readonly breakpoint = inject(BreakpointObserver);
+  private readonly destroy = inject(DestroyRef);
+  @ViewChild('drawer') private drawer?: MatSidenav;
+  readonly family = inject(FamilyContextService);
   nombre: string = 'Mi cuenta';
   primerNombre: string = 'Mi cuenta';
   iniciales: string = '';
@@ -36,7 +54,14 @@ export class Menucomponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private tema: Themeservice,
     private router: Router,
-  ) {}
+  ) {
+    afterNextRender(() =>
+      this.breakpoint
+        .observe('(max-width: 720px)')
+        .pipe(takeUntilDestroyed(this.destroy))
+        .subscribe((state) => this.smallScreen.set(state.matches)),
+    );
+  }
 
   ngOnInit(): void {
     this.tema.inicializar();
@@ -44,20 +69,28 @@ export class Menucomponent implements OnInit, OnDestroy {
     this.actualizarSeccion(this.router.url);
     this.rutaSub = this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe((event) => this.actualizarSeccion(event.urlAfterRedirects));
+      .subscribe((event) => {
+        this.actualizarSeccion(event.urlAfterRedirects);
+        if (this.smallScreen()) void this.drawer?.close();
+      });
 
     // Cada vez que cambie el usuario de la sesión, el menú muestra su nombre
     this.sub = this.uS.usuario$.subscribe((u) => {
       if (u) {
         this.nombre = `${u.firstName} ${u.lastName}`.trim();
         this.primerNombre = u.firstName.trim();
-        this.iniciales = ((u.firstName?.charAt(0) ?? '') + (u.lastName?.charAt(0) ?? '')).toUpperCase();
-        this.cdr.detectChanges();
+        this.iniciales = (
+          (u.firstName?.charAt(0) ?? '') + (u.lastName?.charAt(0) ?? '')
+        ).toUpperCase();
+      } else {
+        this.nombre = this.primerNombre = 'Mi cuenta';
+        this.iniciales = '';
       }
+      this.cdr.markForCheck();
     });
 
     // Si hay sesión, pedimos los datos del usuario (si ya estaban cargados no vuelve a llamar al backend)
-    this.uS.cargarUsuarioActual().subscribe({ error: () => {} });
+    this.family.load();
   }
 
   ngOnDestroy(): void {
@@ -76,6 +109,7 @@ export class Menucomponent implements OnInit, OnDestroy {
       historial: 'Historial',
       familia: 'Familia',
       contactos: 'Contactos',
+      'cambiar-perfil': 'Cambiar perfil',
       agenda: 'Agenda',
       medicamentos: 'Medicamentos',
       evolucion: 'Evolución',

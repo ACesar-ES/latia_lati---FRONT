@@ -8,8 +8,8 @@
         <p>Elige cómo se relaciona esta persona contigo o con otro miembro de tu árbol.</p>
       </div>
     </header>
-    @if (family.phase() !== 'ready' || !family.root()) {
-      <app-family-state />
+    @if (fcS.fase !== 'listo' || !fcS.raiz()) {
+      <app-familystatecomponent (reintentar)="recargar()" />
     } @else {
       <div class="layout">
         <section class="panel editor">
@@ -17,65 +17,65 @@
           <div class="modes" role="group" aria-label="Origen del perfil">
             <button
               type="button"
-              [attr.aria-pressed]="mode() === 'new'"
-              [disabled]="busy() || !!pending() || uncertain()"
-              (click)="changeMode('new')"
+              [attr.aria-pressed]="modo === 'nuevo'"
+              [disabled]="ocupado || !!pendiente || incierto"
+              (click)="cambiarModo('nuevo')"
             >
               Crear perfil
             </button>
             <button
               type="button"
-              [attr.aria-pressed]="mode() === 'existing'"
-              [disabled]="busy() || !!pending()"
-              (click)="changeMode('existing')"
+              [attr.aria-pressed]="modo === 'existente'"
+              [disabled]="ocupado || !!pendiente"
+              (click)="cambiarModo('existente')"
             >
               Vincular uno existente
             </button>
           </div>
-          <form [formGroup]="link" (ngSubmit)="save()">
-            <fieldset [disabled]="busy() || !!pending()">
+          <form [formGroup]="formVinculo" (ngSubmit)="guardar()">
+            <fieldset [disabled]="ocupado || !!pendiente">
               <legend>1. ¿Dónde va esta rama?</legend>
               <div class="grid">
                 <mat-form-field appearance="outline"
                   ><mat-label>Perfil de referencia</mat-label
                   ><mat-select
-                    formControlName="origin"
-                    (selectionChange)="link.controls.relative.reset()"
+                    formControlName="origen"
+                    (selectionChange)="formVinculo.controls['familiar'].reset()"
                   >
-                    @for (p of family.sorted(); track p.idHealthProfile) {
+                    @for (p of fcS.ordenados(); track p.idHealthProfile) {
                       <mat-option [value]="p.idHealthProfile">{{
-                        family.label(p.idHealthProfile)
+                        fcS.nombre(p.idHealthProfile)
                       }}</mat-option>
                     }
                   </mat-select></mat-form-field
                 >
                 <mat-form-field appearance="outline"
                   ><mat-label>La persona que agregas es su…</mat-label
-                  ><mat-select formControlName="type">
-                    @for (k of kinds; track k) {
+                  ><mat-select formControlName="tipo">
+                    @for (k of parentescos; track k) {
                       <mat-option [value]="k">{{ k }}</mat-option>
                     }
                   </mat-select></mat-form-field
                 >
               </div>
-              @if (mode() === 'existing') {
+              @if (modo === 'existente') {
                 <mat-form-field appearance="outline"
                   ><mat-label>Perfil que quieres vincular</mat-label
-                  ><mat-select formControlName="relative">
-                    @for (p of candidates; track p.idHealthProfile) {
+                  ><mat-select formControlName="familiar">
+                    @for (p of candidatos; track p.idHealthProfile) {
                       <mat-option [value]="p.idHealthProfile">{{
-                        family.label(p.idHealthProfile)
+                        fcS.nombre(p.idHealthProfile)
                       }}</mat-option>
                     }
                   </mat-select></mat-form-field
                 >
-                @if (!candidates.length) {
+                @if (!candidatos.length) {
                   <p class="note">No tienes otro perfil disponible para vincular.</p>
                 }
               }
             </fieldset>
-            @if (mode() === 'new') {
-              <fieldset [formGroup]="person" [disabled]="busy() || !!pending()">
+            @if (modo === 'nuevo') {
+              <fieldset [formGroup]="formPersona" [disabled]="ocupado || !!pendiente">
                 <legend>2. Datos de la persona</legend>
                 <mat-form-field appearance="outline"
                   ><mat-label>Nombre de uso (opcional)</mat-label
@@ -95,15 +95,15 @@
                     ><input
                       matInput
                       [matDatepicker]="picker"
-                      [max]="today"
-                      formControlName="birth"
+                      [max]="hoy"
+                      formControlName="nacimiento"
                     /><mat-datepicker-toggle matIconSuffix [for]="picker" /><mat-datepicker
                       #picker
                     /><mat-error>Ingresa una fecha válida, hasta hoy.</mat-error></mat-form-field
                   >
                   <mat-form-field appearance="outline"
                     ><mat-label>Sexo registrado</mat-label
-                    ><mat-select formControlName="sex">
+                    ><mat-select formControlName="sexo">
                       @for (s of ['Femenino', 'Masculino', 'Otro']; track s) {
                         <mat-option [value]="s">{{ s }}</mat-option>
                       }</mat-select
@@ -111,29 +111,29 @@
                   >
                   <mat-form-field appearance="outline"
                     ><mat-label>Grupo sanguíneo</mat-label
-                    ><mat-select formControlName="blood">
-                      @for (g of groups; track g) {
+                    ><mat-select formControlName="sangre">
+                      @for (g of gruposSangre; track g) {
                         <mat-option [value]="g">{{ g }}</mat-option>
                       }</mat-select
                     ><mat-error>Selecciona el grupo confirmado.</mat-error></mat-form-field
                   >
                   <mat-form-field appearance="outline"
                     ><mat-label>Teléfono de contacto</mat-label
-                    ><input matInput type="tel" formControlName="phone" /><mat-error
+                    ><input matInput type="tel" formControlName="telefono" /><mat-error
                       >Ingresa entre 7 y 15 dígitos.</mat-error
                     ></mat-form-field
                   >
                 </div>
               </fieldset>
             }
-            @if (message()) {
-              <p class="notice" role="status">{{ message() }}</p>
+            @if (mensaje) {
+              <p class="notice" role="status">{{ mensaje }}</p>
             }
-            @if (uncertain()) {
+            @if (incierto) {
               <button
                 class="secondary"
                 type="button"
-                (click)="uncertain.set(false); changeMode('new')"
+                (click)="incierto = false; cambiarModo('nuevo')"
               >
                 Ya revisé mis perfiles; volver a crear
               </button>
@@ -144,15 +144,15 @@
                 class="primary"
                 type="submit"
                 [disabled]="
-                  busy() || (mode() === 'existing' && !link.controls.relative.value && !pending())
+                  ocupado || (modo === 'existente' && !formVinculo.controls['familiar'].value && !pendiente)
                 "
               >
                 {{
-                  busy()
+                  ocupado
                     ? 'Guardando…'
-                    : pending()
+                    : pendiente
                       ? 'Reintentar vínculo'
-                      : mode() === 'existing'
+                      : modo === 'existente'
                         ? 'Guardar vínculo'
                         : 'Agregar a mi árbol'
                 }}

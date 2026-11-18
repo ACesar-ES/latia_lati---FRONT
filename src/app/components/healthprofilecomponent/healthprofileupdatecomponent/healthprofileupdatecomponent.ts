@@ -13,7 +13,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { UsersResponseDTO } from '../../../model/UsersResponseDTO';
 import { HealthprofileDTO } from '../../../model/HealthprofileDTO';
 import { EmergencycontactDTO } from '../../../model/EmergencycontactDTO';
-import { FamilyContextService } from '../../../services/familycontextservice';
+import { Familycontextservice } from '../../../services/familycontextservice';
 import { UsersService } from '../../../services/usuarioservice';
 import { Healthprofileservice } from '../../../services/healthprofileservice';
 import { Emergencycontactservice } from '../../../services/emergencycontactservice';
@@ -47,7 +47,7 @@ export class Healthprofileupdatecomponent implements OnInit {
   gruposSanguineos: string[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
   constructor(
-    private family: FamilyContextService,
+    private fcS: Familycontextservice,
     private uS: UsersService,
     private hpS: Healthprofileservice,
     private ecS: Emergencycontactservice,
@@ -166,7 +166,7 @@ export class Healthprofileupdatecomponent implements OnInit {
         next: () => {
           this.uS.refrescar();
           this.snack.open('Información actualizada correctamente!!', 'Cerrar', { duration: 3000 });
-          this.family.load(true);
+          this.fcS.cargar(true).subscribe({ error: (err) => console.log('No se pudieron recargar los perfiles', err) });
           this.router.navigate(['/perfil/listar']);
         },
         error: (error) => {

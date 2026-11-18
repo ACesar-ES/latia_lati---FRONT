@@ -1,50 +1,73 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { Menucomponent } from '../menucomponent/menucomponent';
-import { FamilyStateComponent } from './familystatecomponent';
-import { FamilyContextService } from '../../services/familycontextservice';
-import { nearby } from '../../utils/family-tree';
+import { Familystatecomponent } from './familystatecomponent';
+import { Familycontextservice } from '../../services/familycontextservice';
 
 @Component({
   selector: 'app-familycomponent',
-  imports: [Menucomponent, RouterLink, NgTemplateOutlet, FamilyStateComponent, MatTableModule],
+  imports: [Menucomponent, RouterLink, NgTemplateOutlet, Familystatecomponent, MatTableModule],
   templateUrl: './familycomponent.html',
   styleUrl: './familycomponent.css',
 })
-export class Familycomponent {
-  readonly family = inject(FamilyContextService);
-  readonly mode = signal<'tree' | 'list'>('tree');
-  readonly zoom = signal(100);
-  readonly expanded = signal(false);
-  readonly columns = ['person', 'action'];
-  readonly parents = computed(() =>
-    nearby(this.family.links(), this.family.root()?.idHealthProfile ?? -1, 'up'),
-  );
-  readonly children = computed(() =>
-    nearby(this.family.links(), this.family.root()?.idHealthProfile ?? -1, 'down'),
-  );
-  readonly available = computed(() =>
-    ['Madre', 'Padre'].filter(
-      (r) => !this.parents().some((id) => this.family.role(id).toLowerCase() === r.toLowerCase()),
-    ),
-  );
-  constructor() {
-    this.family.load();
+export class Familycomponent implements OnInit {
+  modo: 'arbol' | 'lista' = 'arbol';
+  zoom: number = 100;
+  ampliado: boolean = false;
+  columns: string[] = ['person', 'action'];
+
+  constructor(
+    public fcS: Familycontextservice,
+    private cdr: ChangeDetectorRef,
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarFamilia();
   }
-  ancestors(id: number): number[] {
-    return nearby(this.family.links(), id, 'up');
+
+  cargarFamilia(forzar: boolean = false): void {
+    this.fcS.cargar(forzar).subscribe({
+      next: () => this.cdr.detectChanges(),
+      error: (err) => {
+        console.log('Ocurrió un error al cargar la familia', err);
+        this.cdr.detectChanges();
+      },
+    });
   }
-  connections(id: number): number {
-    return new Set(
-      this.family
-        .links()
-        .filter((e) => e.idOriginProfile === id || e.idRelativeProfile === id)
-        .map((e) => (e.idOriginProfile === id ? e.idRelativeProfile : e.idOriginProfile)),
-    ).size;
+
+  recargar(): void {
+    this.cargarFamilia(true);
   }
-  changeZoom(delta: number): void {
-    this.zoom.update((n) => Math.max(70, Math.min(140, n + delta)));
+
+  private idRaiz(): number {
+    return this.fcS.raiz()?.idHealthProfile ?? -1;
+  }
+
+  // Padres del perfil principal (arriba en el árbol)
+  padres(): number[] {
+    return this.fcS.cercanos(this.idRaiz(), 'arriba');
+  }
+
+  // Hijos del perfil principal (abajo en el árbol)
+  hijos(): number[] {
+    return this.fcS.cercanos(this.idRaiz(), 'abajo');
+  }
+
+  // Padres de un progenitor (abuelos)
+  ancestros(id: number): number[] {
+    return this.fcS.cercanos(id, 'arriba');
+  }
+
+  // Madre o Padre que todavía faltan agregar
+  disponibles(): string[] {
+    return ['Madre', 'Padre'].filter(
+      (r) => !this.padres().some((id) => this.fcS.parentesco(id).toLowerCase() === r.toLowerCase()),
+    );
+  }
+
+  cambiarZoom(cambio: number): void {
+    this.zoom = Math.max(70, Math.min(140, this.zoom + cambio));
   }
 }

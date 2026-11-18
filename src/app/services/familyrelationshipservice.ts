@@ -8,7 +8,6 @@ import { HealthprofileDTO } from '../model/HealthprofileDTO';
 import { UsersResponseDTO } from '../model/UsersResponseDTO';
 import { Healthprofileservice } from './healthprofileservice';
 import { UsersService } from './usuarioservice';
-import type { Kinship } from '../utils/family-tree';
 
 // Perfil de salud con el nombre que se muestra en el árbol
 export interface PerfilFamiliar {
@@ -115,23 +114,3 @@ export class Familyrelationshipservice {
   }
 }
 
-// Servicio de la rama de Aixa (árbol y selector de perfil): ver y crear vínculos
-@Injectable({ providedIn: 'root' })
-export class FamilyRelationshipService {
-  private readonly url = environment.base + '/api/familyrelationships';
-  constructor(private http: HttpClient) {}
-  byProfile(id: number): Observable<FamilyrelationshipDTO[]> {
-    return this.http.get<FamilyrelationshipDTO[]>(this.url + '/perfil/' + id);
-  }
-  create(
-    origin: number,
-    relative: number,
-    relationship: Kinship,
-  ): Observable<FamilyrelationshipDTO> {
-    return this.http.post<FamilyrelationshipDTO>(this.url, {
-      idOriginProfile: origin,
-      idRelativeProfile: relative,
-      relationshipType: relationship,
-    });
-  }
-}

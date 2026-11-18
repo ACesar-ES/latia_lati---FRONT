@@ -8,7 +8,7 @@
         </div>
 
         <div class="header-actions">
-            <button matButton="outlined" class="create-btn" [disabled]="!family.activeId()" type="button" routerLink="/historial/insertar">
+            <button matButton="outlined" class="create-btn" [disabled]="!fcS.idActivo()" type="button" routerLink="/historial/insertar">
                 <mat-icon>note_add</mat-icon>
                 Crear historial
             </button>
@@ -20,10 +20,10 @@
         </div>
     </header>
 
-    @if(family.phase()==='error') { <p class="empty-state">No se pudieron cargar los perfiles. <button matButton (click)="family.load(true)">Reintentar</button></p> }
-    @else if(family.phase()==='signedOut') { <p class="empty-state"><a routerLink="/login">Inicia sesión para ver tus perfiles.</a></p> }
-    @else if(family.phase()!=='ready') { <p class="empty-state" role="status">Cargando tus perfiles…</p> }
-    @else if(!family.activeId()) { <p class="empty-state"><a routerLink="/cambiar-perfil" [queryParams]="{volver:'historial'}">Elige un perfil para ver su historial.</a></p> }
+    @if(fcS.fase==='error') { <p class="empty-state">No se pudieron cargar los perfiles. <button matButton (click)="recargar()">Reintentar</button></p> }
+    @else if(fcS.fase==='sinSesion') { <p class="empty-state"><a routerLink="/login">Inicia sesión para ver tus perfiles.</a></p> }
+    @else if(fcS.fase!=='listo') { <p class="empty-state" role="status">Cargando tus perfiles…</p> }
+    @else if(!fcS.idActivo()) { <p class="empty-state"><a routerLink="/cambiar-perfil" [queryParams]="{volver:'historial'}">Elige un perfil para ver su historial.</a></p> }
     @else {
     <!-- Filtros -->
     <div class="filters-bar">
@@ -99,12 +99,12 @@
             </li>
             }
         </ul>
-        } @else if(loading()) { <p class="empty-state" role="status">Cargando historial…</p>
-        } @else if(!notice()) { <p class="empty-state">{{ busqueda || filtroActivo!=='todos' ? 'No hay coincidencias.' : 'Este perfil todavía no tiene registros.' }}</p>
+        } @else if(cargando) { <p class="empty-state" role="status">Cargando historial…</p>
+        } @else if(!aviso) { <p class="empty-state">{{ busqueda || filtroActivo!=='todos' ? 'No hay coincidencias.' : 'Este perfil todavía no tiene registros.' }}</p>
         }
 
-        @if (notice()) {
-        <p class="empty-state">{{ notice() }} <button matButton (click)="reload()">Reintentar</button></p>
+        @if (aviso) {
+        <p class="empty-state">{{ aviso }} <button matButton (click)="listarHistoriales()">Reintentar</button></p>
         }
     </section>
     }

@@ -1,100 +1,96 @@
-<div class="clinical-container">
+<section class="med-page">
   <!-- Encabezado -->
-  <header class="header-section">
-    <div class="header-titles">
-      <h1>Medicamentos de Elena</h1>
-      <p>Encuentra y gestiona los medicamentos, formas de dosaje y fuerzas.</p>
+  <header class="med-hero">
+    <div>
+      <p class="med-eyebrow">Botiquín</p>
+      <h1>Mis medicamentos</h1>
+      <p class="med-sub">Consulta la forma de dosaje y la fuerza de cada medicamento.</p>
     </div>
 
-    <div class="header-actions">
-      <!-- Asegúrate de que la ruta del routerLink coincida con la que pusiste en app.routes.ts -->
-      <button matButton="outlined" class="create-btn" type="button" routerLink="/medicamentos/insertar">
-        <mat-icon>vaccines</mat-icon>
-        Registrar medicamento
-      </button>
-
-      <button matButton="filled" class="upload-btn" type="button">
-        <mat-icon>upload</mat-icon>
-        Subir inventario
-      </button>
-    </div>
+    <button matButton="filled" class="med-add" type="button" routerLink="/medicamentos/insertar">
+      <mat-icon>add</mat-icon>
+      Nuevo medicamento
+    </button>
   </header>
 
-  <!-- Filtros -->
-  <div class="filters-bar">
-    <div class="filter-tabs">
-      <button matButton type="button" class="tab-btn" [class.active]="filtroActivo === 'todos'" (click)="filtroActivo = 'todos'">
-        <mat-icon>folder_special</mat-icon>
+  <!-- Filtros y búsqueda -->
+  <div class="med-toolbar">
+    <div class="med-chips">
+      <button type="button" class="med-chip" [class.active]="filtroActivo === 'todos'" (click)="filtroActivo = 'todos'">
         Todos
       </button>
-      <button matButton type="button" class="tab-btn" [class.active]="filtroActivo === 'tableta'" (click)="filtroActivo = 'tableta'">
+      <button type="button" class="med-chip" [class.active]="filtroActivo === 'tableta'" (click)="filtroActivo = 'tableta'">
         Tabletas
       </button>
-      <button matButton type="button" class="tab-btn" [class.active]="filtroActivo === 'jarabe'" (click)="filtroActivo = 'jarabe'">
+      <button type="button" class="med-chip" [class.active]="filtroActivo === 'jarabe'" (click)="filtroActivo = 'jarabe'">
         Jarabes
       </button>
-
-      <label class="search-box">
-        <mat-icon>search</mat-icon>
-        <input type="text" placeholder="Buscar medicamento" [value]="busqueda" (input)="busqueda = $any($event.target).value" />
-      </label>
     </div>
 
-    <button matButton="outlined" class="export-btn" type="button">
-      <mat-icon>download</mat-icon>
-      Exportar lista
-    </button>
+    <label class="med-search">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Buscar por nombre, forma o fuerza"
+        [value]="busqueda"
+        (input)="busqueda = $any($event.target).value"
+      />
+    </label>
   </div>
 
-  <!-- Tarjeta con la lista -->
-  <section class="records-card">
-    <div class="records-header">
-      <h2>{{ medicamentosFiltrados.length }} medicamentos</h2>
-      <span class="sort-pill">Más recientes primero</span>
-    </div>
+  <p class="med-count">{{ medicamentosFiltrados.length }} medicamentos</p>
 
-    @if (medicamentosFiltrados.length > 0) {
-      <ul class="records-list">
-        @for (m of medicamentosFiltrados; track m.idMedications) {
-          <li class="record-item">
-            <div class="record-info">
-              <!-- Icono cambiado a pastilla -->
-              <div class="record-icon-box"><mat-icon>medication</mat-icon></div>
-              <div class="record-text">
-                <h3>{{ m.nameMedications }}</h3>
-                <p>ID: {{ m.idMedications }}</p>
-              </div>
-            </div>
+  <!-- Cuadrícula de tarjetas -->
+  @if (medicamentosFiltrados.length > 0) {
+    <div class="med-grid">
+      @for (m of medicamentosFiltrados; track m.idMedications) {
+        <article class="med-card">
+          <div class="med-card-top">
+            <div class="med-pill-icon"><mat-icon>medication</mat-icon></div>
+            <span class="med-form">{{ m.dosageForm }}</span>
+          </div>
 
-            <div class="record-meta">
-              <!-- Reemplazados los datos del paciente por los del medicamento -->
-              <span class="patient-badge">{{ m.dosageForm }}</span>
-              <span class="professional">Fuerza: {{ m.strength }}</span>
+          <h3>{{ m.nameMedications }}</h3>
+          <p class="med-strength">
+            <mat-icon>science</mat-icon>
+            {{ m.strength }}
+          </p>
 
-              <div class="row-actions">
-                <button matIconButton class="icon-btn" type="button" title="Actualizar" aria-label="Actualizar medicamento" [routerLink]="['/medicamentos/actualizar', m.idMedications]">
-                  <mat-icon>edit</mat-icon>
-                </button>
-
-                <button matIconButton class="icon-btn danger" type="button" title="Eliminar" aria-label="Eliminar medicamento" (click)="eliminarMedicamento(m.idMedications!)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-
-              <button matButton class="open-btn" type="button">
-                <mat-icon>arrow_forward</mat-icon>
-                Abrir
+          <footer class="med-card-footer">
+            <span class="med-id">#{{ m.idMedications }}</span>
+            <div class="med-actions">
+              <button
+                matIconButton
+                type="button"
+                title="Editar"
+                aria-label="Editar medicamento"
+                [routerLink]="['/medicamentos/actualizar', m.idMedications]"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                matIconButton
+                type="button"
+                class="med-danger"
+                title="Eliminar"
+                aria-label="Eliminar medicamento"
+                (click)="eliminarMedicamento(m.idMedications!)"
+              >
+                <mat-icon>delete</mat-icon>
               </button>
             </div>
-          </li>
-        }
-      </ul>
-    } @else {
-      <p class="empty-state">No hay medicamentos registrados.</p>
-    }
+          </footer>
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="med-empty">
+      <mat-icon>inventory_2</mat-icon>
+      <p>No hay medicamentos registrados.</p>
+    </div>
+  }
 
-    @if (mensaje) {
-      <p class="empty-state">{{ mensaje }}</p>
-    }
-  </section>
-</div>
+  @if (mensaje) {
+    <p class="med-message">{{ mensaje }}</p>
+  }
+</section>

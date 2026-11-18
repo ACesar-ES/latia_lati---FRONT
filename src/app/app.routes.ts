@@ -52,7 +52,7 @@ export const routes: Routes = [
     path: 'inicio',
     component: Homecomponent,
   },
- 
+
   // 4. Historial clínico (con menú lateral), protegido por sesión
   {
     path: 'historial',
@@ -78,11 +78,17 @@ export const routes: Routes = [
   {
     path: "medicamentos",
     component: Medicamentoscomponents,
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full'},
+      { path: 'listar', component: Medicationslistcomponent },
+      { path: 'insertar', component: Medicationsinsertcomponent },
+      { path: 'actualizar/:id', component: Medicationsupdatecomponent },
+    ],
   },
 
   {
     path: "evolucion",
-    component: Evolutioncomponent, 
+    component: Evolutioncomponent,
   },
 
   {
@@ -94,7 +100,7 @@ export const routes: Routes = [
     path: 'ajustes',
     component: Settingscomponent
   },
- 
+
   {
     path: 'perfil',
     component: Healthprofilecomponent,
@@ -105,25 +111,15 @@ export const routes: Routes = [
     ],
   },
 
-  {
-    path: 'medicamentos',
-    component: Medicationscomponent,
-    children: [
-      { path: '', redirectTo: 'listar', pathMatch: 'full' },
-      { path: 'listar', component: Medicationslistcomponent },
-      { path: 'insertar', component: Medicationsinsertcomponent },
-      { path: 'actualizar/:id', component: Medicationsupdatecomponent },
-    ],
-  },
-
   // 5. Cualquier URL desconocida vuelve a la landing (SIEMPRE al final)
   {
     path: '**',
     redirectTo: '/historial'
+  },
   // 5. Cualquier URL desconocida vuelve al inicio (SIEMPRE al final)
-  
-  { 
-    path: '**', 
+
+  {
+    path: '**',
     redirectTo: '/inicio'
   },
 

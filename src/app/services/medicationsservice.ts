@@ -1,4 +1,4 @@
-import { Injectable, Service } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,7 +9,7 @@ import { MedicationsDTO } from '../model/MedicationsDTO';
   providedIn: 'root',
 })
 export class Medicationsservice {
-  private apiURL=`${environment.base}/apis/medications`;
+  private apiURL=`${environment.base}/api/medications`;
 
   constructor(private http: HttpClient) {}
 

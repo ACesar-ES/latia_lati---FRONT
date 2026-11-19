@@ -18,8 +18,23 @@ import { Settingscomponent } from './components/settingscomponent/settingscompon
 import { Laticomponent } from './components/laticomponent/laticomponent';
 import { Homecomponent } from './components/homecomponent/homecomponent';
 import { Familycomponent } from './components/familycomponent/familycomponent';
+import { Familyaddcomponent } from './components/familycomponent/familyaddcomponent/familyaddcomponent';
+import { Profileswitchcomponent } from './components/profileswitchcomponent/profileswitchcomponent';
 import { Schedulecomponent } from './components/schedulecomponent/schedulecomponent';
 import { Evolutioncomponent } from './components/evolutioncomponent/evolutioncomponent';
+import { Familyshellcomponent } from './components/familycomponent/familyshellcomponent/familyshellcomponent';
+import { Familylistcomponent } from './components/familycomponent/familylistcomponent/familylistcomponent';
+import { Familyinsertcomponent } from './components/familycomponent/familyinsertcomponent/familyinsertcomponent';
+import { Familyupdatecomponent } from './components/familycomponent/familyupdatecomponent/familyupdatecomponent';
+import { Familyprofilecomponent } from './components/familycomponent/familyprofilecomponent/familyprofilecomponent';
+import { Familygenerationcomponent } from './components/familycomponent/familygenerationcomponent/familygenerationcomponent';
+import { Familybackgroundcomponent } from './components/familycomponent/familybackgroundcomponent/familybackgroundcomponent';
+import { Familyhelpcomponent } from './components/familycomponent/familyhelpcomponent/familyhelpcomponent';
+import { Emergencycontactcomponent } from './components/emergencycontactcomponent/emergencycontactcomponent';
+import { Emergencycontactlistcomponent } from './components/emergencycontactcomponent/emergencycontactlistcomponent/emergencycontactlistcomponent';
+import { Emergencycontactinsertcomponent } from './components/emergencycontactcomponent/emergencycontactinsertcomponent/emergencycontactinsertcomponent';
+import { Emergencycontactupdatecomponent } from './components/emergencycontactcomponent/emergencycontactupdatecomponent/emergencycontactupdatecomponent';
+import { Emergencycardcomponent } from './components/emergencycontactcomponent/emergencycardcomponent/emergencycardcomponent';
 
 
 export const routes: Routes = [
@@ -64,6 +79,7 @@ export const routes: Routes = [
     ],
   },
 
+  // Relaciones familiares (HU46-HU50, HU73)
   {
     path: "familia",
     component: Familycomponent,
@@ -108,6 +124,62 @@ export const routes: Routes = [
       { path: 'insertar', component: Medicationsinsertcomponent },
       { path: 'actualizar/:id', component: Medicationsupdatecomponent },
     ],
+  },
+
+  // Familia: agregar un familiar al árbol (/familia ya muestra el árbol)
+  {
+    path: 'familia/agregar',
+    component: Familyaddcomponent,
+  },
+
+  // Elegir el perfil de salud con el que se trabaja (historial, familia)
+  {
+    path: 'cambiar-perfil',
+    component: Profileswitchcomponent,
+  },
+
+  // CRUD de relaciones familiares (HU46-HU50, HU73). /familia (sin más) es el árbol de Aixa;
+  // estas pantallas van debajo, con su propio contenedor de menú.
+  {
+    path: 'familia',
+    component: Familyshellcomponent,
+    children: [
+      { path: 'listar', component: Familylistcomponent },
+      { path: 'insertar', component: Familyinsertcomponent },
+      { path: 'actualizar/:id', component: Familyupdatecomponent },
+      { path: 'perfil/:id', component: Familyprofilecomponent },
+      { path: 'generaciones', component: Familygenerationcomponent },
+      { path: 'antecedentes', component: Familybackgroundcomponent },
+      { path: 'ayuda', component: Familyhelpcomponent },
+    ],
+  },
+
+  // Contactos de emergencia (HU11-HU15, HU68, HU69)
+  {
+    path: 'contactos',
+    component: Emergencycontactcomponent,
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Emergencycontactlistcomponent },
+      { path: 'insertar', component: Emergencycontactinsertcomponent },
+      { path: 'actualizar/:id', component: Emergencycontactupdatecomponent },
+      { path: 'fichas', component: Emergencycardcomponent },
+    ],
+  },
+
+  {
+    path: 'agenda',
+    component: Schedulecomponent,
+  },
+
+  {
+    path: 'evolucion',
+    component: Evolutioncomponent,
+  },
+
+  {
+    path: 'lati',
+    component: Laticomponent,
   },
 
   // 5. Cualquier URL desconocida vuelve a la landing (SIEMPRE al final)

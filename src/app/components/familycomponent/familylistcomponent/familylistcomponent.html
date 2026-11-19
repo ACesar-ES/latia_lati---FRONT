@@ -1,0 +1,206 @@
+<div class="clinical-container">
+  <!-- Encabezado -->
+  <header class="header-section">
+    <div class="header-titles">
+      @if (vista === 'arbol') {
+        <h1>Tu árbol, tu círculo de cuidado</h1>
+        <p>Una historia compartida. Un espacio propio para cada persona.</p>
+      } @else {
+        <h1>Tu familia, de un vistazo</h1>
+        <p>Cambia al árbol para explorar cómo se conectan sus historias.</p>
+      }
+    </div>
+
+    <div class="header-actions">
+      <button matButton="filled" class="upload-btn" type="button" routerLink="/familia/insertar">
+        <mat-icon>add</mat-icon>
+        Agregar familiar
+      </button>
+    </div>
+  </header>
+
+  <div class="familia-layout">
+    <!-- Tarjeta principal: Árbol / Lista -->
+    <section class="arbol-card" #lienzo>
+      <div class="arbol-toolbar">
+        <div class="vista-tabs">
+          <button matButton type="button" class="tab-btn" [class.active]="vista === 'arbol'" (click)="vista = 'arbol'">
+            <mat-icon>account_tree</mat-icon>
+            Árbol
+          </button>
+          <button matButton type="button" class="tab-btn" [class.active]="vista === 'lista'" (click)="vista = 'lista'">
+            <mat-icon>group</mat-icon>
+            Lista
+          </button>
+        </div>
+
+        @if (vista === 'arbol') {
+          <div class="zoom-tools">
+            <span class="zoom-texto">{{ zoomTexto }}</span>
+            <span class="sort-pill">{{ familiares.length + 1 }} perfiles</span>
+            <button matIconButton type="button" title="Alejar" aria-label="Alejar" (click)="alejar()"><mat-icon>zoom_out</mat-icon></button>
+            <button matIconButton type="button" title="Acercar" aria-label="Acercar" (click)="acercar()"><mat-icon>zoom_in</mat-icon></button>
+            <button matIconButton type="button" title="Pantalla completa" aria-label="Pantalla completa" (click)="pantallaCompleta()"><mat-icon>open_in_full</mat-icon></button>
+          </div>
+        }
+      </div>
+
+      @if (vista === 'arbol') {
+        @if (datos?.miPerfil; as yo) {
+          <div class="arbol" [style.transform]="'scale(' + zoom + ')'">
+            <!-- Abuelos -->
+            <div class="fila">
+              @for (n of fila('abuelos'); track n.perfil.idHealthProfile) {
+                <button type="button" class="nodo" [class.activo]="seleccionado?.idHealthProfile === n.perfil.idHealthProfile" (click)="seleccionar(n.perfil)">
+                  <span class="avatar">{{ n.perfil.iniciales }}</span>
+                  <span class="nodo-texto"><strong>{{ n.perfil.nombre }}</strong><small>{{ n.tipo }}</small></span>
+                  <span class="nodo-resumen">{{ resumen(n.perfil) }}</span>
+                </button>
+              }
+              <a class="agregar-link" routerLink="/familia/generaciones"><mat-icon>add</mat-icon> Abuelos maternos</a>
+              <a class="agregar-link" routerLink="/familia/generaciones"><mat-icon>add</mat-icon> Abuelos paternos</a>
+            </div>
+            <span class="conector"></span>
+
+            <!-- Padres y tíos -->
+            @if (fila('padres').length > 0) {
+              <div class="fila">
+                @for (n of fila('padres'); track n.perfil.idHealthProfile) {
+                  <button type="button" class="nodo" [class.activo]="seleccionado?.idHealthProfile === n.perfil.idHealthProfile" (click)="seleccionar(n.perfil)">
+                    <span class="avatar">{{ n.perfil.iniciales }}</span>
+                    <span class="nodo-texto"><strong>{{ n.perfil.nombre }}</strong><small>{{ n.tipo }}</small></span>
+                    <span class="nodo-resumen">{{ resumen(n.perfil) }}</span>
+                  </button>
+                }
+              </div>
+              <span class="conector"></span>
+            }
+
+            <!-- Perfil principal, pareja y hermanos -->
+            <div class="fila">
+              <button type="button" class="nodo principal" [class.activo]="seleccionado?.idHealthProfile === yo.idHealthProfile" (click)="seleccionar(yo)">
+                <span class="avatar">{{ yo.iniciales }}</span>
+                <span class="nodo-texto"><strong>{{ yo.nombre }}</strong><small>Tú · perfil principal</small></span>
+                <span class="nodo-resumen">{{ resumen(yo) }}</span>
+              </button>
+              @for (n of fila('medio'); track n.perfil.idHealthProfile) {
+                <button type="button" class="nodo" [class.activo]="seleccionado?.idHealthProfile === n.perfil.idHealthProfile" (click)="seleccionar(n.perfil)">
+                  <span class="avatar">{{ n.perfil.iniciales }}</span>
+                  <span class="nodo-texto"><strong>{{ n.perfil.nombre }}</strong><small>{{ n.tipo }}</small></span>
+                  <span class="nodo-resumen">{{ resumen(n.perfil) }}</span>
+                </button>
+              }
+            </div>
+            <span class="conector"></span>
+
+            <!-- Hijos -->
+            <div class="fila">
+              @for (n of fila('hijos'); track n.perfil.idHealthProfile) {
+                <button type="button" class="nodo" [class.activo]="seleccionado?.idHealthProfile === n.perfil.idHealthProfile" (click)="seleccionar(n.perfil)">
+                  <span class="avatar">{{ n.perfil.iniciales }}</span>
+                  <span class="nodo-texto"><strong>{{ n.perfil.nombre }}</strong><small>{{ n.tipo }}</small></span>
+                  <span class="nodo-resumen">{{ resumen(n.perfil) }}</span>
+                </button>
+              }
+              <a class="nodo nuevo" routerLink="/familia/insertar" [queryParams]="{ tipo: 'Hijo' }">
+                <strong><mat-icon>add</mat-icon> Agregar hijo/a</strong>
+                <small>Completa tu círculo</small>
+              </a>
+            </div>
+          </div>
+        } @else {
+          <p class="empty-state">Todavía no tienes un perfil de salud. Créalo en tu perfil para armar tu árbol.</p>
+        }
+      } @else {
+        <!-- Vista Lista (HU47): el perfil principal y sus familiares -->
+        @if (datos?.miPerfil; as yo) {
+          <ul class="familia-lista">
+            <li class="familia-fila">
+              <span class="avatar">{{ yo.iniciales }}</span>
+              <div class="fila-nombre"><strong>{{ yo.nombre }}</strong><small>Tú · perfil principal</small></div>
+              <span class="fila-resumen">{{ resumen(yo) }}</span>
+              <a class="ver-perfil" [routerLink]="['/familia/perfil', yo.idHealthProfile]"><mat-icon>arrow_forward</mat-icon> Ver perfil</a>
+              <span class="fila-acciones"></span>
+            </li>
+            @for (n of familiares; track n.idRelacion) {
+              <li class="familia-fila">
+                <span class="avatar">{{ n.perfil.iniciales }}</span>
+                <div class="fila-nombre"><strong>{{ n.perfil.nombre }}</strong><small>{{ n.tipo }}</small></div>
+                <span class="fila-resumen">{{ resumen(n.perfil) }}</span>
+                <a class="ver-perfil" [routerLink]="['/familia/perfil', n.perfil.idHealthProfile]"><mat-icon>arrow_forward</mat-icon> Ver perfil</a>
+                <span class="fila-acciones">
+                  <button matIconButton class="icon-btn" type="button" title="Editar relación" aria-label="Editar relación" [routerLink]="['/familia/actualizar', n.idRelacion]"><mat-icon>edit</mat-icon></button>
+                  <button matIconButton class="icon-btn danger" type="button" title="Eliminar relación" aria-label="Eliminar relación" (click)="eliminarRelacion(n.idRelacion)"><mat-icon>delete</mat-icon></button>
+                </span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="empty-state">Todavía no tienes un perfil de salud.</p>
+        }
+      }
+
+      @if (mensaje) {
+        <p class="empty-state">{{ mensaje }}</p>
+      }
+    </section>
+
+    <!-- Panel del perfil elegido -->
+    @if (seleccionado; as s) {
+      <aside class="panel-card">
+        <div class="panel-head">
+          <span class="avatar grande">{{ s.iniciales }}</span>
+          <div>
+            <h2>{{ s.nombre }}</h2>
+            <span class="badge">{{ tipoSeleccionado }}</span>
+          </div>
+        </div>
+
+        <h3>{{ s.principal ? 'Tu información, siempre cerca' : 'La información de ' + s.nombre }}</h3>
+        <p class="muted">Reúne sus datos de emergencia y cuida también de quienes más quieres.</p>
+
+        <div class="stats">
+          <div><strong>{{ contactosDe(s.idHealthProfile).length }}</strong><span>contactos</span></div>
+          <div><strong>{{ familiaresSeleccionado }}</strong><span>familiares</span></div>
+        </div>
+
+        @if (s.principal) {
+          <button matButton="filled" class="upload-btn ancho" type="button" routerLink="/historial">
+            <mat-icon>folder_shared</mat-icon>
+            Abrir mi historial
+          </button>
+        } @else {
+          <button matButton="filled" class="upload-btn ancho" type="button" [routerLink]="['/familia/perfil', s.idHealthProfile]">
+            <mat-icon>person</mat-icon>
+            Ver su perfil
+          </button>
+        }
+        <button matButton class="link-btn ancho" type="button" routerLink="/familia/antecedentes">
+          <mat-icon>account_tree</mat-icon>
+          Ver antecedentes
+        </button>
+
+        <!-- Contacto de emergencia del perfil elegido (HU11-HU15) -->
+        <div class="contacto-card">
+          <div class="contacto-titulo"><mat-icon>contact_phone</mat-icon> Contacto de emergencia</div>
+          @if (contactoSeleccionado; as c) {
+            <strong>{{ c.name }}</strong>
+            <span>{{ c.relationship }} · {{ c.phone }}</span>
+            <a routerLink="/contactos/listar">Gestionar contactos</a>
+          } @else {
+            <span>Este perfil aún no tiene a quién avisar.</span>
+            <a routerLink="/contactos/insertar" [queryParams]="{ perfil: s.idHealthProfile }">Agregar contacto</a>
+          }
+        </div>
+
+        <div class="info-card">
+          <mat-icon>verified_user</mat-icon>
+          <strong>Cada perfil es independiente</strong>
+          <span>Al cambiar de persona, sus documentos, citas y conversación cambian con ella.</span>
+        </div>
+
+        <button matButton class="link-btn ancho" type="button" routerLink="/familia/ayuda">¿Cómo funciona el árbol?</button>
+      </aside>
+    }
+  </div>
+</div>

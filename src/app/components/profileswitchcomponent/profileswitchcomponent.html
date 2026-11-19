@@ -1,0 +1,51 @@
+<app-menucomponent
+  ><main class="latia-family">
+    <a class="back" routerLink="/familia"><i class="fi arrow"></i>Volver a Familia</a>
+    <header class="page-head">
+      <div>
+        <span class="eyebrow">Mi espacio / Cambiar perfil</span>
+        <h1>¿A quién vamos a cuidar hoy?</h1>
+        <p>Elige un perfil para ver su información y continuar desde ahí.</p>
+      </div>
+    </header>
+    @if (fcS.fase !== 'listo' || !fcS.perfiles.length) {
+      <app-familystatecomponent (reintentar)="recargar()" />
+    } @else {
+      <section class="cards" aria-label="Perfiles de salud">
+        @for (p of fcS.ordenados(); track p.idHealthProfile) {
+          <article class="panel card" [class.current]="p.idHealthProfile === fcS.idActivo()">
+            <div class="card-top">
+              <span class="avatar large">{{ fcS.iniciales(p.idHealthProfile) }}</span>
+              @if (p.idHealthProfile === fcS.idActivo()) {
+                <span class="tag">✓ En uso</span>
+              }
+            </div>
+            <h2>{{ fcS.nombre(p.idHealthProfile) }}</h2>
+            <p>{{ fcS.parentesco(p.idHealthProfile) }}</p>
+            <button
+              type="button"
+              class="secondary"
+              (click)="abrir(p.idHealthProfile)"
+              [attr.aria-label]="'Abrir perfil de ' + fcS.nombre(p.idHealthProfile)"
+            >
+              Abrir perfil<i class="fi arrow"></i>
+            </button>
+          </article>
+        }
+        <a
+          class="panel card add"
+          [routerLink]="fcS.raiz() ? '/familia/agregar' : '/perfil/actualizar'"
+          ><span class="avatar large"><i class="fi plus"></i></span>
+          <h2>{{ fcS.raiz() ? 'Agregar otra persona' : 'Completar mi perfil' }}</h2>
+          <p>
+            {{
+              fcS.raiz()
+                ? 'Amplía tu círculo de cuidado.'
+                : 'Empieza tu árbol con tu propio perfil.'
+            }}
+          </p></a
+        >
+      </section>
+    }
+  </main></app-menucomponent
+>

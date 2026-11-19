@@ -3,12 +3,12 @@
     <!-- Encabezado -->
     <header class="header-section">
         <div class="header-titles">
-            <h1>La historia de {{ primerNombre }}, en un lugar</h1>
+            <h1>{{ primerNombre ? 'La historia de ' + primerNombre : 'Historial clínico' }}</h1>
             <p>Encuentra documentos, recetas y exámenes cuando los necesites.</p>
         </div>
 
         <div class="header-actions">
-            <button matButton="outlined" class="create-btn" type="button" routerLink="/historial/insertar">
+            <button matButton="outlined" class="create-btn" [disabled]="!fcS.idActivo()" type="button" routerLink="/historial/insertar">
                 <mat-icon>note_add</mat-icon>
                 Crear historial
             </button>
@@ -20,6 +20,11 @@
         </div>
     </header>
 
+    @if(fcS.fase==='error') { <p class="empty-state">No se pudieron cargar los perfiles. <button matButton (click)="recargar()">Reintentar</button></p> }
+    @else if(fcS.fase==='sinSesion') { <p class="empty-state"><a routerLink="/login">Inicia sesión para ver tus perfiles.</a></p> }
+    @else if(fcS.fase!=='listo') { <p class="empty-state" role="status">Cargando tus perfiles…</p> }
+    @else if(!fcS.idActivo()) { <p class="empty-state"><a routerLink="/cambiar-perfil" [queryParams]="{volver:'historial'}">Elige un perfil para ver su historial.</a></p> }
+    @else {
     <!-- Filtros -->
     <div class="filters-bar">
         <div class="filter-tabs">
@@ -94,13 +99,13 @@
             </li>
             }
         </ul>
-        } @else {
-        <p class="empty-state">No hay historiales registrados.</p>
+        } @else if(cargando) { <p class="empty-state" role="status">Cargando historial…</p>
+        } @else if(!aviso) { <p class="empty-state">{{ busqueda || filtroActivo!=='todos' ? 'No hay coincidencias.' : 'Este perfil todavía no tiene registros.' }}</p>
         }
 
-        @if (mensaje) {
-        <p class="empty-state">{{ mensaje }}</p>
+        @if (aviso) {
+        <p class="empty-state">{{ aviso }} <button matButton (click)="listarHistoriales()">Reintentar</button></p>
         }
     </section>
-
+    }
 </div>

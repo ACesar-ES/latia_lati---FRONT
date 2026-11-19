@@ -1,0 +1,78 @@
+/* Árbol familiar y panel lateral (según el prototipo de Figma) */
+.familia-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; margin-top: 28px; align-items: start; }
+
+.arbol-card, .panel-card {
+  background: var(--latia-surface); border: 1px solid var(--latia-border); border-radius: 18px; box-sizing: border-box;
+}
+.arbol-card { padding: 20px 24px 32px; overflow: hidden; min-height: 520px; }
+.arbol-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.vista-tabs, .zoom-tools { display: flex; align-items: center; gap: 6px; }
+
+.arbol { display: flex; flex-direction: column; align-items: center; margin-top: 28px; transform-origin: top center; transition: transform .2s; }
+.fila { display: flex; justify-content: center; align-items: center; gap: 28px; flex-wrap: wrap; }
+.conector { width: 2px; height: 32px; background: #cfd8dc; }
+
+.nodo {
+  display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: center; text-align: left;
+  width: 240px; padding: 16px 18px; border: 1px solid var(--latia-border); border-radius: 14px;
+  background: var(--latia-surface); font: inherit; color: inherit; cursor: pointer; text-decoration: none;
+}
+.nodo:hover { border-color: var(--latia-primary); }
+.nodo.principal { background: var(--latia-primary-soft); border: 2px solid var(--latia-primary); }
+.nodo.activo { box-shadow: 0 0 0 3px rgba(184, 50, 79, .18); }
+.nodo-texto { display: flex; flex-direction: column; }
+.nodo-texto strong { font-size: 14px; }
+.nodo-texto small, .nodo-resumen { font-size: 12px; color: var(--latia-muted); }
+.nodo-resumen { grid-column: 1 / -1; margin-top: 6px; }
+.nodo.nuevo { display: flex; flex-direction: column; align-items: center; border-style: dashed; background: #f9fafb; }
+.nodo.nuevo strong { display: flex; align-items: center; gap: 6px; color: var(--latia-primary); font-size: 14px; }
+.nodo.nuevo small { font-size: 12px; color: var(--latia-muted); }
+
+.avatar {
+  width: 40px; height: 40px; border-radius: 50%; background: var(--latia-primary-soft); color: var(--latia-primary);
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0;
+}
+.avatar.grande { width: 52px; height: 52px; font-size: 16px; }
+
+.agregar-link { display: inline-flex; align-items: center; gap: 6px; color: #4b5563; font-weight: 700; font-size: 14px; text-decoration: none; padding: 8px 12px; border-radius: 10px; }
+.agregar-link:hover { background: var(--latia-primary-soft); color: var(--latia-primary); }
+.agregar-link mat-icon { width: 18px; height: 18px; font-size: 18px; }
+
+.zoom-texto { font-size: 12px; color: var(--latia-muted); margin-right: 6px; }
+.familia-lista { list-style: none; margin: 16px 0 0; padding: 0; }
+.familia-fila { display: grid; grid-template-columns: 48px minmax(0, 1.4fr) 1fr auto 96px; align-items: center; gap: 16px; padding: 18px 8px; border-bottom: 1px solid var(--latia-border); }
+.familia-fila:last-child { border-bottom: none; }
+.fila-nombre { display: flex; flex-direction: column; }
+.fila-nombre strong { font-size: 17px; }
+.fila-nombre small, .fila-resumen { font-size: 13px; color: var(--latia-muted); }
+.ver-perfil { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--latia-text); text-decoration: none; }
+.ver-perfil mat-icon { width: 18px; height: 18px; font-size: 18px; }
+.fila-acciones { display: flex; justify-content: flex-end; }
+
+/* Panel lateral */
+.panel-card { padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.panel-head { display: flex; align-items: center; gap: 14px; }
+.panel-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+.badge { display: inline-block; margin-top: 6px; padding: 3px 12px; border-radius: 999px; background: var(--latia-primary-soft); color: var(--latia-primary); font-size: 12px; font-weight: 700; }
+.panel-card h3 { margin: 4px 0 0; font-size: 15px; font-weight: 800; }
+.muted { margin: 0; font-size: 13px; color: var(--latia-muted); line-height: 1.5; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; }
+.stats strong { display: block; font-size: 26px; font-weight: 800; }
+.stats span { font-size: 13px; color: var(--latia-muted); }
+.ancho { width: 100%; }
+.link-btn { font-family: inherit; font-weight: 700; --mat-button-text-label-text-color: var(--latia-text); }
+.link-btn mat-icon { margin-right: 8px; }
+
+.contacto-card, .info-card { display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; font-size: 13px; }
+.contacto-card { border: 1px solid var(--latia-border); }
+.contacto-titulo { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--latia-primary); margin-bottom: 4px; }
+.contacto-card span { color: var(--latia-muted); }
+.contacto-card a { margin-top: 6px; color: var(--latia-primary); font-weight: 700; text-decoration: none; }
+.info-card { background: #edf5f0; color: #397562; }
+.info-card strong { font-size: 14px; }
+
+@media (max-width: 1100px) {
+  .familia-layout { grid-template-columns: 1fr; }
+  .familia-fila { grid-template-columns: 48px 1fr auto; }
+  .fila-resumen, .fila-acciones { display: none; }
+}

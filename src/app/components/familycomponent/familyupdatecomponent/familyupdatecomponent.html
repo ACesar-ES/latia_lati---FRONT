@@ -1,0 +1,61 @@
+<div class="form-card">
+  <header class="form-header">
+    <div class="form-icon"><mat-icon>edit_note</mat-icon></div>
+    <div>
+      <h2>Actualizar relación familiar</h2>
+      <p>Modifica los perfiles o el tipo de relación.</p>
+    </div>
+  </header>
+
+  <form [formGroup]="formRelacion" (ngSubmit)="actualizarRelacion()">
+    <mat-form-field appearance="outline">
+      <mat-label>Perfil de origen</mat-label>
+      <mat-select formControlName="origen">
+        @for (p of propios; track p.idHealthProfile) {
+          <mat-option [value]="p.idHealthProfile">{{ p.nombre }}</mat-option>
+        }
+      </mat-select>
+      @if (formRelacion.get('origen')?.hasError('required')) {
+        <mat-error>Selecciona el perfil de origen</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Perfil del familiar</mat-label>
+      <mat-select formControlName="familiar">
+        @for (p of perfiles; track p.idHealthProfile) {
+          <mat-option [value]="p.idHealthProfile">{{ p.nombre }} · perfil {{ p.idHealthProfile }}</mat-option>
+        }
+      </mat-select>
+      @if (formRelacion.get('familiar')?.hasError('required')) {
+        <mat-error>Selecciona el perfil del familiar</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>¿Qué es del perfil de origen?</mat-label>
+      <mat-select formControlName="tipo">
+        @for (t of tiposRelacion; track t) {
+          <mat-option [value]="t">{{ t }}</mat-option>
+        }
+      </mat-select>
+      @if (formRelacion.get('tipo')?.hasError('required')) {
+        <mat-error>Selecciona el tipo de relación</mat-error>
+      }
+    </mat-form-field>
+
+    @if (mensaje) {
+      <p class="mensaje">{{ mensaje }}</p>
+    }
+
+    <div class="actions">
+      <button matButton="outlined" class="cancel-btn" type="button" routerLink="/familia/listar">
+        Cancelar
+      </button>
+      <button matButton="filled" class="submit-btn" type="submit">
+        <mat-icon>save</mat-icon>
+        Guardar cambios
+      </button>
+    </div>
+  </form>
+</div>

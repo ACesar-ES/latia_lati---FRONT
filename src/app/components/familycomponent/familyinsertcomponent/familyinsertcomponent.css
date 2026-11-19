@@ -1,0 +1,17 @@
+.agregar-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 28px; align-items: start; }
+form { display: flex; flex-direction: column; }
+.etiqueta { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: block; }
+mat-form-field { width: 100%; --mat-form-field-outlined-focus-outline-color: var(--latia-primary); }
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.modo { display: flex; gap: 8px; margin: 0 0 20px; }
+.modo button { flex: 1; height: 40px; border-radius: 10px; border: 1px solid var(--latia-border); background: #fff; font: inherit; font-weight: 700; color: var(--latia-muted); cursor: pointer; }
+.modo button.activo { border-color: var(--latia-primary); color: var(--latia-primary); background: var(--latia-primary-soft); }
+.botones { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+.vista-previa { display: flex; flex-direction: column; min-height: 520px; }
+.previa { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 8px 0 48px; }
+.avatar.blanco { background: #fff; width: 64px; height: 64px; font-size: 16px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 999px; background: #fff; color: var(--latia-primary); font-size: 14px; font-weight: 600; }
+.chip mat-icon { width: 18px; height: 18px; font-size: 18px; }
+.flecha { color: var(--latia-primary); }
+.muted.grande { font-size: 17px; margin-bottom: 16px; }
+@media (max-width: 1000px) { .agregar-grid, .dos { grid-template-columns: 1fr; } }

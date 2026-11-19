@@ -29,10 +29,21 @@ export class Healthprofileservice {
       ),
     );
   }
+  // GET /api/healthprofiles (todos los perfiles; se usa para mostrar el nombre de cada familiar)
+  list(): Observable<HealthprofileDTO[]> {
+    return this.http.get<HealthprofileDTO[]>(this.apiURL);
+  }
+
+  // Todos los perfiles del usuario con sesión (el suyo y los de sus familiares)
+  listPropios(): Observable<HealthprofileDTO[]> {
+    return this.http.get<HealthprofileDTO[]>(`${this.apiURL}/consulta-nativa`);
+  }
 
   // POST /api/healthprofiles
+  // Se envía sin idHealthProfile: si llega con id 0, el backend responde 500
   insertHealthProfile(dto: HealthprofileDTO): Observable<HealthprofileDTO> {
-    return this.http.post<HealthprofileDTO>(this.apiURL, dto);
+    const { idHealthProfile, ...perfil } = dto;
+    return this.http.post<HealthprofileDTO>(this.apiURL, perfil);
   }
 
   // PUT /api/healthprofiles  (el backend recibe el DTO completo con su id)

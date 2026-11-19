@@ -1,0 +1,7 @@
+.guias { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.guia { display: flex; flex-direction: column; gap: 16px; min-height: 380px; }
+.guia h2 { margin: 8px 0 0; }
+.guia .muted { font-size: 16px; }
+.icono { width: 48px; height: 48px; font-size: 48px; color: var(--latia-primary); }
+.volver { margin-top: 24px; }
+@media (max-width: 1000px) { .guias { grid-template-columns: 1fr; } .guia { min-height: 0; } }

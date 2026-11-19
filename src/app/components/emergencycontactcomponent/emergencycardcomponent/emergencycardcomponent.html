@@ -1,0 +1,50 @@
+<div class="clinical-container">
+  <!-- Encabezado -->
+  <header class="header-section">
+    <div class="header-titles">
+      <h1>Fichas de emergencia</h1>
+      <p>Tipo de sangre y contacto principal de cada perfil activo de tu familia.</p>
+    </div>
+
+    <div class="header-actions">
+      <button matButton="outlined" class="create-btn" type="button" routerLink="/contactos/listar">
+        <mat-icon>arrow_back</mat-icon>
+        Volver a contactos
+      </button>
+    </div>
+  </header>
+
+  <section class="records-card">
+    <div class="records-header">
+      <h2>{{ dataSource.length }} fichas</h2>
+      <span class="sort-pill">Perfiles activos</span>
+    </div>
+
+    @if (dataSource.length > 0) {
+      <ul class="records-list">
+        @for (f of dataSource; track f.idHealthProfile) {
+          <li class="record-item">
+            <div class="record-info">
+              <div class="record-icon-box"><mat-icon>badge</mat-icon></div>
+              <div class="record-text">
+                <h3>{{ f.patientName }}</h3>
+                <p>Perfil {{ f.idHealthProfile }}</p>
+              </div>
+            </div>
+
+            <div class="record-meta">
+              <span class="patient-badge">Sangre {{ f.bloodType }}</span>
+              <span class="professional">{{ f.contactName }} ({{ f.relationship }}) · {{ f.contactPhone }}</span>
+            </div>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="empty-state">Ningún perfil activo tiene un contacto principal registrado.</p>
+    }
+
+    @if (mensaje) {
+      <p class="empty-state">{{ mensaje }}</p>
+    }
+  </section>
+</div>

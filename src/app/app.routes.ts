@@ -21,6 +21,10 @@ import { Familycomponent } from './components/familycomponent/familycomponent';
 import { Schedulecomponent } from './components/schedulecomponent/schedulecomponent';
 import { Medicamentoscomponents } from './components/medicamentoscomponents/medicamentoscomponents';
 import { Evolutioncomponent } from './components/evolutioncomponent/evolutioncomponent';
+import { Medicaldocumentscomponent } from './components/medicaldocumentscomponent/medicaldocumentscomponent';
+import { Medicaldocumentslistcomponent } from './components/medicaldocumentscomponent/medicaldocumentslistcomponent/medicaldocumentslistcomponent';
+import { Medicaldocumentsinsertcomponent } from './components/medicaldocumentscomponent/medicaldocumentsinsertcomponent/medicaldocumentsinsertcomponent';
+import { Medicaldocumentsupdatecomponent } from './components/medicaldocumentscomponent/medicaldocumentsupdatecomponent/medicaldocumentsupdatecomponent';
 
 
 export const routes: Routes = [
@@ -83,6 +87,17 @@ export const routes: Routes = [
       { path: 'listar', component: Medicationslistcomponent },
       { path: 'insertar', component: Medicationsinsertcomponent },
       { path: 'actualizar/:id', component: Medicationsupdatecomponent },
+    ],
+  },
+
+  {
+    path: "documentos",
+    component: Medicaldocumentscomponent,
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full'},
+      { path: 'listar', component: Medicaldocumentslistcomponent },
+      { path: 'insertar', component: Medicaldocumentsinsertcomponent },
+      { path: 'actualizar/:id', component: Medicaldocumentsupdatecomponent },
     ],
   },
 

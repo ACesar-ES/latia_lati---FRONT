@@ -1,0 +1,69 @@
+<section class="doc-page">
+  <header class="doc-head">
+    <div>
+      <h1>Documentos médicos</h1>
+      <p>Recetas, exámenes e informes guardados en un solo lugar.</p>
+    </div>
+    <button matButton="filled" class="doc-add" type="button" routerLink="/documentos/insertar">
+      <mat-icon>upload_file</mat-icon>
+      Nuevo documento
+    </button>
+  </header>
+
+  <div class="doc-toolbar">
+    <div class="doc-tabs">
+      <button type="button" class="doc-tab" [class.active]="filtroActivo === 'todos'" (click)="filtroActivo = 'todos'">Todos</button>
+      <button type="button" class="doc-tab" [class.active]="filtroActivo === 'receta'" (click)="filtroActivo = 'receta'">Recetas</button>
+      <button type="button" class="doc-tab" [class.active]="filtroActivo === 'examen'" (click)="filtroActivo = 'examen'">Exámenes</button>
+      <button type="button" class="doc-tab" [class.active]="filtroActivo === 'informe'" (click)="filtroActivo = 'informe'">Informes</button>
+    </div>
+
+    <label class="doc-search">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Buscar por título o tipo" [value]="busqueda"
+        (input)="busqueda = $any($event.target).value" />
+    </label>
+  </div>
+
+  <p class="doc-count">{{ documentosFiltrados.length }} documentos</p>
+
+  @if (documentosFiltrados.length > 0) {
+    <ul class="doc-list">
+      @for (d of documentosFiltrados; track d.idMedicalDocuments) {
+        <li class="doc-row">
+          <div class="doc-icon"><mat-icon>{{ iconoDe(d.documentType) }}</mat-icon></div>
+
+          <div class="doc-main">
+            <h3>{{ d.title }}</h3>
+            <p>{{ d.documentType }} · Perfil #{{ d.idHealthProfile }}</p>
+          </div>
+
+          <span class="doc-date">{{ d.documentDate | date: 'dd MMM yyyy' }}</span>
+
+          <div class="doc-actions">
+            <a matIconButton [href]="d.fileURL" target="_blank" rel="noopener" title="Abrir archivo" aria-label="Abrir archivo">
+              <mat-icon>open_in_new</mat-icon>
+            </a>
+            <button matIconButton type="button" title="Editar" aria-label="Editar documento"
+              [routerLink]="['/documentos/actualizar', d.idMedicalDocuments]">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button matIconButton type="button" class="doc-danger" title="Eliminar" aria-label="Eliminar documento"
+              (click)="eliminarDocumento(d.idMedicalDocuments)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else {
+    <div class="doc-empty">
+      <mat-icon>folder_off</mat-icon>
+      <p>No hay documentos registrados.</p>
+    </div>
+  }
+
+  @if (mensaje) {
+    <p class="doc-message">{{ mensaje }}</p>
+  }
+</section>

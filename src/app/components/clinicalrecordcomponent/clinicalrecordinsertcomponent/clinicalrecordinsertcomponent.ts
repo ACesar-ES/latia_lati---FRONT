@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Clinicalrecordservice } from '../../../services/clinicalrecordservice';
 import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
+import { Familycontextservice } from '../../../services/familycontextservice';
 
 @Component({
   imports: [
@@ -27,10 +28,10 @@ import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
   styleUrl: './clinicalrecordinsertcomponent.css',
   templateUrl: './clinicalrecordinsertcomponent.html',
 })
-export class Clinicalrecordinsertcomponent {
+export class Clinicalrecordinsertcomponent implements OnInit {
   formClinicalRecord: any;
   mensaje: string = '';
-  hoy: Date = new Date(); 
+  hoy: Date = new Date();
 
   tiposDocumento: string[] = [
     'Examen de laboratorio',
@@ -45,9 +46,9 @@ export class Clinicalrecordinsertcomponent {
     private fb: FormBuilder,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    public fcS: Familycontextservice,
   ) {
     this.formClinicalRecord = this.fb.group({
-      perfil_salud: [null, [Validators.required, Validators.min(1)]],
       tipo: ['', Validators.required],
       titulo: ['', [Validators.required, Validators.maxLength(100)]],
       descripcion: ['', [Validators.required, Validators.maxLength(500)]],
@@ -57,7 +58,23 @@ export class Clinicalrecordinsertcomponent {
     });
   }
 
+  ngOnInit(): void {
+    // El historial se guarda en el perfil elegido en "Cambiar perfil"
+    this.fcS.cargar().subscribe({
+      next: () => this.cdr.detectChanges(),
+      error: (err) => {
+        console.log('Ocurrió un error al cargar los perfiles', err);
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
   insertarHistorial(): void {
+    const idPerfil = this.fcS.idActivo();
+    if (!idPerfil) {
+      this.mensaje = 'Elige un perfil antes de guardar.';
+      return;
+    }
     if (this.formClinicalRecord.invalid) {
       this.formClinicalRecord.markAllAsTouched();
       this.mensaje = 'Por favor, complete todos los campos correctamente!!';
@@ -65,7 +82,7 @@ export class Clinicalrecordinsertcomponent {
     }
 
     const dto: ClinicalrecordDTO = {
-      idHealthProfile: this.formClinicalRecord.value.perfil_salud,
+      idHealthProfile: idPerfil,
       recordType: this.formClinicalRecord.value.tipo,
       title: this.formClinicalRecord.value.titulo,
       description: this.formClinicalRecord.value.descripcion,
@@ -78,7 +95,7 @@ export class Clinicalrecordinsertcomponent {
       next: () => {
         this.mensaje = 'Historial registrado correctamente!!';
         this.cdr.detectChanges();
-        this.router.navigate(['/listar']);
+        this.router.navigate(['/historial/listar']);
       },
       error: (error) => {
         console.error(error);

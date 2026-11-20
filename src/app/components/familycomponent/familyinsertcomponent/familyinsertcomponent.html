@@ -1,0 +1,115 @@
+<div class="pagina">
+  <header class="cabecera">
+    <div>
+      <h1>Hazle un lugar en tu árbol</h1>
+      <p>Solo necesitas sus datos básicos. El historial puede completarse después.</p>
+    </div>
+    <a class="btn-texto" routerLink="/familia/listar"><mat-icon>arrow_back</mat-icon> Volver</a>
+  </header>
+
+  <div class="agregar-grid">
+    <section class="tarjeta">
+      <h2>Nuevo perfil familiar</h2>
+
+      <form [formGroup]="formRelacion" (ngSubmit)="crearPerfil()">
+        <label class="etiqueta">Parentesco</label>
+        <mat-form-field appearance="outline">
+          <mat-select formControlName="tipo" placeholder="Familiar">
+            @for (t of tiposRelacion; track t) {
+              <mat-option [value]="t">{{ t }}</mat-option>
+            }
+          </mat-select>
+          @if (formRelacion.get('tipo')?.hasError('required')) {
+            <mat-error>Selecciona el parentesco</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="modo">
+          <button type="button" [class.activo]="modo === 'nuevo'" (click)="modo = 'nuevo'">Crear su perfil</button>
+          <button type="button" [class.activo]="modo === 'existente'" (click)="modo = 'existente'">Ya tiene perfil en Latia</button>
+        </div>
+
+        @if (modo === 'nuevo') {
+          <div class="dos">
+            <div>
+              <label class="etiqueta">Fecha de nacimiento</label>
+              <mat-form-field appearance="outline">
+                <input matInput type="date" formControlName="nacimiento" [max]="hoy" />
+              </mat-form-field>
+            </div>
+            <div>
+              <label class="etiqueta">Sexo registrado</label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="sexo" placeholder="Seleccionar">
+                  @for (s of sexos; track s) {
+                    <mat-option [value]="s">{{ s }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="dos">
+            <div>
+              <label class="etiqueta">Grupo sanguíneo</label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="sangre" placeholder="Seleccionar">
+                  @for (g of tiposSangre; track g) {
+                    <mat-option [value]="g">{{ g }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div>
+              <label class="etiqueta">Teléfono</label>
+              <mat-form-field appearance="outline">
+                <input matInput formControlName="telefono" placeholder="+51 987654321" maxlength="20" />
+                @if (formRelacion.get('telefono')?.hasError('pattern')) {
+                  <mat-error>Debe tener entre 7 y 15 dígitos</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+        } @else {
+          <label class="etiqueta">Perfil del familiar</label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="familiar" placeholder="Elige su perfil">
+              @for (p of perfiles; track p.idHealthProfile) {
+                <mat-option [value]="p.idHealthProfile">{{ p.nombre }} · perfil {{ p.idHealthProfile }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+
+        <div class="aviso-verde"><mat-icon>account_tree</mat-icon> Este perfil quedará vinculado a ti como {{ tipoElegido.toLowerCase() }}.</div>
+
+        @if (mensaje) {
+          <p class="mensaje">{{ mensaje }}</p>
+        }
+
+        <div class="botones">
+          <a class="btn-texto" routerLink="/familia/listar">Cancelar</a>
+          <button class="btn-lleno" type="submit"><mat-icon>add</mat-icon> Crear perfil</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Vista previa: dónde quedará en el árbol -->
+    <aside class="tarjeta rosa vista-previa">
+      <h2>Así se verá su lugar</h2>
+      <div class="previa">
+        @if (esAncestro) {
+          <span class="chip"><mat-icon>person_outline</mat-icon> {{ tipoElegido }}</span>
+          <mat-icon class="flecha">expand_more</mat-icon>
+        }
+        <span class="avatar blanco">{{ miPerfil?.iniciales }}</span>
+        <strong>{{ (miPerfil?.nombre ?? '').split(' ')[0] }} · tú</strong>
+        @if (!esAncestro) {
+          <mat-icon class="flecha">expand_more</mat-icon>
+          <span class="chip"><mat-icon>person_outline</mat-icon> {{ tipoElegido }}</span>
+        }
+      </div>
+      <p class="muted grande">El usuario principal permanece en el centro. Sus padres se ubican arriba y sus hijos debajo.</p>
+      <p class="muted">Los datos de cada familiar se mantienen en su propio perfil.</p>
+    </aside>
+  </div>
+</div>

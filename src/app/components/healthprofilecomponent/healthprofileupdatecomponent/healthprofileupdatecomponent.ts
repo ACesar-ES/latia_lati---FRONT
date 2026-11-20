@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { catchError, of, switchMap } from 'rxjs';
+import { catchError, of, switchMap, throwError } from 'rxjs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,6 +13,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { UsersResponseDTO } from '../../../model/UsersResponseDTO';
 import { HealthprofileDTO } from '../../../model/HealthprofileDTO';
 import { EmergencycontactDTO } from '../../../model/EmergencycontactDTO';
+import { Familycontextservice } from '../../../services/familycontextservice';
 import { UsersService } from '../../../services/usuarioservice';
 import { Healthprofileservice } from '../../../services/healthprofileservice';
 import { Emergencycontactservice } from '../../../services/emergencycontactservice';
@@ -46,6 +47,7 @@ export class Healthprofileupdatecomponent implements OnInit {
   gruposSanguineos: string[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
   constructor(
+    private fcS: Familycontextservice,
     private uS: UsersService,
     private hpS: Healthprofileservice,
     private ecS: Emergencycontactservice,
@@ -76,7 +78,7 @@ export class Healthprofileupdatecomponent implements OnInit {
       .pipe(
         switchMap((u) => {
           this.usuario = u;
-          return this.hpS.getByOwner(u.idUser).pipe(catchError(() => of(null)));
+          return this.hpS.getByOwner(u.idUser).pipe(catchError(e => e.status === 404 ? of(null) : throwError(() => e)));
         }),
         switchMap((p) => {
           this.perfil = p;
@@ -102,6 +104,7 @@ export class Healthprofileupdatecomponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
+          this.usuario = null;
           this.mensaje = 'No se pudo cargar tu información.';
           this.cdr.detectChanges();
         },
@@ -142,6 +145,7 @@ export class Healthprofileupdatecomponent implements OnInit {
     guardarPerfil$
       .pipe(
         switchMap((p) => {
+          this.perfil = p;
           if (!hayContacto) return of(null);
 
           const contactoDto: EmergencycontactDTO = {
@@ -162,7 +166,8 @@ export class Healthprofileupdatecomponent implements OnInit {
         next: () => {
           this.uS.refrescar();
           this.snack.open('Información actualizada correctamente!!', 'Cerrar', { duration: 3000 });
-          this.router.navigate(['/perfil/ver']);
+          this.fcS.cargar(true).subscribe({ error: (err) => console.log('No se pudieron recargar los perfiles', err) });
+          this.router.navigate(['/perfil/listar']);
         },
         error: (error) => {
           console.error(error);

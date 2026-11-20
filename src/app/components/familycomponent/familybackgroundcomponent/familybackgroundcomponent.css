@@ -1,0 +1,8 @@
+.aviso-verde { margin-bottom: 24px; }
+.lista-antecedentes { margin-bottom: 24px; }
+.fila { display: grid; grid-template-columns: 1fr 1fr 1fr 24px; align-items: center; gap: 16px; padding: 28px 0; color: inherit; text-decoration: none; border-bottom: 1px solid #f1f2f4; }
+.fila:last-of-type { border-bottom: none; }
+.fila:hover strong { color: var(--latia-primary); }
+.condicion { font-size: 18px; }
+.cita { font-size: 17px; margin: 0 0 20px; }
+@media (max-width: 900px) { .fila { grid-template-columns: 1fr 24px; } .condicion, .fila .muted { grid-column: 1; } }

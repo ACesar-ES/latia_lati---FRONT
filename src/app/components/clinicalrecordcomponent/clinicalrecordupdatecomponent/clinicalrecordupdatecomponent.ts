@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { Clinicalrecordservice } from '../../../services/clinicalrecordservice';
+import { Familycontextservice } from '../../../services/familycontextservice';
 import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
 
 @Component({
@@ -30,6 +31,8 @@ export class Clinicalrecordupdatecomponent implements OnInit {
   formClinicalRecord: any;
   mensaje: string = '';
   hoy: Date = new Date(); // no permite fechas futuras
+  perfilCargado: number | null = null; // perfil al que pertenece el historial
+  guardando: boolean = false;
  
   tiposDocumento: string[] = [
     'Examen de laboratorio',
@@ -45,6 +48,7 @@ export class Clinicalrecordupdatecomponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    public fcS: Familycontextservice,
   ) {}
  
   ngOnInit(): void {
@@ -58,7 +62,6 @@ export class Clinicalrecordupdatecomponent implements OnInit {
  
     this.formClinicalRecord = this.fb.group({
       codigo: [this.idClinicalRecord],
-      perfil_salud: [null, [Validators.required, Validators.min(1)]],
       tipo: ['', Validators.required],
       titulo: ['', [Validators.required, Validators.maxLength(100)]],
       descripcion: ['', [Validators.required, Validators.maxLength(500)]],
@@ -67,15 +70,29 @@ export class Clinicalrecordupdatecomponent implements OnInit {
       condicion_medica: [null, [Validators.required, Validators.min(1)]],
     });
  
-    this.buscarPorId();
+    // Primero se cargan los perfiles para saber cuál está elegido
+    this.fcS.cargar().subscribe({
+      next: () => this.buscarPorId(),
+      error: (err) => {
+        console.log('Ocurrió un error al cargar los perfiles', err);
+        this.mensaje = 'No se pudieron cargar los perfiles!!';
+        this.cdr.detectChanges();
+      },
+    });
   }
  
   buscarPorId(): void {
     this.crS.listId(this.idClinicalRecord).subscribe({
       next: (data: ClinicalrecordDTO) => {
+        // Solo se edita si el historial es del perfil elegido
+        if (data.idHealthProfile !== this.fcS.idActivo()) {
+          this.mensaje = 'Este documento no está disponible en el perfil activo.';
+          this.cdr.detectChanges();
+          return;
+        }
+        this.perfilCargado = data.idHealthProfile;
         this.formClinicalRecord.patchValue({
           codigo: data.idClinicalRecord,
-          perfil_salud: data.idHealthProfile,
           tipo: data.recordType,
           titulo: data.title,
           descripcion: data.description,
@@ -102,7 +119,7 @@ export class Clinicalrecordupdatecomponent implements OnInit {
  
     const dto: ClinicalrecordDTO = {
       idClinicalRecord: this.formClinicalRecord.value.codigo,
-      idHealthProfile: this.formClinicalRecord.value.perfil_salud,
+      idHealthProfile: this.perfilCargado!,
       recordType: this.formClinicalRecord.value.tipo,
       title: this.formClinicalRecord.value.titulo,
       description: this.formClinicalRecord.value.descripcion,
@@ -111,14 +128,17 @@ export class Clinicalrecordupdatecomponent implements OnInit {
       idCondition: this.formClinicalRecord.value.condicion_medica,
     };
  
+    this.guardando = true;
     this.crS.updateClinicalRecord(dto).subscribe({
       next: () => {
+        this.guardando = false;
         this.mensaje = 'Actualizado correctamente!!';
         this.cdr.detectChanges();
         this.router.navigate(['/historial/listar']);
       },
       error: (error) => {
         console.error(error);
+        this.guardando = false;
         this.mensaje = 'Error al actualizar!!';
         this.cdr.detectChanges();
       },

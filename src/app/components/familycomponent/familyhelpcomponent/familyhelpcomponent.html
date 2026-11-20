@@ -1,0 +1,21 @@
+<div class="pagina">
+  <header class="cabecera">
+    <div>
+      <h1>Aquí ninguna pregunta sobra</h1>
+      <p>Una guía breve para moverte con confianza.</p>
+    </div>
+  </header>
+
+  <div class="guias">
+    @for (g of guias; track g.titulo) {
+      <section class="tarjeta guia">
+        <mat-icon class="icono">{{ g.icono }}</mat-icon>
+        <h2>{{ g.titulo }}</h2>
+        <p class="muted">{{ g.texto }}</p>
+        <a class="btn-lleno ancho" [routerLink]="g.ruta"><mat-icon>arrow_forward</mat-icon> Explorar</a>
+      </section>
+    }
+  </div>
+
+  <a class="btn-borde volver" routerLink="/inicio"><mat-icon>home</mat-icon> Volver al inicio</a>
+</div>

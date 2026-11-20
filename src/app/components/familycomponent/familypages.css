@@ -1,0 +1,60 @@
+/* Estilos compartidos de las pantallas de Familia (perfil, agregar, generaciones, antecedentes, ayuda) */
+:host {
+  --latia-primary: #b8324f;
+  --latia-primary-dark: #a22b45;
+  --latia-primary-soft: #fbe9ec;
+  --latia-surface: #ffffff;
+  --latia-text: #1f2a37;
+  --latia-muted: #6b7280;
+  --latia-border: #e5e7eb;
+  --latia-green-bg: #edf5f0;
+  --latia-green: #397562;
+  display: block;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  color: var(--latia-text);
+}
+
+.pagina { padding: 32px 36px 40px; box-sizing: border-box; }
+.cabecera { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
+.cabecera h1 { margin: 0; font-size: 30px; font-weight: 800; letter-spacing: -0.3px; }
+.cabecera p { margin: 8px 0 0; font-size: 14px; color: var(--latia-muted); }
+
+.tarjeta { background: var(--latia-surface); border: 1px solid var(--latia-border); border-radius: 18px; padding: 28px 32px; box-sizing: border-box; }
+.tarjeta h2 { margin: 0 0 20px; font-size: 24px; font-weight: 800; }
+.tarjeta.rosa { background: var(--latia-primary-soft); border-color: #f3d3da; }
+.tarjeta.rosa h2 { color: var(--latia-primary); }
+
+.btn-borde, .btn-lleno, .btn-texto {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 22px;
+  border-radius: 12px; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; box-sizing: border-box;
+}
+.btn-borde { background: var(--latia-surface); border: 1px solid var(--latia-border); color: var(--latia-text); }
+.btn-lleno { background: var(--latia-primary); border: none; color: #fff; }
+.btn-lleno:hover { background: var(--latia-primary-dark); }
+.btn-texto { background: transparent; border: none; color: var(--latia-text); }
+.btn-texto:hover { background: #f3f4f6; }
+.btn-borde mat-icon, .btn-lleno mat-icon, .btn-texto mat-icon { width: 20px; height: 20px; font-size: 20px; }
+.ancho { width: 100%; }
+
+.avatar {
+  width: 44px; height: 44px; border-radius: 50%; background: var(--latia-primary-soft); color: var(--latia-primary);
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0;
+}
+.badge { display: inline-block; padding: 4px 14px; border-radius: 999px; background: var(--latia-primary-soft); color: var(--latia-primary); font-size: 13px; font-weight: 700; }
+.muted { color: var(--latia-muted); font-size: 14px; line-height: 1.5; margin: 0; }
+.aviso-verde { display: flex; align-items: center; gap: 12px; padding: 18px 20px; border-radius: 14px; background: var(--latia-green-bg); color: var(--latia-green); font-size: 15px; }
+.mensaje { margin: 12px 0 0; font-size: 13px; font-weight: 700; color: var(--latia-primary); }
+
+/* Tarjetas de un perfil dentro de un árbol */
+.nodo { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: center; width: 260px; padding: 18px 20px; border: 1px solid var(--latia-border); border-radius: 14px; background: var(--latia-surface); box-sizing: border-box; color: inherit; text-decoration: none; }
+.nodo strong { display: block; font-size: 15px; }
+.nodo small, .nodo .resumen { font-size: 13px; color: var(--latia-muted); }
+.nodo .resumen { grid-column: 1 / -1; margin-top: 8px; }
+.nodo.principal { background: var(--latia-primary-soft); border: 2px solid var(--latia-primary); }
+.nodo.vacio { display: flex; flex-direction: column; align-items: center; gap: 8px; border-style: dashed; background: #f9fafb; cursor: pointer; }
+.nodo.vacio strong { display: flex; align-items: center; gap: 6px; color: var(--latia-primary); }
+
+@media (max-width: 900px) {
+  .pagina { padding: 20px 16px; }
+  .tarjeta { padding: 20px; }
+}

@@ -1,0 +1,19 @@
+.container {
+  padding: 8px 0;
+}
+
+.subtitulo {
+  margin: 4px 0 16px;
+  color: #667580;
+}
+
+.grafico {
+  position: relative;
+  height: 380px;
+  max-width: 900px;
+}
+
+.vacio {
+  padding: 24px 0;
+  color: #667580;
+}

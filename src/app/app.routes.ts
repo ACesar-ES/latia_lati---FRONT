@@ -43,6 +43,10 @@ import { Emergencycontactinsertcomponent } from './components/emergencycontactco
 import { Emergencycontactupdatecomponent } from './components/emergencycontactcomponent/emergencycontactupdatecomponent/emergencycontactupdatecomponent';
 import { Emergencycardcomponent } from './components/emergencycontactcomponent/emergencycardcomponent/emergencycardcomponent';
 import { ReportCountClinicalRecordsByMedicalCondition } from './components/dashboardcomponent/report-count-clinical-records-by-medical-condition/report-count-clinical-records-by-medical-condition';
+import { ReportCountEmergencyContactsByRelationship } from './components/dashboardcomponent/report-count-emergency-contacts-by-relationship/report-count-emergency-contacts-by-relationship';
+import { ReportCountEmergencyContactsByProfile } from './components/dashboardcomponent/report-count-emergency-contacts-by-profile/report-count-emergency-contacts-by-profile';
+import { ReportCountFamilyRelationshipsByType } from './components/dashboardcomponent/report-count-family-relationships-by-type/report-count-family-relationships-by-type';
+import { ReportCountFamilyRelationshipsByProfile } from './components/dashboardcomponent/report-count-family-relationships-by-profile/report-count-family-relationships-by-profile';
 
 
 
@@ -139,6 +143,10 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'reporte01', pathMatch: 'full' },
       { path: 'reporte01', component: ReportCountClinicalRecordsByMedicalCondition },
+      { path: 'contactos-parentesco', component: ReportCountEmergencyContactsByRelationship },
+      { path: 'contactos-perfil', component: ReportCountEmergencyContactsByProfile },
+      { path: 'familia-parentesco', component: ReportCountFamilyRelationshipsByType },
+      { path: 'familia-perfil', component: ReportCountFamilyRelationshipsByProfile },
     ],
   },
 

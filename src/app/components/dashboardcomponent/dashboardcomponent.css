@@ -1,0 +1,21 @@
+.reportes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.reportes a {
+  padding: 6px 14px;
+  border: 1px solid #e3c4cc;
+  border-radius: 999px;
+  color: #b73550;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.reportes a.activo {
+  background: #b73550;
+  border-color: #b73550;
+  color: #ffffff;
+}

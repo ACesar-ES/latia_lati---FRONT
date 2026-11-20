@@ -110,6 +110,7 @@ export class Menucomponent implements OnInit, OnDestroy {
       evolucion: 'Evolución',
       lati: 'Lati',
       ajustes: 'Ajustes',
+      dashboard: 'Reportes',
       perfil: 'Perfil',
     };
 

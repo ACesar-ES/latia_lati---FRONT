@@ -35,6 +35,8 @@ import { Emergencycontactlistcomponent } from './components/emergencycontactcomp
 import { Emergencycontactinsertcomponent } from './components/emergencycontactcomponent/emergencycontactinsertcomponent/emergencycontactinsertcomponent';
 import { Emergencycontactupdatecomponent } from './components/emergencycontactcomponent/emergencycontactupdatecomponent/emergencycontactupdatecomponent';
 import { Emergencycardcomponent } from './components/emergencycontactcomponent/emergencycardcomponent/emergencycardcomponent';
+import { Dashboardcomponent } from './components/dashboardcomponent/dashboardcomponent';
+import { ReportCountClinicalRecordsByMedicalCondition } from './components/dashboardcomponent/report-count-clinical-records-by-medical-condition/report-count-clinical-records-by-medical-condition';
 
 
 export const routes: Routes = [
@@ -98,6 +100,15 @@ export const routes: Routes = [
   {
     path: "lati",
     component: Laticomponent
+  },
+
+  {
+    path: "reportes",
+    component: Dashboardcomponent,
+    children: [
+      { path: '', redirectTo: 'reporte01', pathMatch: 'full' },
+      { path: 'reporte01', component: ReportCountClinicalRecordsByMedicalCondition },
+    ],
   },
 
   {

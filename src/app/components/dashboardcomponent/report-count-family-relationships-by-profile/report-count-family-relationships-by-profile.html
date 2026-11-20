@@ -1,0 +1,20 @@
+<div class="container">
+
+  <h2>Familiares registrados por perfil</h2>
+  <p class="subtitulo">Cantidad de familiares que tiene vinculados cada perfil de salud activo.</p>
+
+  @if (cargado && lista.length === 0) {
+    <p class="vacio">Todavía no hay datos para este reporte.</p>
+  } @else {
+    <p class="subtitulo"><strong>{{ total }}</strong> perfiles con familiares</p>
+    <div class="grafico">
+      <canvas
+        baseChart
+        [type]="chartType"
+        [data]="chartData"
+        [options]="chartOptions">
+      </canvas>
+    </div>
+  }
+
+</div>

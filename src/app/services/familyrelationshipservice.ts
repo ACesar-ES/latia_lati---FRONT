@@ -4,6 +4,8 @@ import { Observable, forkJoin, map, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment.development';
 import { FamilyrelationshipDTO } from '../model/FamilyrelationshipDTO';
+import { CountfamilyrelationshipsbytypeDTO } from '../model/CountfamilyrelationshipsbytypeDTO';
+import { CountfamilyrelationshipsbyprofileDTO } from '../model/CountfamilyrelationshipsbyprofileDTO';
 import { HealthprofileDTO } from '../model/HealthprofileDTO';
 import { UsersResponseDTO } from '../model/UsersResponseDTO';
 import { Healthprofileservice } from './healthprofileservice';
@@ -68,6 +70,16 @@ export class Familyrelationshipservice {
   // HU73: GET /api/familyrelationships/perfil/{healthProfileId}
   listByProfile(idHealthProfile: number): Observable<FamilyrelationshipDTO[]> {
     return this.http.get<FamilyrelationshipDTO[]>(`${this.apiURL}/perfil/${idHealthProfile}`);
+  }
+
+  // Reporte: GET /api/familyrelationships/reporte/tipos
+  getCountByType(): Observable<CountfamilyrelationshipsbytypeDTO[]> {
+    return this.http.get<CountfamilyrelationshipsbytypeDTO[]>(`${this.apiURL}/reporte/tipos`);
+  }
+
+  // Reporte: GET /api/familyrelationships/reporte/perfiles
+  getCountByProfile(): Observable<CountfamilyrelationshipsbyprofileDTO[]> {
+    return this.http.get<CountfamilyrelationshipsbyprofileDTO[]>(`${this.apiURL}/reporte/perfiles`);
   }
 
   /**

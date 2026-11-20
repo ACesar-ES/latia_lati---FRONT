@@ -4,6 +4,8 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { EmergencycontactDTO } from '../model/EmergencycontactDTO';
 import { EmergencycardDTO } from '../model/EmergencycardDTO';
+import { CountemergencycontactsbyrelationshipDTO } from '../model/CountemergencycontactsbyrelationshipDTO';
+import { CountemergencycontactsbyprofileDTO } from '../model/CountemergencycontactsbyprofileDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -56,5 +58,15 @@ export class Emergencycontactservice {
   // HU69 (consulta nativa con JOIN): GET /api/emergencycontacts/fichas
   listFichas(): Observable<EmergencycardDTO[]> {
     return this.http.get<EmergencycardDTO[]>(`${this.apiURL}/fichas`);
+  }
+
+  // Reporte: GET /api/emergencycontacts/reporte/parentescos
+  getCountByRelationship(): Observable<CountemergencycontactsbyrelationshipDTO[]> {
+    return this.http.get<CountemergencycontactsbyrelationshipDTO[]>(`${this.apiURL}/reporte/parentescos`);
+  }
+
+  // Reporte: GET /api/emergencycontacts/reporte/perfiles
+  getCountByProfile(): Observable<CountemergencycontactsbyprofileDTO[]> {
+    return this.http.get<CountemergencycontactsbyprofileDTO[]>(`${this.apiURL}/reporte/perfiles`);
   }
 }

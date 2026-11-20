@@ -77,7 +77,7 @@ export const routes: Routes = [
 
   {
     path: "medicamentos",
-    component: Medicamentoscomponents,
+    component: Medicationscomponent,
     children: [
       { path: '', redirectTo: 'listar', pathMatch: 'full'},
       { path: 'listar', component: Medicationslistcomponent },

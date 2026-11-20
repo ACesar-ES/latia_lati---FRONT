@@ -17,14 +17,14 @@ import { MedicationsDTO } from '../../../model/MedicationsDTO';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
   ],
   selector: 'app-medicationsupdatecomponent',
   styleUrl: './medicationsupdatecomponent.css',
   templateUrl: './medicationsupdatecomponent.html',
 })
 export class Medicationsupdatecomponent implements OnInit {
-  idMedications: any = null;
+  idMedications: number = 0;
   formMedication: any;
   mensaje: string = '';
 
@@ -40,15 +40,7 @@ export class Medicationsupdatecomponent implements OnInit {
     'Gotas',
   ];
 
-  fuerza: string[]= [
-    'mg',
-    'mcg',
-    'g',
-    'UI',
-    'mg/mL',
-    '%',
-    'mEq',
-  ];
+  unidades: string[] = ['mg', 'mcg', 'g', 'UI', 'mg/mL', '%', 'mEq'];
 
   constructor(
     private mS: Medicationsservice,
@@ -71,7 +63,8 @@ export class Medicationsupdatecomponent implements OnInit {
       codigo: [this.idMedications],
       nombre: ['', [Validators.required, Validators.maxLength(100)]],
       forma: ['', Validators.required],
-      fuerza: ['', Validators.required]
+      cantidad: [null, [Validators.required, Validators.min(0.01)]],
+      unidad: ['', Validators.required],
     });
 
     this.buscarPorId();
@@ -80,11 +73,22 @@ export class Medicationsupdatecomponent implements OnInit {
   buscarPorId(): void {
     this.mS.listId(this.idMedications).subscribe({
       next: (data: MedicationsDTO) => {
+        const { cantidad, unidad } = this.separarFuerza(data.strength);
+
+        // Si el valor guardado no está en las listas, se agrega para que el select lo muestre
+        if (data.dosageForm && !this.formaDosaje.includes(data.dosageForm)) {
+          this.formaDosaje.push(data.dosageForm);
+        }
+        if (unidad && !this.unidades.includes(unidad)) {
+          this.unidades.push(unidad);
+        }
+
         this.formMedication.patchValue({
           codigo: data.idMedications,
           nombre: data.nameMedications,
           forma: data.dosageForm,
-          fuerza: data.strength,
+          cantidad: cantidad,
+          unidad: unidad,
         });
         this.cdr.detectChanges();
       },
@@ -96,6 +100,13 @@ export class Medicationsupdatecomponent implements OnInit {
     });
   }
 
+  // "500 mg" -> { cantidad: 500, unidad: 'mg' }
+  private separarFuerza(texto: string): { cantidad: number | null; unidad: string } {
+    const m = (texto ?? '').trim().match(/^([\d.,]+)\s*(.*)$/);
+    if (!m) return { cantidad: null, unidad: '' };
+    return { cantidad: Number(m[1].replace(',', '.')), unidad: m[2].trim() };
+  }
+
   actualizarMedicamento(): void {
     if (this.formMedication.invalid) {
       this.formMedication.markAllAsTouched();
@@ -103,17 +114,17 @@ export class Medicationsupdatecomponent implements OnInit {
       return;
     }
 
+    const v = this.formMedication.value;
+
     const dto: MedicationsDTO = {
-      idMedications: this.formMedication.value.codigo,
-      nameMedications: this.formMedication.value.nombre,
-      dosageForm: this.formMedication.value.forma,
-      strength: this.formMedication.value.fuerza,
+      idMedications: this.idMedications, // aquí SÍ va el id real
+      nameMedications: v.nombre,
+      dosageForm: v.forma,
+      strength: `${v.cantidad} ${v.unidad}`,
     };
 
     this.mS.updateMedication(dto).subscribe({
       next: () => {
-        this.mensaje = 'Actualizado correctamente!!';
-        this.cdr.detectChanges();
         this.router.navigate(['/medicamentos/listar']);
       },
       error: (error) => {

@@ -22,6 +22,13 @@ import { Familyaddcomponent } from './components/familycomponent/familyaddcompon
 import { Profileswitchcomponent } from './components/profileswitchcomponent/profileswitchcomponent';
 import { Schedulecomponent } from './components/schedulecomponent/schedulecomponent';
 import { Evolutioncomponent } from './components/evolutioncomponent/evolutioncomponent';
+
+import { Medicaldocumentscomponent } from './components/medicaldocumentscomponent/medicaldocumentscomponent';
+import { Medicaldocumentslistcomponent } from './components/medicaldocumentscomponent/medicaldocumentslistcomponent/medicaldocumentslistcomponent';
+import { Medicaldocumentsinsertcomponent } from './components/medicaldocumentscomponent/medicaldocumentsinsertcomponent/medicaldocumentsinsertcomponent';
+import { Medicaldocumentsupdatecomponent } from './components/medicaldocumentscomponent/medicaldocumentsupdatecomponent/medicaldocumentsupdatecomponent';
+import { Dashboardcomponent } from './components/dashboardcomponent/dashboardcomponent';
+
 import { Familyshellcomponent } from './components/familycomponent/familyshellcomponent/familyshellcomponent';
 import { Familylistcomponent } from './components/familycomponent/familylistcomponent/familylistcomponent';
 import { Familyinsertcomponent } from './components/familycomponent/familyinsertcomponent/familyinsertcomponent';
@@ -35,8 +42,8 @@ import { Emergencycontactlistcomponent } from './components/emergencycontactcomp
 import { Emergencycontactinsertcomponent } from './components/emergencycontactcomponent/emergencycontactinsertcomponent/emergencycontactinsertcomponent';
 import { Emergencycontactupdatecomponent } from './components/emergencycontactcomponent/emergencycontactupdatecomponent/emergencycontactupdatecomponent';
 import { Emergencycardcomponent } from './components/emergencycontactcomponent/emergencycardcomponent/emergencycardcomponent';
-import { Dashboardcomponent } from './components/dashboardcomponent/dashboardcomponent';
 import { ReportCountClinicalRecordsByMedicalCondition } from './components/dashboardcomponent/report-count-clinical-records-by-medical-condition/report-count-clinical-records-by-medical-condition';
+
 
 
 export const routes: Routes = [
@@ -68,7 +75,7 @@ export const routes: Routes = [
     path: 'inicio',
     component: Homecomponent,
   },
- 
+
   // 4. Historial clínico (con menú lateral), protegido por sesión
   {
     path: 'historial',
@@ -93,8 +100,32 @@ export const routes: Routes = [
   },
 
   {
+
+    path: "medicamentos",
+    component: Medicationscomponent,
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full'},
+      { path: 'listar', component: Medicationslistcomponent },
+      { path: 'insertar', component: Medicationsinsertcomponent },
+      { path: 'actualizar/:id', component: Medicationsupdatecomponent },
+    ],
+  },
+
+  {
+    path: "documentos",
+    component: Medicaldocumentscomponent,
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full'},
+      { path: 'listar', component: Medicaldocumentslistcomponent },
+      { path: 'insertar', component: Medicaldocumentsinsertcomponent },
+      { path: 'actualizar/:id', component: Medicaldocumentsupdatecomponent },
+    ],
+  },
+
+  {
+
     path: "evolucion",
-    component: Evolutioncomponent, 
+    component: Evolutioncomponent,
   },
 
   {
@@ -115,7 +146,7 @@ export const routes: Routes = [
     path: 'ajustes',
     component: Settingscomponent
   },
- 
+
   {
     path: 'perfil',
     component: Healthprofilecomponent,
@@ -125,6 +156,7 @@ export const routes: Routes = [
       { path: 'actualizar', component: Healthprofileupdatecomponent },
     ],
   },
+
 
   {
     path: 'medicamentos',
@@ -199,9 +231,9 @@ export const routes: Routes = [
     redirectTo: '/historial'
   },
   // 5. Cualquier URL desconocida vuelve al inicio (SIEMPRE al final)
-  
-  { 
-    path: '**', 
+
+  {
+    path: '**',
     redirectTo: '/inicio'
   },
 

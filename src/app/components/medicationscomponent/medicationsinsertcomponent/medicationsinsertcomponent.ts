@@ -25,8 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class Medicationsinsertcomponent {
   formMedication: any;
-  mensaje: string='';
-  hoy: Date = new Date();
+  mensaje: string = '';
 
   formaDosaje: string[] = [
     'Tableta',
@@ -40,15 +39,7 @@ export class Medicationsinsertcomponent {
     'Gotas',
   ];
 
-  fuerza: string[]= [
-    'mg',
-    'mcg',
-    'g',
-    'UI',
-    'mg/mL',
-    '%',
-    'mEq',
-  ];
+  unidades: string[] = ['mg', 'mcg', 'g', 'UI', 'mg/mL', '%', 'mEq'];
 
   constructor(
     private mS: Medicationsservice,
@@ -56,10 +47,11 @@ export class Medicationsinsertcomponent {
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {
-    this.formMedication=this.fb.group({
+    this.formMedication = this.fb.group({
       nombre: ['', [Validators.required, Validators.maxLength(100)]],
       forma: ['', Validators.required],
-      fuerza: ['', Validators.required]
+      cantidad: [null, [Validators.required, Validators.min(0.01)]],
+      unidad: ['', Validators.required],
     });
   }
 
@@ -70,18 +62,17 @@ export class Medicationsinsertcomponent {
       return;
     }
 
+    const v = this.formMedication.value;
+
     const dto: MedicationsDTO = {
-      idMedications: 0,
-      nameMedications: this.formMedication.value.nombre,
-      dosageForm: this.formMedication.value.forma,
-      strength: this.formMedication.value.fuerza,
-    };
+      nameMedications: v.nombre,
+      dosageForm: v.forma,
+      strength: `${v.cantidad} ${v.unidad}`, // ej: "500 mg"
+    } as MedicationsDTO;
 
     this.mS.insertMedication(dto).subscribe({
       next: () => {
-        this.mensaje = 'Medicamento registrado correctamente!!';
-        this.cdr.detectChanges();
-        this.router.navigate(['/listar']);
+        this.router.navigate(['/medicamentos/listar']);
       },
       error: (error) => {
         console.error(error);

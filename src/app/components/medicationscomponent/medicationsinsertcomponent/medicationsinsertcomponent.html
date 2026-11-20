@@ -1,6 +1,6 @@
 <div class="form-card">
   <header class="form-header">
-    <div class="form-icon"><mat-icon>note_add</mat-icon></div>
+    <div class="form-icon"><mat-icon>vaccines</mat-icon></div>
     <div>
       <h2>Crear medicamento</h2>
       <p>Registra un nuevo medicamento.</p>
@@ -9,8 +9,8 @@
 
   <form [formGroup]="formMedication" (ngSubmit)="insertarMedicamento()">
     <mat-form-field appearance="outline">
-      <mat-label>Nombre del Medicamento</mat-label>
-      <input matInput placeholder="Hemograma completo" formControlName="nombre" maxlength="100" />
+      <mat-label>Nombre del medicamento</mat-label>
+      <input matInput placeholder="Paracetamol" formControlName="nombre" maxlength="100" />
       @if (formMedication.get('nombre')?.hasError('required')) {
         <mat-error>El nombre del medicamento es obligatorio</mat-error>
       }
@@ -28,24 +28,34 @@
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Fuerza</mat-label>
-      <mat-select formControlName="fuerza">
-        @for (fu of fuerza; track fu) {
-          <mat-option [value]="fu">{{ fu }}</mat-option>
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" min="0" placeholder="500" formControlName="cantidad" />
+        @if (formMedication.get('cantidad')?.invalid) {
+          <mat-error>Ingresa una cantidad válida</mat-error>
         }
-      </mat-select>
-      @if (formMedication.get('fuerza')?.hasError('required')) {
-        <mat-error>Selecciona una fuerza</mat-error>
-      }
-    </mat-form-field>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Unidad</mat-label>
+        <mat-select formControlName="unidad">
+          @for (u of unidades; track u) {
+            <mat-option [value]="u">{{ u }}</mat-option>
+          }
+        </mat-select>
+        @if (formMedication.get('unidad')?.hasError('required')) {
+          <mat-error>Selecciona una unidad</mat-error>
+        }
+      </mat-form-field>
+    </div>
 
     @if (mensaje) {
       <p class="mensaje">{{ mensaje }}</p>
     }
 
     <div class="actions">
-      <button matButton="outlined" class="cancel-btn" type="button" routerLink="/historial/listar">
+      <button matButton="outlined" class="cancel-btn" type="button" routerLink="/medicamentos/listar">
         Cancelar
       </button>
       <button matButton="outlined" class="clear-btn" type="button" (click)="limpiar()">

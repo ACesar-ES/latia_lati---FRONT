@@ -1,12 +1,11 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Clinicalrecordservice } from '../../../services/clinicalrecordservice';
-import { UsersService } from '../../../services/usuarioservice';
 import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
-import { Subscription } from 'rxjs';
+import { Familycontextservice } from '../../../services/familycontextservice';
 
 @Component({
   imports: [DatePipe, RouterLink, MatIconModule, MatButtonModule],
@@ -14,49 +13,69 @@ import { Subscription } from 'rxjs';
   styleUrl: './clinicalrecordlistcomponent.css',
   templateUrl: './clinicalrecordlistcomponent.html',
 })
-export class Clinicalrecordlistcomponent implements OnInit, OnDestroy {
+export class Clinicalrecordlistcomponent implements OnInit {
   dataSource: ClinicalrecordDTO[] = [];
   filtroActivo: string = 'todos';
   busqueda: string = '';
-  mensaje: string = '';
-  primerNombre = '';
-  private usuarioSub?: Subscription;
+  aviso: string = '';
+  cargando: boolean = false;
  
   constructor(
     private crS: Clinicalrecordservice,
-    private usuarios: UsersService,
     private cdr: ChangeDetectorRef,
+    public fcS: Familycontextservice,
   ) {}
  
   ngOnInit(): void {
-    this.usuarioSub = this.usuarios.usuario$.subscribe((usuario) => {
-      this.primerNombre = usuario?.firstName?.trim() ?? '';
-      this.cdr.detectChanges();
-    });
-    this.usuarios.cargarUsuarioActual().subscribe({
-      error: (err) => console.error('No se pudo cargar el nombre del usuario', err),
-    });
-    this.listarHistoriales();
+    this.cargarPerfiles();
   }
 
-  ngOnDestroy(): void {
-    this.usuarioSub?.unsubscribe();
+  // Primero se cargan los perfiles para saber cuál está elegido
+  cargarPerfiles(forzar: boolean = false): void {
+    this.fcS.cargar(forzar).subscribe({
+      next: () => {
+        this.cdr.detectChanges();
+        this.listarHistoriales();
+      },
+      error: (err) => {
+        console.log('Ocurrió un error al cargar los perfiles', err);
+        this.cdr.detectChanges();
+      },
+    });
   }
- 
+
+  recargar(): void {
+    this.cargarPerfiles(true);
+  }
+
+  // Nombre del perfil elegido, para el título
+  get primerNombre(): string {
+    const id = this.fcS.idActivo();
+    return id ? this.fcS.nombre(id) : '';
+  }
+
+  // Solo los registros del perfil elegido
   listarHistoriales(): void {
+    const idPerfil = this.fcS.idActivo();
+    this.dataSource = [];
+    this.aviso = '';
+    if (!idPerfil) return;
+    this.cargando = true;
     this.crS.getClinicalRecord().subscribe({
       next: (data) => {
-        this.dataSource = data;
+        this.dataSource = data.filter((r) => r.idHealthProfile === idPerfil);
+        this.cargando = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.log('Ocurrió un error al obtener los registros', err);
-        this.mensaje = 'Error al obtener los registros!!';
+        this.aviso = 'Error al obtener los registros!!';
+        this.cargando = false;
         this.cdr.detectChanges();
       },
     });
   }
- 
+
   // Filtro por pestaña + buscador, más recientes primero
   get historialesFiltrados(): ClinicalrecordDTO[] {
     const q = this.busqueda.trim().toLowerCase();
@@ -80,7 +99,7 @@ export class Clinicalrecordlistcomponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.log('Ocurrió un error al eliminar el registro', err);
-        this.mensaje = 'Error al eliminar!!';
+        this.aviso = 'Error al eliminar!!';
         this.cdr.detectChanges();
       },
     });

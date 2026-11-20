@@ -1,0 +1,263 @@
+.latia-family {
+  --canvas: #f7f8fa;
+  --paper: #fff;
+  --ink: #25323b;
+  --muted: #566671;
+  --line: #dfe6e9;
+  --wine: #ac304d;
+  --tint: #fbedf1;
+  --leaf: #eaf5ee;
+  --green: #245e4a;
+  --rail: #b2c0c6;
+  display: block;
+  box-sizing: border-box;
+  min-height: calc(100dvh - 72px);
+  max-width: 1540px;
+  margin: auto;
+  padding: clamp(20px, 3vw, 46px);
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: 'Nunito Sans', 'Nunito', 'Segoe UI', sans-serif;
+  & * {
+    box-sizing: border-box;
+  }
+  & h1,
+  & h2,
+  & h3,
+  & p {
+    margin: 0;
+  }
+  & h1 {
+    margin-top: 7px;
+    font-weight: 820;
+    font-size: clamp(1.7rem, 2.8vw, 2.35rem);
+    line-height: 1.18;
+    letter-spacing: -0.035em;
+  }
+  & h2 {
+    font-size: 1.27rem;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+  & .eyebrow {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--wine);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  & .page-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 26px;
+  }
+  & .page-head p,
+  & .empty p,
+  & .care p,
+  & .note {
+    color: var(--muted);
+    line-height: 1.55;
+    margin-top: 7px;
+  }
+  & .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: 0 3px 15px rgb(24 40 52 / 4%);
+  }
+  & .primary,
+  & .secondary,
+  & .back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 11px;
+    text-align: center;
+    font: inherit;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  & .primary {
+    color: #fff;
+    background: var(--wine);
+    border: 1px solid var(--wine);
+  }
+  & .secondary {
+    color: var(--wine);
+    background: var(--paper);
+    border: 1px solid var(--line);
+  }
+  & .back {
+    min-height: 32px;
+    margin-bottom: 12px;
+    justify-content: start;
+    padding: 0;
+    color: var(--wine);
+    font-size: 0.85rem;
+  }
+  & .back .fi {
+    transform: rotate(180deg);
+    width: 14px;
+  }
+  & button {
+    font: inherit;
+    cursor: pointer;
+  }
+  & button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  & :is(a, button, summary, [tabindex='0']):focus-visible {
+    outline: 3px solid var(--wine);
+    outline-offset: 3px;
+  }
+  & .primary:hover,
+  & .secondary:hover {
+    filter: brightness(0.94);
+  }
+  & .avatar {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: var(--wine);
+    background: var(--tint);
+    font-size: 0.85rem;
+    font-weight: 850;
+  }
+  & .avatar.large {
+    width: 66px;
+    height: 66px;
+    font-size: 1.3rem;
+  }
+  & .tag {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-weight: 750;
+    font-size: 0.77rem;
+    color: var(--wine);
+    background: var(--tint);
+  }
+  & .care {
+    padding: 18px;
+    border: 1px solid color-mix(in srgb, var(--green) 23%, transparent);
+    border-radius: 15px;
+    background: var(--leaf);
+    color: var(--green);
+  }
+  & .care summary {
+    cursor: pointer;
+    font-weight: 750;
+  }
+  & .care p {
+    color: var(--green);
+    font-size: 0.88rem;
+  }
+  & .care .fi {
+    vertical-align: middle;
+    margin-right: 7px;
+  }
+  & .empty {
+    padding: 34px 20px;
+    text-align: center;
+  }
+  & .empty p {
+    margin-bottom: 16px;
+  }
+  & .fi {
+    display: inline-block;
+    width: 19px;
+    height: 19px;
+    flex: none;
+    background: currentColor;
+    mask: var(--glyph) center/contain no-repeat;
+    -webkit-mask: var(--glyph) center/contain no-repeat;
+  }
+  & .fi.plus {
+    --glyph: url('/latia-family/plus.svg');
+  }
+  & .fi.tree {
+    --glyph: url('/latia-family/tree.svg');
+  }
+  & .fi.users {
+    --glyph: url('/latia-family/users.svg');
+  }
+  & .fi.folder {
+    --glyph: url('/latia-family/folder.svg');
+  }
+  & .fi.shield {
+    --glyph: url('/latia-family/shield.svg');
+  }
+  & .fi.arrow {
+    --glyph: url('/latia-family/arrow.svg');
+  }
+  & .fi.zoom-in {
+    --glyph: url('/latia-family/zoom-in.svg');
+  }
+  & .fi.zoom-out {
+    --glyph: url('/latia-family/zoom-out.svg');
+  }
+  & .fi.expand {
+    --glyph: url('/latia-family/expand.svg');
+  }
+}
+html.dark-theme .latia-family {
+  --paper: #222a32;
+  --canvas: #181f26;
+  --ink: #f2f4f6;
+  --muted: #bac7cf;
+  --line: #43535e;
+  --wine: #ff9bb5;
+  --tint: #432733;
+  --leaf: #253b34;
+  --green: #a4e5c5;
+  --rail: #7c919e;
+  color-scheme: dark;
+}
+html.dark-theme .latia-family .primary {
+  color: #35121c;
+}
+@media (max-width: 720px) {
+  .latia-family {
+    padding: 20px 12px;
+  }
+  .latia-family .page-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 13px;
+    margin-bottom: 18px;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .latia-family .panel {
+    animation: latia-family-in 0.23s ease-out both;
+  }
+  .latia-family :is(a, button) {
+    transition:
+      background-color 0.16s,
+      border-color 0.16s,
+      box-shadow 0.16s;
+  }
+  @keyframes latia-family-in {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

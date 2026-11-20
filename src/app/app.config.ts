@@ -7,10 +7,9 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './interceptors/Authinterceptor';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 
-
- 
 registerLocaleData(localeEs);
 
 export const appConfig: ApplicationConfig = {
@@ -18,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes), provideClientHydration(withEventReplay()),
     provideHttpClient(withInterceptors([authInterceptor])),
-    { provide: LOCALE_ID, useValue: 'es' }
+    { provide: LOCALE_ID, useValue: 'es' },
+    provideCharts(withDefaultRegisterables())
   ]
 };

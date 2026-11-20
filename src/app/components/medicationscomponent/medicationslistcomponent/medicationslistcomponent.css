@@ -1,0 +1,220 @@
+.med-page {
+  --med-primary: #b5294a;
+  --med-soft: #fde8ec;
+  --med-border: #e6e8ec;
+  --med-muted: #6b7280;
+
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+/* Encabezado */
+.med-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.med-eyebrow {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--med-primary);
+}
+
+.med-hero h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.med-sub {
+  margin: 6px 0 0;
+  color: var(--med-muted);
+}
+
+.med-add {
+  --mat-button-filled-container-color: var(--med-primary);
+  --mat-button-filled-label-text-color: #fff;
+}
+
+/* Filtros */
+.med-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.med-chips {
+  display: flex;
+  gap: 8px;
+}
+
+.med-chip {
+  padding: 8px 16px;
+  border: 1px solid var(--med-border);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.med-chip:hover {
+  border-color: var(--med-primary);
+}
+
+.med-chip.active {
+  background: var(--med-primary);
+  border-color: var(--med-primary);
+  color: #fff;
+}
+
+.med-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 260px;
+  padding: 8px 14px;
+  border: 1px solid var(--med-border);
+  border-radius: 12px;
+}
+
+.med-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.med-count {
+  margin: 8px 0 16px;
+  color: var(--med-muted);
+  font-size: 14px;
+}
+
+/* Tarjetas */
+.med-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.med-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid var(--med-border);
+  border-top: 4px solid var(--med-primary);
+  border-radius: 16px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.med-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.med-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.med-pill-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--med-soft);
+  color: var(--med-primary);
+}
+
+.med-form {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--med-soft);
+  color: var(--med-primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.med-card h3 {
+  margin: 8px 0 0;
+  font-size: 18px;
+}
+
+.med-strength {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--med-muted);
+}
+
+.med-strength mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.med-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed var(--med-border);
+}
+
+.med-id {
+  color: var(--med-muted);
+  font-size: 13px;
+}
+
+.med-actions {
+  display: flex;
+}
+
+.med-danger {
+  color: #c62828;
+}
+
+/* Vacío y mensajes */
+.med-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  border: 2px dashed var(--med-border);
+  border-radius: 16px;
+  color: var(--med-muted);
+}
+
+.med-empty mat-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 48px;
+}
+
+.med-message {
+  margin-top: 16px;
+  text-align: center;
+  color: var(--med-muted);
+}

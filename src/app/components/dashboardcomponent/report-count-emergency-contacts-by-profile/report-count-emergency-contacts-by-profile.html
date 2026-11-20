@@ -1,0 +1,20 @@
+<div class="container">
+
+  <h2>Contactos de emergencia por perfil</h2>
+  <p class="subtitulo">Contactos principales y secundarios que tiene cada perfil de salud activo.</p>
+
+  @if (cargado && lista.length === 0) {
+    <p class="vacio">Todavía no hay datos para este reporte.</p>
+  } @else {
+    <p class="subtitulo"><strong>{{ total }}</strong> perfiles con contactos</p>
+    <div class="grafico">
+      <canvas
+        baseChart
+        [type]="chartType"
+        [data]="chartData"
+        [options]="chartOptions">
+      </canvas>
+    </div>
+  }
+
+</div>

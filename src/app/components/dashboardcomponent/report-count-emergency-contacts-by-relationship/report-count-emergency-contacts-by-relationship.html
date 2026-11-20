@@ -1,0 +1,20 @@
+<div class="container">
+
+  <h2>Contactos de emergencia por parentesco</h2>
+  <p class="subtitulo">Cuántos contactos de emergencia hay registrados según su parentesco con el paciente.</p>
+
+  @if (cargado && lista.length === 0) {
+    <p class="vacio">Todavía no hay datos para este reporte.</p>
+  } @else {
+    <p class="subtitulo"><strong>{{ total }}</strong> contactos en total</p>
+    <div class="grafico">
+      <canvas
+        baseChart
+        [type]="chartType"
+        [data]="chartData"
+        [options]="chartOptions">
+      </canvas>
+    </div>
+  }
+
+</div>

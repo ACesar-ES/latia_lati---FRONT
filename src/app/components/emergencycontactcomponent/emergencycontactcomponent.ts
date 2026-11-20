@@ -4,8 +4,8 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   imports: [Menucomponent, RouterOutlet],
-  selector: 'app-medicamentoscomponents',
-  styleUrl: './medicamentoscomponents.css',
-  templateUrl: './medicamentoscomponents.html',
+  selector: 'app-emergencycontactcomponent',
+  styleUrl: './emergencycontactcomponent.css',
+  templateUrl: './emergencycontactcomponent.html',
 })
-export class Medicamentoscomponents {}
+export class Emergencycontactcomponent {}

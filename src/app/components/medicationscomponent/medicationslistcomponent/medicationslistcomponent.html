@@ -1,0 +1,96 @@
+<section class="med-page">
+  <!-- Encabezado -->
+  <header class="med-hero">
+    <div>
+      <p class="med-eyebrow">Botiquín</p>
+      <h1>Mis medicamentos</h1>
+      <p class="med-sub">Consulta la forma de dosaje y la fuerza de cada medicamento.</p>
+    </div>
+
+    <button matButton="filled" class="med-add" type="button" routerLink="/medicamentos/insertar">
+      <mat-icon>add</mat-icon>
+      Nuevo medicamento
+    </button>
+  </header>
+
+  <!-- Filtros y búsqueda -->
+  <div class="med-toolbar">
+    <div class="med-chips">
+      <button type="button" class="med-chip" [class.active]="filtroActivo === 'todos'" (click)="filtroActivo = 'todos'">
+        Todos
+      </button>
+      <button type="button" class="med-chip" [class.active]="filtroActivo === 'tableta'" (click)="filtroActivo = 'tableta'">
+        Tabletas
+      </button>
+      <button type="button" class="med-chip" [class.active]="filtroActivo === 'jarabe'" (click)="filtroActivo = 'jarabe'">
+        Jarabes
+      </button>
+    </div>
+
+    <label class="med-search">
+      <mat-icon>search</mat-icon>
+      <input
+        type="text"
+        placeholder="Buscar por nombre, forma o fuerza"
+        [value]="busqueda"
+        (input)="busqueda = $any($event.target).value"
+      />
+    </label>
+  </div>
+
+  <p class="med-count">{{ medicamentosFiltrados.length }} medicamentos</p>
+
+  <!-- Cuadrícula de tarjetas -->
+  @if (medicamentosFiltrados.length > 0) {
+    <div class="med-grid">
+      @for (m of medicamentosFiltrados; track m.idMedications) {
+        <article class="med-card">
+          <div class="med-card-top">
+            <div class="med-pill-icon"><mat-icon>medication</mat-icon></div>
+            <span class="med-form">{{ m.dosageForm }}</span>
+          </div>
+
+          <h3>{{ m.nameMedications }}</h3>
+          <p class="med-strength">
+            <mat-icon>science</mat-icon>
+            {{ m.strength }}
+          </p>
+
+          <footer class="med-card-footer">
+            <span class="med-id">#{{ m.idMedications }}</span>
+            <div class="med-actions">
+              <button
+                matIconButton
+                type="button"
+                title="Editar"
+                aria-label="Editar medicamento"
+                [routerLink]="['/medicamentos/actualizar', m.idMedications]"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                matIconButton
+                type="button"
+                class="med-danger"
+                title="Eliminar"
+                aria-label="Eliminar medicamento"
+                (click)="eliminarMedicamento(m.idMedications!)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </footer>
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="med-empty">
+      <mat-icon>inventory_2</mat-icon>
+      <p>No hay medicamentos registrados.</p>
+    </div>
+  }
+
+  @if (mensaje) {
+    <p class="med-message">{{ mensaje }}</p>
+  }
+</section>

@@ -1,3 +1,233 @@
-<app-menucomponent>
-    <router-outlet></router-outlet>
-</app-menucomponent>
+<app-menucomponent
+  ><main class="latia-family">
+    <header class="page-head">
+      <div>
+        <span class="eyebrow">Mi espacio / Familia</span>
+        <h1>Tu árbol, tu círculo de cuidado</h1>
+        <p>Una historia compartida. Un espacio propio para cada persona.</p>
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap">
+        <a class="secondary" routerLink="/familia/listar">Gestionar vínculos</a>
+        @if (fcS.fase === 'listo' && fcS.raiz()) {
+          <a class="primary" routerLink="/familia/agregar"><i class="fi plus"></i>Agregar familiar</a>
+        }
+      </div>
+    </header>
+    @if (fcS.fase !== 'listo' || !fcS.raiz()) {
+      <app-familystatecomponent (reintentar)="recargar()" />
+      @if (fcS.fase === 'listo' && fcS.perfiles.length) {
+        <a class="secondary" routerLink="/cambiar-perfil">Ver perfiles que ya administro</a>
+      }
+    } @else if (fcS.raiz(); as raiz) {
+      <div class="layout" [class.expanded]="ampliado">
+        <section class="panel tree-panel" aria-label="Árbol y lista de familiares">
+          <div class="toolbar">
+            <div class="segmented" role="group" aria-label="Vista de familia">
+              <button
+                type="button"
+                (click)="modo = 'arbol'"
+                [attr.aria-pressed]="modo === 'arbol'"
+              >
+                <i class="fi tree"></i>Árbol
+              </button>
+              <button
+                type="button"
+                (click)="modo = 'lista'"
+                [attr.aria-pressed]="modo === 'lista'"
+              >
+                <i class="fi users"></i>Lista
+              </button>
+            </div>
+            <small
+              >{{ fcS.perfiles.length }}
+              {{ fcS.perfiles.length === 1 ? 'perfil' : 'perfiles' }}</small
+            >
+            @if (modo === 'arbol') {
+              <div class="zoom">
+                <button
+                  type="button"
+                  class="icon"
+                  aria-label="Reducir árbol"
+                  [disabled]="zoom <= 70"
+                  (click)="cambiarZoom(-10)"
+                >
+                  <i class="fi zoom-out"></i>
+                </button>
+                <button
+                  type="button"
+                  class="scale"
+                  title="Restablecer tamaño"
+                  (click)="zoom = 100"
+                >
+                  {{ zoom }}%
+                </button>
+                <button
+                  type="button"
+                  class="icon"
+                  aria-label="Ampliar árbol"
+                  [disabled]="zoom >= 140"
+                  (click)="cambiarZoom(10)"
+                >
+                  <i class="fi zoom-in"></i>
+                </button>
+                <button
+                  type="button"
+                  class="icon"
+                  aria-label="Alternar ancho del árbol"
+                  [attr.aria-pressed]="ampliado"
+                  (click)="ampliado = !ampliado"
+                >
+                  <i class="fi expand"></i>
+                </button>
+              </div>
+            }
+          </div>
+          @if (modo === 'arbol') {
+            <div class="viewport" tabindex="0" aria-label="Árbol genealógico desplazable">
+              <div class="canvas" [style.--factor]="zoom / 100">
+                <div class="generation parents">
+                  @for (padre of padres(); track padre) {
+                    <div class="branch">
+                      @if (ancestros(padre).length) {
+                        <div class="generation grandparents">
+                          @for (abuelo of ancestros(padre); track abuelo) {
+                            <div class="branch">
+                              <ng-container
+                                [ngTemplateOutlet]="persona"
+                                [ngTemplateOutletContext]="{ $implicit: abuelo }"
+                              />
+                            </div>
+                          }
+                        </div>
+                      }
+                      <ng-container
+                        [ngTemplateOutlet]="persona"
+                        [ngTemplateOutletContext]="{ $implicit: padre }"
+                      />
+                      <a
+                        class="micro"
+                        routerLink="/familia/agregar"
+                        [queryParams]="{ origen: padre, tipo: 'Madre' }"
+                        >+ Agregar progenitor</a
+                      >
+                    </div>
+                  }
+                  @for (rol of disponibles(); track rol) {
+                    <div class="branch">
+                      <a
+                        class="add-node"
+                        routerLink="/familia/agregar"
+                        [queryParams]="{ origen: raiz.idHealthProfile, tipo: rol }"
+                        ><i class="fi plus"></i>Agregar {{ rol.toLowerCase() }}</a
+                      >
+                    </div>
+                  }
+                </div>
+                <div class="root-row">
+                  <ng-container
+                    [ngTemplateOutlet]="persona"
+                    [ngTemplateOutletContext]="{ $implicit: raiz.idHealthProfile }"
+                  />
+                </div>
+                <div class="generation children">
+                  @for (hijo of hijos(); track hijo) {
+                    <div class="branch">
+                      <ng-container
+                        [ngTemplateOutlet]="persona"
+                        [ngTemplateOutletContext]="{ $implicit: hijo }"
+                      />
+                    </div>
+                  }
+                  <div class="branch">
+                    <a
+                      class="add-node"
+                      routerLink="/familia/agregar"
+                      [queryParams]="{ origen: raiz.idHealthProfile, tipo: 'Hijo' }"
+                      ><i class="fi plus"></i>Agregar hijo/a</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          } @else {
+            <table mat-table [dataSource]="fcS.ordenados()" aria-label="Lista de familiares">
+              <ng-container matColumnDef="person"
+                ><th mat-header-cell *matHeaderCellDef>Familiar</th>
+                <td mat-cell *matCellDef="let p">
+                  <div class="person-cell">
+                    <span class="avatar">{{ fcS.iniciales(p.idHealthProfile) }}</span
+                    ><span
+                      ><strong>{{ fcS.nombre(p.idHealthProfile) }}</strong
+                      ><small>{{ fcS.parentesco(p.idHealthProfile) }}</small></span
+                    >
+                  </div>
+                </td></ng-container
+              >
+              <ng-container matColumnDef="action"
+                ><th mat-header-cell *matHeaderCellDef>Perfil</th>
+                <td mat-cell *matCellDef="let p">
+                  <button
+                    type="button"
+                    class="secondary small"
+                    [attr.aria-pressed]="fcS.idActivo() === p.idHealthProfile"
+                    (click)="fcS.seleccionar(p.idHealthProfile)"
+                  >
+                    {{ fcS.idActivo() === p.idHealthProfile ? 'En uso' : 'Seleccionar' }}
+                  </button>
+                </td></ng-container
+              >
+              <tr mat-header-row *matHeaderRowDef="columns"></tr>
+              <tr mat-row *matRowDef="let row; columns: columns"></tr>
+            </table>
+          }
+          <p class="caption">
+            <span></span>Elige un perfil para ver su detalle. La raíz del árbol siempre eres tú.
+          </p>
+        </section>
+        <aside class="side">
+          @if (fcS.activo(); as perfil) {
+            <section class="panel detail" aria-live="polite">
+              <span class="eyebrow">Perfil seleccionado</span>
+              <span class="avatar large">{{ fcS.iniciales(perfil.idHealthProfile) }}</span>
+              <h2>{{ fcS.nombre(perfil.idHealthProfile) }}</h2>
+              <span class="tag">{{ fcS.parentesco(perfil.idHealthProfile) }}</span>
+              <dl>
+                <dt>Vínculos en el árbol</dt>
+                <dd>{{ fcS.conexiones(perfil.idHealthProfile) }}</dd>
+              </dl>
+              <a class="primary" routerLink="/historial/listar"
+                ><i class="fi folder"></i>Ver historial</a
+              >
+              <a
+                class="secondary"
+                routerLink="/familia/agregar"
+                [queryParams]="{ origen: perfil.idHealthProfile }"
+                ><i class="fi tree"></i>Agregar vínculo</a
+              >
+            </section>
+          }
+          <details class="care">
+            <summary><i class="fi shield"></i>¿Cómo funciona el árbol?</summary>
+            <p>
+              Tus padres aparecen arriba y tus hijos abajo. En Lista también encuentras perfiles que
+              todavía no tienen vínculos.
+            </p>
+          </details>
+        </aside>
+      </div>
+      <ng-template #persona let-id
+        ><button
+          type="button"
+          class="node"
+          [class.root]="id === raiz.idHealthProfile"
+          [attr.aria-pressed]="fcS.idActivo() === id"
+          (click)="fcS.seleccionar(id)"
+        >
+          <span class="avatar">{{ fcS.iniciales(id) }}</span
+          ><strong>{{ fcS.nombre(id) }}</strong
+          ><small>{{ fcS.parentesco(id) }}</small>
+        </button></ng-template
+      >
+    }
+  </main></app-menucomponent
+>

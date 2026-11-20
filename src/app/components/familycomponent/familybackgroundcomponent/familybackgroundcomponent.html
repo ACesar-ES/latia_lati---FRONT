@@ -1,0 +1,40 @@
+<div class="pagina">
+  <header class="cabecera">
+    <div>
+      <h1>Conoce tu historia familiar</h1>
+      <p>Registra información confirmada y prepárala para tu próxima consulta.</p>
+    </div>
+    <a class="btn-borde" routerLink="/familia/listar"><mat-icon>account_tree</mat-icon> Ver árbol</a>
+  </header>
+
+  <div class="aviso-verde"><mat-icon>verified_user</mat-icon> Los antecedentes ayudan a conversar con un profesional. No determinan por sí solos tu salud.</div>
+
+  <section class="tarjeta lista-antecedentes">
+    <h2>Antecedentes registrados</h2>
+    @for (a of antecedentes; track a.perfil.idHealthProfile) {
+      <a class="fila" [routerLink]="['/familia/perfil', a.perfil.idHealthProfile]">
+        <strong>{{ a.perfil.nombre }} · {{ a.tipo.toLowerCase() }}</strong>
+        <span class="condicion">{{ a.condiciones.length ? a.condiciones.join(', ') : 'Sin antecedentes registrados' }}</span>
+        <span class="muted">{{ a.condiciones.length ? 'Según su historial clínico' : 'Puedes completar su perfil' }}</span>
+        <mat-icon>chevron_right</mat-icon>
+      </a>
+    }
+    @if (!tieneAbuelos) {
+      <a class="fila" routerLink="/familia/generaciones">
+        <strong>Abuelos</strong>
+        <span class="condicion">Información pendiente</span>
+        <span class="muted">Amplía tu árbol familiar</span>
+        <mat-icon>chevron_right</mat-icon>
+      </a>
+    }
+    @if (mensaje) {
+      <p class="mensaje">{{ mensaje }}</p>
+    }
+  </section>
+
+  <section class="tarjeta rosa">
+    <h2>Una buena pregunta para tu consulta</h2>
+    <p class="cita">«Con estos antecedentes familiares, ¿qué controles tienen sentido para mí y con qué frecuencia?»</p>
+    <a class="btn-lleno" routerLink="/lati"><mat-icon>favorite_border</mat-icon> Preparar mis preguntas</a>
+  </section>
+</div>

@@ -1,0 +1,67 @@
+<div class="pagina">
+  <header class="cabecera">
+    <div>
+      <h1>Un espacio para {{ primerNombre || 'tu familiar' }}</h1>
+      <p>Su información está reunida aquí, con el contexto de su familia.</p>
+    </div>
+    <a class="btn-borde" routerLink="/familia/listar"><mat-icon>account_tree</mat-icon> Volver al árbol</a>
+  </header>
+
+  @if (perfil; as p) {
+    <section class="tarjeta perfil-cabecera">
+      <span class="avatar grande">{{ p.iniciales }}</span>
+      <div class="perfil-nombre">
+        <h2>{{ p.nombre }}</h2>
+        <span class="badge">{{ tipo }}</span>
+      </div>
+      <div class="perfil-acciones">
+        @if (p.principal) {
+          <a class="btn-texto" routerLink="/perfil"><mat-icon>person_outline</mat-icon> Editar perfil</a>
+        } @else if (relacionConmigo) {
+          <a class="btn-texto" [routerLink]="['/familia/actualizar', relacionConmigo.idFamilyRelationship]"><mat-icon>person_outline</mat-icon> Editar perfil</a>
+        }
+        <button class="btn-lleno" type="button" (click)="imprimir()"><mat-icon>download</mat-icon> Resumen PDF</button>
+      </div>
+    </section>
+
+    <div class="perfil-grid">
+      <section class="tarjeta">
+        <h2>Lo importante, a mano</h2>
+        <dl class="datos">
+          <dt>Grupo sanguíneo</dt>
+          <dd>{{ p.bloodType || 'Pendiente de registrar' }}</dd>
+
+          <dt>Contacto de emergencia</dt>
+          <dd>
+            @if (contactoPrincipal; as c) {
+              {{ c.name }} · {{ c.relationship }} · {{ c.phone }}
+            } @else {
+              Sin contacto registrado
+            }
+          </dd>
+
+          <dt>Familiares vinculados</dt>
+          <dd>{{ relacionesPerfil.length }} {{ relacionesPerfil.length === 1 ? 'relación' : 'relaciones' }}</dd>
+        </dl>
+        @if (contactoPrincipal; as c) {
+          <a class="btn-texto" [routerLink]="['/contactos/actualizar', c.idEmergencyContact]"><mat-icon>arrow_forward</mat-icon> Editar contacto de emergencia</a>
+        } @else {
+          <a class="btn-texto" routerLink="/contactos/insertar" [queryParams]="{ perfil: p.idHealthProfile }"><mat-icon>arrow_forward</mat-icon> Completar información</a>
+        }
+      </section>
+
+      <section class="tarjeta acciones">
+        <h2>¿Qué te gustaría hacer?</h2>
+        <a class="btn-texto" routerLink="/historial"><mat-icon>folder_shared</mat-icon> Ver historial</a>
+        <a class="btn-texto" routerLink="/lati"><mat-icon>favorite_border</mat-icon> Conversar con Lati</a>
+        <a class="btn-texto" routerLink="/agenda"><mat-icon>calendar_today</mat-icon> Programar una cita</a>
+        <a class="btn-lleno ancho" routerLink="/historial/insertar"><mat-icon>upload</mat-icon> Subir un documento</a>
+        <a class="btn-texto gris" routerLink="/familia/antecedentes"><mat-icon>account_tree</mat-icon> Ver antecedentes familiares</a>
+      </section>
+    </div>
+  }
+
+  @if (mensaje) {
+    <p class="mensaje">{{ mensaje }}</p>
+  }
+</div>

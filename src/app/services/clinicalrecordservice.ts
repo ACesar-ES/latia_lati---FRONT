@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ClinicalrecordDTO } from '../model/ClinicalrecordDTO';
+import { CountclinicalrecordsbymedicalconditionDTO } from '../model/CountclinicalrecordsbymedicalconditionDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +28,9 @@ export class Clinicalrecordservice {
   }
   updateClinicalRecord(dto: ClinicalrecordDTO): Observable<ClinicalrecordDTO> {
     return this.http.put<ClinicalrecordDTO>(this.apiURL, dto);
+  }
+
+  getcountbycondition(): Observable<CountclinicalrecordsbymedicalconditionDTO[]> {
+    return this.http.get<CountclinicalrecordsbymedicalconditionDTO[]>(`${this.apiURL}/reporte/condiciones`)
   }
 }

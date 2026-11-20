@@ -1,0 +1,74 @@
+<div class="form-card">
+  <header class="form-header">
+    <div class="form-icon"><mat-icon>contact_phone</mat-icon></div>
+    <div>
+      <h2>Agregar contacto de emergencia</h2>
+      <p>Registra a quién llamar si algo le pasa a este perfil.</p>
+    </div>
+  </header>
+
+  <form [formGroup]="formContacto" (ngSubmit)="insertarContacto()">
+    <mat-form-field appearance="outline">
+      <mat-label>Perfil de salud</mat-label>
+      <mat-select formControlName="perfil">
+        @for (p of perfiles; track p.idHealthProfile) {
+          <mat-option [value]="p.idHealthProfile">{{ p.nombre }}</mat-option>
+        }
+      </mat-select>
+      @if (formContacto.get('perfil')?.hasError('required')) {
+        <mat-error>Selecciona un perfil de salud</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre del contacto</mat-label>
+      <input matInput placeholder="María Pérez" formControlName="nombre" maxlength="150" />
+      @if (formContacto.get('nombre')?.hasError('required')) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Teléfono</mat-label>
+        <input matInput placeholder="+51 987654321" formControlName="telefono" maxlength="20" />
+        @if (formContacto.get('telefono')?.hasError('required')) {
+          <mat-error>El teléfono es obligatorio</mat-error>
+        } @else if (formContacto.get('telefono')?.hasError('pattern')) {
+          <mat-error>Debe tener entre 7 y 15 dígitos</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Parentesco</mat-label>
+        <mat-select formControlName="parentesco">
+          @for (pa of parentescos; track pa) {
+            <mat-option [value]="pa">{{ pa }}</mat-option>
+          }
+        </mat-select>
+        @if (formContacto.get('parentesco')?.hasError('required')) {
+          <mat-error>Selecciona el parentesco</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-checkbox class="check" formControlName="principal">Es el contacto principal</mat-checkbox>
+
+    @if (mensaje) {
+      <p class="mensaje">{{ mensaje }}</p>
+    }
+
+    <div class="actions">
+      <button matButton="outlined" class="cancel-btn" type="button" routerLink="/contactos/listar">
+        Cancelar
+      </button>
+      <button matButton="outlined" class="clear-btn" type="button" (click)="limpiar()">
+        Limpiar
+      </button>
+      <button matButton="filled" class="submit-btn" type="submit">
+        <mat-icon>save</mat-icon>
+        Registrar contacto
+      </button>
+    </div>
+  </form>
+</div>

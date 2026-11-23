@@ -11,6 +11,8 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { Clinicalrecordservice } from '../../../services/clinicalrecordservice';
 import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
 import { Familycontextservice } from '../../../services/familycontextservice';
+import { Medicalconditionservice } from '../../../services/medicalconditionservice';
+import { MedicalconditionDTO } from '../../../model/MedicalconditionDTO';
 
 @Component({
   imports: [
@@ -32,6 +34,7 @@ export class Clinicalrecordinsertcomponent implements OnInit {
   formClinicalRecord: any;
   mensaje: string = '';
   hoy: Date = new Date();
+  condiciones: MedicalconditionDTO[] = [];
 
   tiposDocumento: string[] = [
     'Examen de laboratorio',
@@ -43,6 +46,7 @@ export class Clinicalrecordinsertcomponent implements OnInit {
 
   constructor(
     private crS: Clinicalrecordservice,
+    private mcS: Medicalconditionservice,
     private fb: FormBuilder,
     private router: Router,
     private cdr: ChangeDetectorRef,
@@ -54,7 +58,7 @@ export class Clinicalrecordinsertcomponent implements OnInit {
       descripcion: ['', [Validators.required, Validators.maxLength(500)]],
       dia_evento: [new Date(), Validators.required],
       profesional: ['', Validators.required],
-      condicion_medica: [null, [Validators.required, Validators.min(1)]],
+      condicion_medica: [null, Validators.required],
     });
   }
 
@@ -64,6 +68,21 @@ export class Clinicalrecordinsertcomponent implements OnInit {
       next: () => this.cdr.detectChanges(),
       error: (err) => {
         console.log('Ocurrió un error al cargar los perfiles', err);
+        this.cdr.detectChanges();
+      },
+    });
+
+    this.cargarCondiciones();
+  }
+
+  cargarCondiciones(): void {
+    this.mcS.getMedicalCondition().subscribe({
+      next: (data) => {
+        this.condiciones = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log('Ocurrió un error al cargar las condiciones médicas', err);
         this.cdr.detectChanges();
       },
     });

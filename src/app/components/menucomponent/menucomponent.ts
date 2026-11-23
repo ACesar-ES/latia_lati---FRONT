@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, PLATFORM_ID, V
 import { isPlatformBrowser } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Familycontextservice } from '../../services/familycontextservice';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
@@ -11,12 +12,14 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { UsersService } from '../../services/usuarioservice';
 import { Themeservice } from '../../services/themeservice';
+import { Loginservice } from '../../services/loginservice';
 
 @Component({
   selector: 'app-menucomponent',
   imports: [
     MatIconModule,
     MatButtonModule,
+    MatMenuModule,
     MatSidenavModule,
     MatListModule,
     RouterLink,
@@ -27,18 +30,17 @@ import { Themeservice } from '../../services/themeservice';
 })
 export class Menucomponent implements OnInit, OnDestroy {
   @ViewChild('drawer') private drawer?: MatSidenav;
-  pantallaChica: boolean = false; // en celular el menú se abre con un botón
+  pantallaChica: boolean = false;
   nombre: string = 'Mi cuenta';
   primerNombre: string = 'Mi cuenta';
   iniciales: string = '';
   modoOscuro = false;
   seccionActual = 'Inicio';
-  private sub?: Subscription;
-  private rutaSub?: Subscription;
-  private pantallaSub?: Subscription;
+  private sub = new Subscription();
 
   constructor(
     private uS: UsersService,
+    private lS: Loginservice,
     private cdr: ChangeDetectorRef,
     private tema: Themeservice,
     private router: Router,
@@ -51,50 +53,66 @@ export class Menucomponent implements OnInit, OnDestroy {
     this.tema.inicializar();
     this.modoOscuro = this.tema.modoOscuro;
     this.actualizarSeccion(this.router.url);
-    this.rutaSub = this.router.events
-      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe((event) => {
-        this.actualizarSeccion(event.urlAfterRedirects);
-        if (this.pantallaChica) this.drawer?.close();
-      });
+
+    this.sub.add(
+      this.router.events
+        .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+        .subscribe((event) => {
+          this.actualizarSeccion(event.urlAfterRedirects);
+          if (this.pantallaChica) this.drawer?.close();
+        }),
+    );
 
     // Cada vez que cambie el usuario de la sesión, el menú muestra su nombre
-    this.sub = this.uS.usuario$.subscribe((u) => {
-      if (u) {
-        this.nombre = `${u.firstName} ${u.lastName}`.trim();
-        this.primerNombre = u.firstName.trim();
-        this.iniciales = (
-          (u.firstName?.charAt(0) ?? '') + (u.lastName?.charAt(0) ?? '')
-        ).toUpperCase();
-      } else {
-        this.nombre = this.primerNombre = 'Mi cuenta';
-        this.iniciales = '';
-      }
-      this.cdr.detectChanges();
-    });
+    this.sub.add(
+      this.uS.usuario$.subscribe((u) => {
+        if (u) {
+          this.nombre = `${u.firstName} ${u.lastName}`.trim();
+          this.primerNombre = u.firstName.trim();
+          this.iniciales = (
+            (u.firstName?.charAt(0) ?? '') + (u.lastName?.charAt(0) ?? '')
+          ).toUpperCase();
+        } else {
+          this.nombre = this.primerNombre = 'Mi cuenta';
+          this.iniciales = '';
+        }
+        this.cdr.detectChanges();
+      }),
+    );
 
     if (isPlatformBrowser(this.platformId)) {
-      this.pantallaSub = this.breakpoint.observe('(max-width: 720px)').subscribe((estado) => {
-        this.pantallaChica = estado.matches;
-        this.cdr.detectChanges();
-      });
+      this.sub.add(
+        this.breakpoint.observe('(max-width: 720px)').subscribe((estado) => {
+          this.pantallaChica = estado.matches;
+          this.cdr.detectChanges();
+        }),
+      );
     }
 
     // Perfiles de la cuenta: el botón de arriba muestra el perfil elegido
-    this.fcS.cargar().subscribe({
-      next: () => this.cdr.detectChanges(),
-      error: (err) => console.log('Ocurrió un error al cargar los perfiles', err),
-    });
+    this.sub.add(
+      this.fcS.cargar().subscribe({
+        next: () => this.cdr.detectChanges(),
+        error: (err) => console.log('Ocurrió un error al cargar los perfiles', err),
+      }),
+    );
   }
 
   ngOnDestroy(): void {
-    this.sub?.unsubscribe();
-    this.rutaSub?.unsubscribe();
-    this.pantallaSub?.unsubscribe();
+    this.sub.unsubscribe();
   }
 
   toggleTheme(): void {
     this.modoOscuro = this.tema.alternar();
+  }
+
+  cerrarSesion(): void {
+    this.lS.logout();
+    this.uS.limpiar();
+    this.fcS.cargar(true).subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login']),
+    });
   }
 
   private actualizarSeccion(url: string): void {
@@ -102,6 +120,7 @@ export class Menucomponent implements OnInit, OnDestroy {
     const secciones: Record<string, string> = {
       inicio: 'Inicio',
       historial: 'Historial',
+      condicion_medica: 'Condición médica',
       familia: 'Familia',
       contactos: 'Contactos',
       'cambiar-perfil': 'Cambiar perfil',

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { CountclinicalrecordsbymedicalconditionDTO } from '../../../model/CountclinicalrecordsbymedicalconditionDTO';
@@ -11,7 +11,10 @@ type TipoGrafico = 'bar' | 'line' | 'pie' | 'doughnut' | 'radar';
   styleUrl: './report-count-clinical-records-by-medical-condition.css',
   templateUrl: './report-count-clinical-records-by-medical-condition.html',
 })
-export class ReportCountClinicalRecordsByMedicalCondition {
+export class ReportCountClinicalRecordsByMedicalCondition implements OnInit {
+  // Avisa al dashboard cuando llegan los datos (para sus tarjetas de resumen)
+  @Output() cargado = new EventEmitter<CountclinicalrecordsbymedicalconditionDTO[]>();
+
   lista: CountclinicalrecordsbymedicalconditionDTO[] = [];
 
   public chartType: TipoGrafico = 'bar';
@@ -34,9 +37,21 @@ export class ReportCountClinicalRecordsByMedicalCondition {
       legend: {
         display: true,
         position: 'bottom',
+        labels: { font: { family: 'Nunito, Segoe UI, sans-serif', weight: 'bold' } },
+      },
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { family: 'Nunito, Segoe UI, sans-serif' } } },
+      y: {
+        beginAtZero: true,
+        grid: { color: '#f1f2f4' },
+        ticks: { precision: 0, font: { family: 'Nunito, Segoe UI, sans-serif' } },
       },
     },
   };
+
+  // Colores de la paleta de Latia (se repiten si hay más condiciones que colores)
+  private paleta: string[] = ['#b8324f', '#d98a9b', '#8c7bb0', '#5aa17f', '#e2a65b', '#9ca3af'];
 
   constructor(
     private crS: Clinicalrecordservice,
@@ -56,17 +71,15 @@ export class ReportCountClinicalRecordsByMedicalCondition {
           labels: data.map((item) => item.conditionName),
           datasets: [
             {
-              label: 'Cantidad de cultivos',
+              label: 'Cantidad de historiales clínicos',
               data: data.map((item) => item.totalRecords),
-              backgroundColor: [
-                '#efa0a0', 
-                '#e70f0f', 
-                '#f83e3e', 
-                '#f10303'],
-              borderWidth: 1,
+              backgroundColor: data.map((_, i) => this.paleta[i % this.paleta.length]),
+              borderRadius: 8,
+              borderWidth: 0,
             },
           ],
         };
+        this.cargado.emit(data);
         this.cdr.detectChanges();
       },
       error: (error) => {

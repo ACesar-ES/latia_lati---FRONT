@@ -82,6 +82,7 @@ form {
   font-size: 14px;
   color: var(--latia-text);
   outline: none;
+  box-sizing: border-box;
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
@@ -96,6 +97,55 @@ form {
 .field input.invalid {
   border-color: #c62828;
 }
+
+/* Contenedor de contraseña + ojito */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  border-radius: 50%;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.toggle-password-btn:hover {
+  color: var(--latia-primary);
+  background: rgba(184, 50, 79, 0.08);
+}
+
+.toggle-password-btn mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
 .error {
   margin-top: 6px;
   font-size: 12px;

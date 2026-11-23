@@ -11,16 +11,20 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { Clinicalrecordservice } from '../../../services/clinicalrecordservice';
 import { Familycontextservice } from '../../../services/familycontextservice';
 import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
+import { Medicalconditionservice } from '../../../services/medicalconditionservice';
+import { MedicalconditionDTO } from '../../../model/MedicalconditionDTO';
 
 @Component({
-  imports: [ReactiveFormsModule,
+  imports: [
+    ReactiveFormsModule,
     RouterLink,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatDatepickerModule,
     MatButtonModule,
-    MatIconModule],
+    MatIconModule,
+  ],
   providers: [provideNativeDateAdapter()],
   selector: 'app-clinicalrecordupdatecomponent',
   styleUrl: './clinicalrecordupdatecomponent.css',
@@ -33,7 +37,8 @@ export class Clinicalrecordupdatecomponent implements OnInit {
   hoy: Date = new Date(); // no permite fechas futuras
   perfilCargado: number | null = null; // perfil al que pertenece el historial
   guardando: boolean = false;
- 
+  condiciones: MedicalconditionDTO[] = [];
+
   tiposDocumento: string[] = [
     'Examen de laboratorio',
     'Receta médica',
@@ -41,25 +46,26 @@ export class Clinicalrecordupdatecomponent implements OnInit {
     'Resumen de consulta',
     'Orden médica',
   ];
- 
+
   constructor(
     private crS: Clinicalrecordservice,
+    private mcS: Medicalconditionservice,
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef,
     public fcS: Familycontextservice,
   ) {}
- 
+
   ngOnInit(): void {
     // Recuperar ID desde la URL: /historial/editar/:id
     this.idClinicalRecord = Number(this.route.snapshot.paramMap.get('id'));
- 
+
     if (!this.idClinicalRecord || isNaN(this.idClinicalRecord)) {
       this.mensaje = 'ID inválido';
       return;
     }
- 
+
     this.formClinicalRecord = this.fb.group({
       codigo: [this.idClinicalRecord],
       tipo: ['', Validators.required],
@@ -67,9 +73,11 @@ export class Clinicalrecordupdatecomponent implements OnInit {
       descripcion: ['', [Validators.required, Validators.maxLength(500)]],
       dia_evento: [new Date(), Validators.required],
       profesional: ['', Validators.required],
-      condicion_medica: [null, [Validators.required, Validators.min(1)]],
+      condicion_medica: [null, Validators.required],
     });
- 
+
+    this.cargarCondiciones();
+
     // Primero se cargan los perfiles para saber cuál está elegido
     this.fcS.cargar().subscribe({
       next: () => this.buscarPorId(),
@@ -80,7 +88,20 @@ export class Clinicalrecordupdatecomponent implements OnInit {
       },
     });
   }
- 
+
+  cargarCondiciones(): void {
+    this.mcS.getMedicalCondition().subscribe({
+      next: (data) => {
+        this.condiciones = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log('Ocurrió un error al cargar las condiciones médicas', err);
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
   buscarPorId(): void {
     this.crS.listId(this.idClinicalRecord).subscribe({
       next: (data: ClinicalrecordDTO) => {
@@ -96,7 +117,7 @@ export class Clinicalrecordupdatecomponent implements OnInit {
           tipo: data.recordType,
           titulo: data.title,
           descripcion: data.description,
-          dia_evento: new Date(data.eventDate), 
+          dia_evento: new Date(data.eventDate),
           profesional: data.professionalName,
           condicion_medica: data.idCondition,
         });
@@ -109,14 +130,14 @@ export class Clinicalrecordupdatecomponent implements OnInit {
       },
     });
   }
- 
+
   actualizarHistorial(): void {
     if (this.formClinicalRecord.invalid) {
       this.formClinicalRecord.markAllAsTouched();
       this.mensaje = 'Por favor, complete todos los campos correctamente!!';
       return;
     }
- 
+
     const dto: ClinicalrecordDTO = {
       idClinicalRecord: this.formClinicalRecord.value.codigo,
       idHealthProfile: this.perfilCargado!,
@@ -127,7 +148,7 @@ export class Clinicalrecordupdatecomponent implements OnInit {
       professionalName: this.formClinicalRecord.value.profesional,
       idCondition: this.formClinicalRecord.value.condicion_medica,
     };
- 
+
     this.guardando = true;
     this.crS.updateClinicalRecord(dto).subscribe({
       next: () => {

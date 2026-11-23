@@ -21,6 +21,10 @@
           <mat-icon matListItemIcon>folder_special</mat-icon>
           <span matListItemTitle>Historial</span>
         </a>
+        <a mat-list-item routerLink="/condicionmedica" routerLinkActive="active-link">
+          <mat-icon matListItemIcon>medical_information</mat-icon>
+          <span matListItemTitle>Condición médica</span>
+        </a>
         <a mat-list-item routerLink="/familia" routerLinkActive="active-link">
           <mat-icon matListItemIcon>account_tree</mat-icon>
           <span matListItemTitle>Familia</span>
@@ -34,7 +38,7 @@
           <span matListItemTitle>Agenda</span>
         </a>
         <a mat-list-item routerLink="/medicamentos" routerLinkActive="active-link">
-          <mat-icon matListItemIcon>medication</mat-icon>
+          <mat-icon matListItemIcon>monitor_heart</mat-icon>
           <span matListItemTitle>Medicamentos</span>
         </a>
         <a mat-list-item routerLink="/documentos" routerLinkActive="active-link">
@@ -101,11 +105,45 @@
           <input type="text" placeholder="Buscar en Latia" />
         </div>
 
-        <a class="top-user-pill" routerLink="/cambiar-perfil" [queryParams]="{ volver: seccionActual === 'Historial' ? 'historial' : 'familia' }" aria-label="Cambiar perfil de salud" title="Cambiar perfil">
-          <span class="top-user-avatar">{{ fcS.idActivo() ? fcS.iniciales(fcS.idActivo()!) : iniciales }}</span>
-          <span class="top-user-name">{{ fcS.idActivo() ? fcS.nombre(fcS.idActivo()!) : 'Elegir perfil' }}</span>
-          <mat-icon>arrow_drop_down</mat-icon>
-        </a>
+        <div class="top-user-group">
+          <a
+            class="top-user-pill"
+            routerLink="/cambiar-perfil"
+            [queryParams]="{ volver: seccionActual === 'Historial' ? 'historial' : 'familia' }"
+            aria-label="Cambiar perfil de salud"
+            title="Cambiar perfil"
+          >
+            <span class="top-user-avatar">{{ fcS.idActivo() ? fcS.iniciales(fcS.idActivo()!) : iniciales }}</span>
+            <span class="top-user-name">{{ fcS.idActivo() ? fcS.nombre(fcS.idActivo()!) : 'Elegir perfil' }}</span>
+          </a>
+
+          <button
+            matIconButton
+            type="button"
+            class="dropdown-trigger-btn"
+            [matMenuTriggerFor]="menuPerfil"
+            aria-label="Opciones de cuenta y sesión"
+            title="Opciones"
+          >
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+        </div>
+
+        <mat-menu #menuPerfil="matMenu" class="latia-user-menu">
+          <button
+            mat-menu-item
+            type="button"
+            routerLink="/cambiar-perfil"
+            [queryParams]="{ volver: seccionActual === 'Historial' ? 'historial' : 'familia' }"
+          >
+            <mat-icon>switch_account</mat-icon>
+            <span>Cambiar perfil</span>
+          </button>
+          <button mat-menu-item type="button" class="logout-menu-item" (click)="cerrarSesion()">
+            <mat-icon>logout</mat-icon>
+            <span>Cerrar sesión</span>
+          </button>
+        </mat-menu>
 
         <button
           matIconButton

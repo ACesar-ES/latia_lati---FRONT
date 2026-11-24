@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Medicalconditionservice } from '../../services/medicalconditionservice';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { MedicalconditionDTO } from '../../model/MedicalconditionDTO';
+import { Menucomponent } from '../menucomponent/menucomponent';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Menucomponent, RouterOutlet],
   selector: 'app-medicalconditioncomponent',
   styleUrl: './medicalconditioncomponent.css',
   templateUrl: './medicalconditioncomponent.html',

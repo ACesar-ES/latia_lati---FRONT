@@ -1,10 +1,105 @@
 <app-menucomponent>
-    <nav class="reportes">
-        <a routerLink="reporte01" routerLinkActive="activo">Historias por condición</a>
-        <a routerLink="contactos-parentesco" routerLinkActive="activo">Contactos por parentesco</a>
-        <a routerLink="contactos-perfil" routerLinkActive="activo">Contactos por perfil</a>
-        <a routerLink="familia-parentesco" routerLinkActive="activo">Familia por parentesco</a>
-        <a routerLink="familia-perfil" routerLinkActive="activo">Familiares por perfil</a>
-    </nav>
-    <router-outlet></router-outlet>
+    <div class="dashboard-page">
+
+        <!-- Encabezado -->
+        <mat-toolbar class="header-toolbar">
+            <div class="header-titles">
+                <h1>Tu panorama de salud</h1>
+                <p>Un vistazo a lo que has reunido en Latia.</p>
+            </div>
+
+            <span class="spacer"></span>
+
+            <div class="header-actions">
+                <button matButton="outlined" class="refresh-btn" type="button" (click)="actualizar()">
+                    <mat-icon>refresh</mat-icon>
+                    Actualizar
+                </button>
+                <button matButton="filled" class="primary-btn" type="button" routerLink="/historial/insertar">
+                    <mat-icon>add</mat-icon>
+                    Crear historial
+                </button>
+            </div>
+        </mat-toolbar>
+
+        <!-- Tarjetas de resumen -->
+        <section class="kpi-grid" aria-label="Resumen">
+
+            <mat-card appearance="outlined" class="kpi-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="kpi-icon"><mat-icon>folder_special</mat-icon></div>
+                    <mat-card-subtitle class="kpi-label">Historiales registrados</mat-card-subtitle>
+                    <mat-card-title class="kpi-value">{{ resumen.total }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="kpi-hint">Documentos, recetas y exámenes</mat-card-content>
+            </mat-card>
+
+            <mat-card appearance="outlined" class="kpi-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="kpi-icon"><mat-icon>monitor_heart</mat-icon></div>
+                    <mat-card-subtitle class="kpi-label">Condiciones médicas</mat-card-subtitle>
+                    <mat-card-title class="kpi-value">{{ resumen.condiciones }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="kpi-hint">Con al menos un historial</mat-card-content>
+            </mat-card>
+
+            <mat-card appearance="outlined" class="kpi-card">
+                <mat-card-header>
+                    <div mat-card-avatar class="kpi-icon"><mat-icon>trending_up</mat-icon></div>
+                    <mat-card-subtitle class="kpi-label">Más frecuente</mat-card-subtitle>
+                    <mat-card-title class="kpi-value kpi-text">{{ resumen.principal }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="kpi-hint">Condición con más historiales</mat-card-content>
+            </mat-card>
+        </section>
+
+        <!-- Reportes (componentes hijos), organizados por tema -->
+        <mat-tab-group class="reports-tabs" animationDuration="200ms" preserveContent>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>folder_special</mat-icon>
+                    <span class="tab-text">Historial</span>
+                </ng-template>
+
+                <div class="reports-grid single">
+                    <app-report-count-clinical-records-by-medical-condition
+                        class="report-slot"
+                        (cargado)="alCargarCondiciones($event)">
+                    </app-report-count-clinical-records-by-medical-condition>
+                </div>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>contact_phone</mat-icon>
+                    <span class="tab-text">Contactos de emergencia</span>
+                </ng-template>
+
+                <div class="reports-grid">
+                    <app-report-count-emergency-contacts-by-profile class="report-slot">
+                    </app-report-count-emergency-contacts-by-profile>
+
+                    <app-report-count-emergency-contacts-by-relationship class="report-slot">
+                    </app-report-count-emergency-contacts-by-relationship>
+                </div>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>account_tree</mat-icon>
+                    <span class="tab-text">Familia</span>
+                </ng-template>
+
+                <div class="reports-grid">
+                    <app-report-count-family-relationships-by-profile class="report-slot">
+                    </app-report-count-family-relationships-by-profile>
+
+                    <app-report-count-family-relationships-by-type class="report-slot">
+                    </app-report-count-family-relationships-by-type>
+                </div>
+            </mat-tab>
+
+        </mat-tab-group>
+    </div>
 </app-menucomponent>

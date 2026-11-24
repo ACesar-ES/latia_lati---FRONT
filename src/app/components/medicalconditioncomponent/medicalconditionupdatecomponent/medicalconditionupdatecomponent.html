@@ -1,0 +1,63 @@
+<div class="clinical-container">
+
+  <!-- Encabezado -->
+  <header class="header-section">
+    <div class="header-titles">
+      <h1>Actualizar condición médica</h1>
+      <p>Corrige el nombre o la descripción de la condición.</p>
+    </div>
+  </header>
+
+  <!-- Formulario -->
+  <section class="form-card">
+    @if (cargando) {
+      <mat-progress-bar mode="indeterminate" role="status" aria-label="Cargando condición"></mat-progress-bar>
+    }
+
+    <form [formGroup]="formMedicalCondition" (ngSubmit)="actualizarCondicion()" novalidate>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre de la condición</mat-label>
+        <mat-icon matPrefix>medical_information</mat-icon>
+        <input matInput type="text" formControlName="nombre" placeholder="Ej. Hipertensión"
+          maxlength="100" autocomplete="off" />
+        <mat-hint align="end">{{ (formMedicalCondition.value.nombre ?? '').length }}/100</mat-hint>
+        @if (formMedicalCondition.get('nombre')?.hasError('required')
+          || formMedicalCondition.get('nombre')?.hasError('pattern')) {
+          <mat-error>Ingresa el nombre de la condición.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="descripcion" rows="5"
+          placeholder="Síntomas, tratamiento o cualquier detalle útil" maxlength="500"></textarea>
+        <mat-hint align="end">{{ (formMedicalCondition.value.descripcion ?? '').length }}/500</mat-hint>
+      </mat-form-field>
+
+      @if (mensaje) {
+        <p class="form-error" role="alert">
+          <mat-icon>error</mat-icon>
+          {{ mensaje }}
+        </p>
+      }
+
+      <div class="form-actions">
+        <button matButton="outlined" class="cancel-btn" type="button" routerLink="/condicionmedica">
+          Cancelar
+        </button>
+
+        <button matButton="outlined" class="cancel-btn" type="button" [disabled]="!original"
+          (click)="restablecer()">
+          <mat-icon>undo</mat-icon>
+          Restablecer
+        </button>
+
+        <button matButton="filled" class="save-btn" type="submit" [disabled]="cargando || !original">
+          <mat-icon>save</mat-icon>
+          Guardar cambios
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

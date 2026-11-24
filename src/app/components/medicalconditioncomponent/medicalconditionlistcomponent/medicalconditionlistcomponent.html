@@ -1,0 +1,92 @@
+<div class="clinical-container">
+
+  <!-- Encabezado -->
+  <header class="header-section">
+    <div class="header-titles">
+      <h1>Condiciones médicas</h1>
+      <p>Diagnósticos y condiciones que acompañan tu salud.</p>
+    </div>
+
+    <div class="header-actions">
+      <button matButton="filled" class="upload-btn" type="button" routerLink="/condicionmedica/insertar">
+        <mat-icon>add</mat-icon>
+        Agregar condición
+      </button>
+    </div>
+  </header>
+
+  <!-- Buscador -->
+  <div class="filters-bar">
+    <label class="search-box">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Buscar condición" [value]="busqueda"
+        (input)="busqueda = $any($event.target).value" />
+      @if (busqueda) {
+        <button matIconButton class="clear-btn" type="button" aria-label="Limpiar búsqueda"
+          (click)="busqueda = ''">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </label>
+  </div>
+
+  <!-- Contenedor con las tarjetas -->
+  <section class="records-card">
+    <div class="records-header">
+      <h2>{{ condicionesFiltradas.length }} condiciones</h2>
+      <span class="sort-pill">Orden alfabético</span>
+    </div>
+
+    @if (cargando) {
+      <mat-progress-bar mode="indeterminate" role="status" aria-label="Cargando condiciones"></mat-progress-bar>
+    }
+
+    @if (condicionesFiltradas.length > 0) {
+      <div class="cards-grid">
+        @for (c of condicionesFiltradas; track c.idMedicalCondition) {
+          <mat-card appearance="outlined" class="condition-card">
+            <mat-card-header>
+              <div mat-card-avatar class="condition-avatar">
+                <mat-icon>medical_information</mat-icon>
+              </div>
+              <mat-card-title class="condition-title">{{ c.nameMedicalCondition }}</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="condition-description">{{ c.descriptionMedicalCondition || 'Sin descripción.' }}</p>
+            </mat-card-content>
+
+            <mat-card-actions class="row-actions">
+              <button matIconButton class="icon-btn" type="button" title="Actualizar"
+                aria-label="Actualizar condición"
+                [routerLink]="['/condicionmedica/actualizar', c.idMedicalCondition]">
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button matIconButton class="icon-btn danger" type="button" title="Eliminar"
+                aria-label="Eliminar condición" (click)="eliminarCondicion(c.idMedicalCondition!)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    } @else if (!cargando && !aviso) {
+      <p class="empty-state">
+        <mat-icon>health_and_safety</mat-icon>
+        {{ busqueda ? 'No hay coincidencias.' : 'Todavía no hay condiciones médicas registradas.' }}
+      </p>
+    }
+
+    @if (aviso) {
+      <p class="empty-state error" role="alert">
+        <mat-icon>error</mat-icon>
+        {{ aviso }}
+        <button matButton="outlined" class="retry-btn" type="button" (click)="listarCondiciones()">
+          <mat-icon>refresh</mat-icon>
+          Reintentar
+        </button>
+      </p>
+    }
+  </section>
+</div>

@@ -47,43 +47,43 @@ import { ReportCountEmergencyContactsByRelationship } from './components/dashboa
 import { ReportCountEmergencyContactsByProfile } from './components/dashboardcomponent/report-count-emergency-contacts-by-profile/report-count-emergency-contacts-by-profile';
 import { ReportCountFamilyRelationshipsByType } from './components/dashboardcomponent/report-count-family-relationships-by-type/report-count-family-relationships-by-type';
 import { ReportCountFamilyRelationshipsByProfile } from './components/dashboardcomponent/report-count-family-relationships-by-profile/report-count-family-relationships-by-profile';
-
-
+import { authGuard } from './core/guards/auth-guard';
+import { Medicalconditioncomponent } from './components/medicalconditioncomponent/medicalconditioncomponent';
+import { Medicalconditionlistcomponent } from './components/medicalconditioncomponent/medicalconditionlistcomponent/medicalconditionlistcomponent';
+import { Medicalconditioninsertcomponent } from './components/medicalconditioncomponent/medicalconditioninsertcomponent/medicalconditioninsertcomponent';
+import { Medicalconditionupdatecomponent } from './components/medicalconditioncomponent/medicalconditionupdatecomponent/medicalconditionupdatecomponent';
 
 export const routes: Routes = [
-  // 1. Landing: lo primero que se ve
+  // 1. Rutas públicas
   {
     path: '',
     component: Landingcomponent,
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
-
-  // 2. Login: al que lleva "Regístrate aquí"
   {
     path: 'login',
-    component: Logincomponent
+    component: Logincomponent,
   },
-
-  // 3. Registro: la ruta a la que apunta tu botón "Crear una cuenta" / routerLink="/registro"
   {
     path: 'registro',
-    component: RegistroComponent
+    component: RegistroComponent,
   },
-
   {
     path: 'recuperar',
-    component: RecuperarComponent
+    component: RecuperarComponent,
   },
 
+  // 2. Rutas protegidas (requieren sesión)
   {
     path: 'inicio',
     component: Homecomponent,
+    canActivate: [authGuard],
   },
-
-  // 4. Historial clínico (con menú lateral), protegido por sesión
   {
     path: 'historial',
     component: Clinicalrecordcomponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       { path: '', redirectTo: 'listar', pathMatch: 'full' },
       { path: 'listar', component: Clinicalrecordlistcomponent },
@@ -91,109 +91,33 @@ export const routes: Routes = [
       { path: 'actualizar/:id', component: Clinicalrecordupdatecomponent },
     ],
   },
-
-  // Relaciones familiares (HU46-HU50, HU73)
   {
-    path: "familia",
+    path: 'condicionmedica',
+    component: Medicalconditioncomponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Medicalconditionlistcomponent },
+      { path: 'insertar', component: Medicalconditioninsertcomponent },
+      { path: 'actualizar/:id', component: Medicalconditionupdatecomponent },
+    ],
+  },
+  {
+    path: 'familia',
     component: Familycomponent,
+    canActivate: [authGuard],
   },
-
-  {
-    path: "agenda",
-    component: Schedulecomponent,
-  },
-
-  {
-
-    path: "medicamentos",
-    component: Medicationscomponent,
-    children: [
-      { path: '', redirectTo: 'listar', pathMatch: 'full'},
-      { path: 'listar', component: Medicationslistcomponent },
-      { path: 'insertar', component: Medicationsinsertcomponent },
-      { path: 'actualizar/:id', component: Medicationsupdatecomponent },
-    ],
-  },
-
-  {
-    path: "documentos",
-    component: Medicaldocumentscomponent,
-    children: [
-      { path: '', redirectTo: 'listar', pathMatch: 'full'},
-      { path: 'listar', component: Medicaldocumentslistcomponent },
-      { path: 'insertar', component: Medicaldocumentsinsertcomponent },
-      { path: 'actualizar/:id', component: Medicaldocumentsupdatecomponent },
-    ],
-  },
-
-  {
-
-    path: "evolucion",
-    component: Evolutioncomponent,
-  },
-
-  {
-    path: "lati",
-    component: Laticomponent
-  },
-
-  {
-    path: "reportes",
-    component: Dashboardcomponent,
-    children: [
-      { path: '', redirectTo: 'reporte01', pathMatch: 'full' },
-      { path: 'reporte01', component: ReportCountClinicalRecordsByMedicalCondition },
-      { path: 'contactos-parentesco', component: ReportCountEmergencyContactsByRelationship },
-      { path: 'contactos-perfil', component: ReportCountEmergencyContactsByProfile },
-      { path: 'familia-parentesco', component: ReportCountFamilyRelationshipsByType },
-      { path: 'familia-perfil', component: ReportCountFamilyRelationshipsByProfile },
-    ],
-  },
-
-  {
-    path: 'ajustes',
-    component: Settingscomponent
-  },
-
-  {
-    path: 'perfil',
-    component: Healthprofilecomponent,
-    children: [
-      { path: '', redirectTo: 'listar', pathMatch: 'full' },
-      { path: 'listar', component: Healthprofilelistcomponent },
-      { path: 'actualizar', component: Healthprofileupdatecomponent },
-    ],
-  },
-
-
-  {
-    path: 'medicamentos',
-    component: Medicationscomponent,
-    children: [
-      { path: '', redirectTo: 'listar', pathMatch: 'full' },
-      { path: 'listar', component: Medicationslistcomponent },
-      { path: 'insertar', component: Medicationsinsertcomponent },
-      { path: 'actualizar/:id', component: Medicationsupdatecomponent },
-    ],
-  },
-
-  // Familia: agregar un familiar al árbol (/familia ya muestra el árbol)
   {
     path: 'familia/agregar',
     component: Familyaddcomponent,
+    canActivate: [authGuard],
   },
-
-  // Elegir el perfil de salud con el que se trabaja (historial, familia)
-  {
-    path: 'cambiar-perfil',
-    component: Profileswitchcomponent,
-  },
-
-  // CRUD de relaciones familiares (HU46-HU50, HU73). /familia (sin más) es el árbol de Aixa;
-  // estas pantallas van debajo, con su propio contenedor de menú.
   {
     path: 'familia',
     component: Familyshellcomponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       { path: 'listar', component: Familylistcomponent },
       { path: 'insertar', component: Familyinsertcomponent },
@@ -204,11 +128,85 @@ export const routes: Routes = [
       { path: 'ayuda', component: Familyhelpcomponent },
     ],
   },
-
-  // Contactos de emergencia (HU11-HU15, HU68, HU69)
+  {
+    path: 'cambiar-perfil',
+    component: Profileswitchcomponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'agenda',
+    component: Schedulecomponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'medicamentos',
+    component: Medicationscomponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Medicationslistcomponent },
+      { path: 'insertar', component: Medicationsinsertcomponent },
+      { path: 'actualizar/:id', component: Medicationsupdatecomponent },
+    ],
+  },
+  {
+    path: 'documentos',
+    component: Medicaldocumentscomponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Medicaldocumentslistcomponent },
+      { path: 'insertar', component: Medicaldocumentsinsertcomponent },
+      { path: 'actualizar/:id', component: Medicaldocumentsupdatecomponent },
+    ],
+  },
+  {
+    path: 'evolucion',
+    component: Evolutioncomponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'lati',
+    component: Laticomponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'reportes',
+    component: Dashboardcomponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
+    children: [
+      { path: '', redirectTo: 'reporte01', pathMatch: 'full' },
+      { path: 'reporte01', component: ReportCountClinicalRecordsByMedicalCondition },
+      { path: 'contactos-parentesco', component: ReportCountEmergencyContactsByRelationship },
+      { path: 'contactos-perfil', component: ReportCountEmergencyContactsByProfile },
+      { path: 'familia-parentesco', component: ReportCountFamilyRelationshipsByType },
+      { path: 'familia-perfil', component: ReportCountFamilyRelationshipsByProfile },
+    ],
+  },
+  {
+    path: 'ajustes',
+    component: Settingscomponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'perfil',
+    component: Healthprofilecomponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Healthprofilelistcomponent },
+      { path: 'actualizar', component: Healthprofileupdatecomponent },
+    ],
+  },
   {
     path: 'contactos',
     component: Emergencycontactcomponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       { path: '', redirectTo: 'listar', pathMatch: 'full' },
       { path: 'listar', component: Emergencycontactlistcomponent },
@@ -217,32 +215,4 @@ export const routes: Routes = [
       { path: 'fichas', component: Emergencycardcomponent },
     ],
   },
-
-  {
-    path: 'agenda',
-    component: Schedulecomponent,
-  },
-
-  {
-    path: 'evolucion',
-    component: Evolutioncomponent,
-  },
-
-  {
-    path: 'lati',
-    component: Laticomponent,
-  },
-
-  // 5. Cualquier URL desconocida vuelve a la landing (SIEMPRE al final)
-  {
-    path: '**',
-    redirectTo: '/historial'
-  },
-  // 5. Cualquier URL desconocida vuelve al inicio (SIEMPRE al final)
-
-  {
-    path: '**',
-    redirectTo: '/inicio'
-  },
-
 ];

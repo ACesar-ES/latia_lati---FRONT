@@ -1,0 +1,24 @@
+@for (group of groups; track group.month) {
+  <section class="month">
+    <h3>{{ group.month + '-01' | date:'MMMM y' }}</h3>
+    <ol>
+      @for (item of group.items; track item.document.idMedicalDocuments) {
+        <li>
+          <div>
+            <time [attr.datetime]="item.document.documentDate">{{ item.document.documentDate | date:'d MMM y' }}</time>
+            <span class="type">{{ item.document.documentType }}</span>
+            <h4>{{ item.document.title }}</h4>
+          </div>
+          @if (item.link) {
+            <a [href]="item.link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer"
+               [attr.aria-label]="'Abrir ' + item.document.title + ' en otra pestaña'">
+              Abrir archivo <mat-icon aria-hidden="true">open_in_new</mat-icon>
+            </a>
+          } @else {
+            <small>Sin archivo disponible</small>
+          }
+        </li>
+      }
+    </ol>
+  </section>
+}

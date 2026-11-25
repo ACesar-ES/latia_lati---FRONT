@@ -1,0 +1,11 @@
+.month + .month { margin-top: 1.4rem; }
+h3 { margin: 0 0 .5rem; font-size: 1rem; text-transform: capitalize; }
+ol { list-style: none; padding: 0 0 0 1.25rem; margin: 0 0 0 .3rem; border-left: 2px solid var(--latia-border, #e3d9dc); }
+li { position: relative; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .6rem; padding: .85rem 0; }
+li + li { border-top: 1px solid var(--latia-border, #e3d9dc); }
+li::before { content: ''; position: absolute; left: -1.58rem; top: 1.25rem; width: .5rem; height: .5rem; border-radius: 50%; background: #bf4e6d; }
+h4 { margin: .35rem 0 0; font-size: 1rem; overflow-wrap: anywhere; }
+time, small { color: var(--latia-muted, #5e6570); }
+.type { background: var(--latia-primary-soft, #fbe9ec); padding: .12rem .55rem; border-radius: 1rem; font-size: .8rem; margin-left: .5rem; }
+a { display: inline-flex; align-items: center; gap: .3rem; color: inherit; text-underline-offset: .2rem; }
+mat-icon { font-size: 1rem; height: 1rem; width: 1rem; }

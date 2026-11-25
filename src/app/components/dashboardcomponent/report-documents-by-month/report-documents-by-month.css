@@ -1,0 +1,9 @@
+:host { display: block; min-width: 0; }
+p { margin: .25rem 0 1rem; }
+.plot { position: relative; height: clamp(13rem, 28vw, 19rem); }
+details { margin-top: 1rem; }
+summary { cursor: pointer; width: fit-content; }
+table { width: 100%; max-width: 36rem; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+caption { text-align: left; margin: 1rem 0 .25rem; }
+td, th { border-bottom: 1px solid var(--latia-border, #e5e7eb); padding: .35rem .6rem; text-align: left; }
+td:last-child, thead th:last-child { text-align: right; }

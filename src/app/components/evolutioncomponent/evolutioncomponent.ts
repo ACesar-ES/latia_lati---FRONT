@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { Menucomponent } from '../menucomponent/menucomponent';
-import { RouterOutlet } from '@angular/router';
+import { EvolutionPanelComponent } from './evolution-panel/evolution-panel';
 
 @Component({
-  imports: [Menucomponent, RouterOutlet],
   selector: 'app-evolutioncomponent',
-  styleUrl: './evolutioncomponent.css',
+  imports: [Menucomponent, EvolutionPanelComponent],
   templateUrl: './evolutioncomponent.html',
+  styleUrl: './evolutioncomponent.css',
 })
 export class Evolutioncomponent {}

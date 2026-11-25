@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { EvolutionPanelComponent } from '../evolutioncomponent/evolution-panel/evolution-panel';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -23,6 +24,7 @@ import { Themeservice } from '../../services/themeservice';
     Menucomponent,
     MatIconModule,
     MatButtonModule,
+    EvolutionPanelComponent,
     MatCardModule,
     MatToolbarModule,
     MatTabsModule,
@@ -38,6 +40,8 @@ import { Themeservice } from '../../services/themeservice';
 export class Dashboardcomponent implements OnInit, OnDestroy {
   // Tarjetas de resumen: se llenan con lo que informa el reporte de historiales
   resumen = { total: 0, condiciones: 0, principal: '—' };
+
+  documentRefresh = 0;
 
   // Los reportes viven dentro de pestañas: un reporte existe solo cuando su pestaña ya se abrió
   @ViewChild(ReportCountClinicalRecordsByMedicalCondition)
@@ -92,6 +96,7 @@ export class Dashboardcomponent implements OnInit, OnDestroy {
 
   // Vuelve a pedir los datos de todos los reportes que ya están abiertos
   actualizar(): void {
+    this.documentRefresh++;
     this.reporteCondiciones?.obtenerTotal();
     this.reporteContactosPerfil?.obtenerReporte();
     this.reporteContactosParentesco?.obtenerReporte();

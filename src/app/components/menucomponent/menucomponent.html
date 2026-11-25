@@ -109,7 +109,7 @@
           <a
             class="top-user-pill"
             routerLink="/cambiar-perfil"
-            [queryParams]="{ volver: seccionActual === 'Historial' ? 'historial' : 'familia' }"
+            [queryParams]="{ volver: seccionActual === 'Evolución' ? 'evolucion' : seccionActual === 'Historial' ? 'historial' : 'familia' }"
             aria-label="Cambiar perfil de salud"
             title="Cambiar perfil"
           >
@@ -134,7 +134,7 @@
             mat-menu-item
             type="button"
             routerLink="/cambiar-perfil"
-            [queryParams]="{ volver: seccionActual === 'Historial' ? 'historial' : 'familia' }"
+            [queryParams]="{ volver: seccionActual === 'Evolución' ? 'evolucion' : seccionActual === 'Historial' ? 'historial' : 'familia' }"
           >
             <mat-icon>switch_account</mat-icon>
             <span>Cambiar perfil</span>

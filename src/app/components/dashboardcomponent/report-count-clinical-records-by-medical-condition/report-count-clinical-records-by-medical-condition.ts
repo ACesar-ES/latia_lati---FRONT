@@ -44,7 +44,6 @@ export class ReportCountClinicalRecordsByMedicalCondition implements OnInit {
       x: { grid: { display: false }, ticks: { font: { family: 'Nunito, Segoe UI, sans-serif' } } },
       y: {
         beginAtZero: true,
-        grid: { color: '#f1f2f4' },
         ticks: { precision: 0, font: { family: 'Nunito, Segoe UI, sans-serif' } },
       },
     },

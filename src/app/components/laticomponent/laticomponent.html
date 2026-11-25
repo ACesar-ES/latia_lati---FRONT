@@ -1,3 +1,156 @@
 <app-menucomponent>
-    <router-outlet></router-outlet>
+  <main class="lati-page">
+    <header class="lati-page-header">
+      <div>
+        <h1>Ninguna duda es demasiado pequeña</h1>
+        <p>Una conversación con el contexto de {{ nombrePerfilActivo }}.</p>
+      </div>
+      <a
+        class="change-profile-button"
+        routerLink="/cambiar-perfil"
+        [queryParams]="{ volver: 'lati' }"
+      >
+        <mat-icon>groups</mat-icon>
+        <span>Cambiar perfil</span>
+      </a>
+    </header>
+
+    <div class="lati-layout">
+      <section class="conversation-card" aria-label="Conversación con Lati">
+        <header class="conversation-header">
+          <div class="lati-avatar" aria-hidden="true">
+            <mat-icon>monitor_heart</mat-icon>
+          </div>
+          <div class="assistant-identity">
+            <h2>Lati</h2>
+            <p>Aquí para ayudarte a entender</p>
+          </div>
+          <span class="conversation-label">Conversación de {{ nombrePerfilActivo }}</span>
+        </header>
+
+        <div class="conversation-space" role="log" aria-live="polite"></div>
+
+        <div class="composer">
+          @if (mostrarInstrucciones) {
+            <aside class="instructions-panel">
+              <strong>¿Cómo puedes preguntarle a Lati?</strong>
+              <p>
+                Escribe qué te gustaría entender. Lati podrá ayudarte a organizar información, pero
+                no sustituye la orientación de un profesional de salud.
+              </p>
+            </aside>
+          }
+
+          @if (adjuntos.length) {
+            <div class="attachment-list" aria-label="Archivos seleccionados">
+              @for (archivo of adjuntos; track $index) {
+                <span class="attachment-chip">
+                  <mat-icon>attach_file</mat-icon>
+                  <span>{{ archivo.name }}</span>
+                  <button
+                    type="button"
+                    (click)="eliminarAdjunto($index)"
+                    [attr.aria-label]="'Quitar ' + archivo.name"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </span>
+              }
+            </div>
+          }
+
+          <div class="composer-tools">
+            <input
+              #selectorArchivos
+              class="visually-hidden"
+              type="file"
+              accept=".pdf,.png,.jpg,.jpeg"
+              multiple
+              (change)="seleccionarAdjuntos($event)"
+            />
+            <button type="button" class="tool-button" (click)="selectorArchivos.click()">
+              <mat-icon>attach_file</mat-icon>
+              <span>Adjuntar</span>
+            </button>
+            <button
+              type="button"
+              class="tool-button"
+              (click)="mostrarInstrucciones = !mostrarInstrucciones"
+              [attr.aria-expanded]="mostrarInstrucciones"
+            >
+              <mat-icon>info_outline</mat-icon>
+              <span>Instrucciones</span>
+            </button>
+            <div class="more-actions">
+              <button
+                type="button"
+                class="tool-button"
+                (click)="mostrarMas = !mostrarMas"
+                [attr.aria-expanded]="mostrarMas"
+              >
+                <mat-icon>more_horiz</mat-icon>
+                <span>Más</span>
+              </button>
+              @if (mostrarMas) {
+                <div class="more-menu">
+                  <button type="button" (click)="limpiarBorrador()">Limpiar borrador</button>
+                  <p>La conversación se conectará a la IA más adelante.</p>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="message-entry">
+            <textarea
+              class="lati-message-input"
+              rows="1"
+              [value]="mensaje"
+              (input)="actualizarMensaje($event)"
+              placeholder="Escribe lo que te gustaría preguntar..."
+              aria-label="Escribe tu pregunta"
+            ></textarea>
+            <button
+              type="button"
+              class="send-button"
+              disabled
+              aria-label="Enviar mensaje"
+              title="El envío estará disponible al conectar la API"
+            >
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+          <p class="health-disclaimer">
+            Lati te ayuda a comprender. Las decisiones de salud se revisan con un profesional.
+          </p>
+        </div>
+      </section>
+
+      <aside class="profile-context-card" aria-label="Contexto del perfil">
+        <div class="profile-avatar">{{ inicialesPerfilActivo }}</div>
+        <h2>{{ nombrePerfilActivo }}</h2>
+        <span class="profile-tag">{{ parentescoPerfilActivo }}</span>
+
+        <h3>Contexto de esta conversación</h3>
+        <p>Documentos, antecedentes y preguntas de esta persona.</p>
+
+        <a class="context-action" routerLink="/historial">
+          <mat-icon>folder_open</mat-icon>
+          <span>Abrir historial</span>
+        </a>
+        <button
+          type="button"
+          class="context-action"
+          disabled
+          title="Disponible cuando se implemente la generación de resúmenes"
+        >
+          <mat-icon>download</mat-icon>
+          <span>Preparar resumen PDF</span>
+        </button>
+        <a class="profile-link" routerLink="/perfil">
+          <mat-icon>person</mat-icon>
+          <span>Ver perfil</span>
+        </a>
+      </aside>
+    </div>
+  </main>
 </app-menucomponent>

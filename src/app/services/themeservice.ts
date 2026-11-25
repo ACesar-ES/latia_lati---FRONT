@@ -1,11 +1,14 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Themeservice {
   private oscuro = false;
+  private readonly modoOscuroSubject = new BehaviorSubject<boolean>(false);
+  readonly modoOscuro$ = this.modoOscuroSubject.asObservable();
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -40,5 +43,6 @@ export class Themeservice {
 
   private aplicar(): void {
     this.document.documentElement.classList.toggle('dark-theme', this.oscuro);
+    this.modoOscuroSubject.next(this.oscuro);
   }
 }

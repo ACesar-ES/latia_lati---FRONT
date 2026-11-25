@@ -24,8 +24,15 @@
           [title]="modoOscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
           <mat-icon>{{ modoOscuro ? 'light_mode' : 'dark_mode' }}</mat-icon>
         </button>
-        <button type="button" class="btn btn-ghost" routerLink="/login">Iniciar sesión</button>
-        <button type="button" class="btn btn-primary" routerLink="/login">Regístrate aquí</button>
+        @if (!sesionIniciada) {
+          <button type="button" class="btn btn-ghost" routerLink="/login">Iniciar sesión</button>
+        }
+        <button
+          type="button"
+          class="btn btn-primary"
+          [routerLink]="sesionIniciada ? '/inicio' : '/registro'">
+          {{ sesionIniciada ? 'Dashboard' : 'Regístrate aquí' }}
+        </button>
       </div>
     </div>
   </header>
@@ -41,8 +48,11 @@
       </p>
 
       <div class="hero-cta">
-        <button type="button" class="btn btn-primary btn-lg" routerLink="/login">
-          Regístrate aquí
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          [routerLink]="sesionIniciada ? '/inicio' : '/registro'">
+          {{ sesionIniciada ? 'Dashboard' : 'Regístrate aquí' }}
           <mat-icon>arrow_forward</mat-icon>
         </button>
         <button type="button" class="btn btn-outline btn-lg" (click)="irA('como-funciona')">

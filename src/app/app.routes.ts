@@ -47,7 +47,7 @@ import { ReportCountEmergencyContactsByRelationship } from './components/dashboa
 import { ReportCountEmergencyContactsByProfile } from './components/dashboardcomponent/report-count-emergency-contacts-by-profile/report-count-emergency-contacts-by-profile';
 import { ReportCountFamilyRelationshipsByType } from './components/dashboardcomponent/report-count-family-relationships-by-type/report-count-family-relationships-by-type';
 import { ReportCountFamilyRelationshipsByProfile } from './components/dashboardcomponent/report-count-family-relationships-by-profile/report-count-family-relationships-by-profile';
-import { authGuard } from './core/guards/auth-guard';
+import { authGuard, guestGuard } from './core/guards/auth-guard';
 import { Medicalconditioncomponent } from './components/medicalconditioncomponent/medicalconditioncomponent';
 import { Medicalconditionlistcomponent } from './components/medicalconditioncomponent/medicalconditionlistcomponent/medicalconditionlistcomponent';
 import { Medicalconditioninsertcomponent } from './components/medicalconditioncomponent/medicalconditioninsertcomponent/medicalconditioninsertcomponent';
@@ -63,10 +63,12 @@ export const routes: Routes = [
   {
     path: 'login',
     component: Logincomponent,
+    canActivate: [guestGuard],
   },
   {
     path: 'registro',
     component: RegistroComponent,
+    canActivate: [guestGuard],
   },
   {
     path: 'recuperar',
@@ -214,5 +216,9 @@ export const routes: Routes = [
       { path: 'actualizar/:id', component: Emergencycontactupdatecomponent },
       { path: 'fichas', component: Emergencycardcomponent },
     ],
+  },
+  {
+    path: '**',
+    redirectTo: 'inicio',
   },
 ];

@@ -1,8 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+html {
+  --app-bg: #f6f7f9;
+  --app-surface: #ffffff;
+  --app-surface-raised: #f9fafb;
+  --app-text: #1f2a37;
+  --app-muted: #6b7280;
+  --app-border: #e5e7eb;
+  --app-border-soft: #f1f2f4;
+  --app-primary: #b8324f;
+  --app-primary-dark: #a22b45;
+  --app-primary-soft: #fbe9ec;
+  --app-hover: #fafafa;
+  --app-danger: #c62828;
+  --app-danger-soft: #fdecec;
+  --app-lilac: #efeaf5;
+  --app-lilac-text: #6b5b8a;
+}
+
 html, body {
   margin: 0;
   height: 100%;
-  background: #f6f7f9;
+  background: var(--app-bg);
   font-family: 'Nunito', sans-serif;
 }
 
@@ -14,7 +32,15 @@ html.dark-theme {
   --app-text: #f3f4f6;
   --app-muted: #aab4c2;
   --app-border: #374151;
+  --app-border-soft: #374151;
+  --app-primary: #f07a92;
+  --app-primary-dark: #d95874;
   --app-primary-soft: #472632;
+  --app-hover: #273449;
+  --app-danger: #ff9a9a;
+  --app-danger-soft: #4a2028;
+  --app-lilac: #342d43;
+  --app-lilac-text: #c4b5fd;
   background: var(--app-bg);
   --mat-sys-surface: var(--app-surface);
   --mat-sys-on-surface: var(--app-text);
@@ -45,10 +71,92 @@ html.dark-theme app-clinicalrecordlistcomponent {
   --latia-text: var(--app-text);
   --latia-muted: var(--app-muted);
   --latia-border: var(--app-border);
+  --latia-primary: var(--app-primary);
+  --latia-primary-dark: var(--app-primary-dark);
   --latia-primary-soft: var(--app-primary-soft);
-  --latia-lilac: #342d43;
-  --latia-lilac-text: #c4b5fd;
+  --latia-lilac: var(--app-lilac);
+  --latia-lilac-text: var(--app-lilac-text);
   color: var(--app-text);
+}
+
+html.dark-theme app-medicalconditionlistcomponent,
+html.dark-theme app-medicalconditioninsertcomponent,
+html.dark-theme app-medicalconditionupdatecomponent {
+  --latia-bg: var(--app-bg);
+  --latia-surface: var(--app-surface);
+  --latia-text: var(--app-text);
+  --latia-muted: var(--app-muted);
+  --latia-border: var(--app-border);
+  --latia-primary: var(--app-primary);
+  --latia-primary-dark: var(--app-primary-dark);
+  --latia-primary-soft: var(--app-primary-soft);
+  color: var(--app-text);
+}
+
+html.dark-theme app-medicationslistcomponent,
+html.dark-theme app-medicationsinsertcomponent,
+html.dark-theme app-medicationsupdatecomponent {
+  --latia-border: var(--app-border);
+  --latia-muted: var(--app-muted);
+  --latia-primary: var(--app-primary);
+  --latia-primary-dark: var(--app-primary-dark);
+  --latia-primary-soft: var(--app-primary-soft);
+  color: var(--app-text);
+}
+
+html.dark-theme app-dashboardcomponent,
+html.dark-theme app-report-count-clinical-records-by-medical-condition,
+html.dark-theme app-report-count-emergency-contacts-by-profile,
+html.dark-theme app-report-count-emergency-contacts-by-relationship,
+html.dark-theme app-report-count-family-relationships-by-profile,
+html.dark-theme app-report-count-family-relationships-by-type {
+  --primary: var(--app-primary);
+  --primary-dark: var(--app-primary-dark);
+  --primary-soft: var(--app-primary-soft);
+  --text: var(--app-text);
+  --muted: var(--app-muted);
+  --border: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-medicaldocumentslistcomponent {
+  --doc-primary: var(--app-primary);
+  --doc-soft: var(--app-primary-soft);
+  --doc-border: var(--app-border);
+  --doc-muted: var(--app-muted);
+  color: var(--app-text);
+}
+
+html.dark-theme app-familylistcomponent,
+html.dark-theme app-familyinsertcomponent,
+html.dark-theme app-familyupdatecomponent,
+html.dark-theme app-familyprofilecomponent,
+html.dark-theme app-familygenerationcomponent,
+html.dark-theme app-familybackgroundcomponent,
+html.dark-theme app-familyhelpcomponent {
+  --latia-primary: var(--app-primary);
+  --latia-primary-dark: var(--app-primary-dark);
+  --latia-primary-soft: var(--app-primary-soft);
+  --latia-surface: var(--app-surface);
+  --latia-text: var(--app-text);
+  --latia-muted: var(--app-muted);
+  --latia-border: var(--app-border);
+  --latia-green-bg: #1d382d;
+  --latia-green: #9bd5b0;
+  color: var(--app-text);
+}
+
+html.dark-theme app-root .latia-family {
+  --canvas: var(--app-bg);
+  --paper: var(--app-surface);
+  --ink: var(--app-text);
+  --muted: var(--app-muted);
+  --line: var(--app-border);
+  --wine: var(--app-primary);
+  --tint: var(--app-primary-soft);
+  --leaf: #1d382d;
+  --green: #9bd5b0;
+  --rail: var(--app-border);
 }
 
 html.dark-theme app-healthprofilelistcomponent {
@@ -89,6 +197,8 @@ html.dark-theme app-landingcomponent {
 html.dark-theme app-root .example-container,
 html.dark-theme app-root .main-content,
 html.dark-theme app-root .clinical-container,
+html.dark-theme app-root .med-page,
+html.dark-theme app-root .dashboard-page,
 html.dark-theme app-root .profile-page,
 html.dark-theme app-root .login-page {
   background-color: var(--app-bg);
@@ -109,6 +219,34 @@ html.dark-theme app-root .top-search-box {
 
 }
 
+html.dark-theme app-root .condition-card,
+html.dark-theme app-root .med-card,
+html.dark-theme app-root .kpi-card,
+html.dark-theme app-root .doc-search {
+  background-color: var(--app-surface);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+html.dark-theme app-root .condition-card:hover,
+html.dark-theme app-root .med-card:hover,
+html.dark-theme app-root tr[mat-row]:hover,
+html.dark-theme app-root .doc-row:hover,
+html.dark-theme app-root .nodo.vacio,
+html.dark-theme app-root .nodo.nuevo {
+  background-color: var(--app-hover);
+}
+
+html.dark-theme app-root .info-card,
+html.dark-theme app-root .aviso-verde {
+  background-color: #1d382d;
+  color: #9bd5b0;
+}
+
+html.dark-theme app-root .conector {
+  background-color: var(--app-border);
+}
+
 html.dark-theme app-root .lati-prompt-card {
   background-color: var(--app-primary-soft);
   border-color: var(--app-border);
@@ -124,6 +262,7 @@ html.dark-theme app-root .nav-list .mat-mdc-list-item:hover,
 html.dark-theme app-root .icon-action-btn:hover,
 html.dark-theme app-root .btn-secondary:hover,
 html.dark-theme app-root .btn-outline:hover,
+html.dark-theme app-root .btn-texto:hover,
 html.dark-theme app-root .nav-links button:hover {
   background-color: var(--app-surface-raised);
 }
@@ -236,16 +375,28 @@ html.dark-theme app-root .footer small {
 }
 
 html.dark-theme app-root input,
-html.dark-theme app-root textarea,
+html.dark-theme app-root textarea:not(.lati-message-input),
 html.dark-theme app-root select {
   background-color: var(--app-surface-raised) !important;
   border-color: var(--app-border) !important;
   color: var(--app-text) !important;
 }
 
+html.dark-theme app-root .search-box input,
+html.dark-theme app-root .med-search input,
+html.dark-theme app-root .doc-search input,
+html.dark-theme app-root .top-search-box input {
+  background-color: transparent !important;
+}
+
 html.dark-theme app-root input::placeholder,
-html.dark-theme app-root textarea::placeholder {
+html.dark-theme app-root textarea:not(.lati-message-input)::placeholder {
   color: var(--app-muted) !important;
+}
+
+html.dark-theme ::selection {
+  background: #593442;
+  color: #ffffff;
 }
 
 html.dark-theme app-root mat-form-field {
@@ -267,6 +418,12 @@ html.dark-theme .mat-datepicker-content {
   color: var(--app-text);
 }
 
+html.dark-theme .mat-mdc-paginator {
+  --mat-paginator-container-background-color: transparent;
+  --mat-paginator-container-text-color: var(--app-muted);
+  --mat-paginator-enabled-icon-color: var(--app-muted);
+}
+
 html.dark-theme app-root .tree-btn,
 html.dark-theme app-root .create-btn,
 html.dark-theme app-root .export-btn,
@@ -275,6 +432,12 @@ html.dark-theme app-root .btn-outline,
 html.dark-theme app-root .btn-light {
   background-color: var(--app-surface);
   color: var(--app-text);
+}
+
+html.dark-theme app-root .condition-card .icon-btn.danger:hover,
+html.dark-theme app-root .records-card .icon-btn.danger:hover {
+  background-color: var(--app-danger-soft);
+  color: var(--app-danger);
 }
 
 html.dark-theme app-logincomponent,

@@ -1,9 +1,9 @@
 :host {
-  --primary: #b8324f;
-  --primary-soft: #fbe9ec;
-  --text: #1f2a37;
-  --muted: #6b7280;
-  --border: #e5e7eb;
+  --primary: var(--app-primary, #b8324f);
+  --primary-soft: var(--app-primary-soft, #fbe9ec);
+  --text: var(--app-text, #1f2a37);
+  --muted: var(--app-muted, #6b7280);
+  --border: var(--app-border, #e5e7eb);
   display: block;
   height: 100%;
   font-family: 'Nunito', 'Segoe UI', sans-serif;
@@ -15,7 +15,7 @@
   height: 100%;
   box-sizing: border-box;
   padding: 24px;
-  background: #ffffff;
+  background: var(--app-surface, #ffffff);
   border: 1px solid var(--border);
   border-radius: 18px;
 }
@@ -27,7 +27,7 @@ h2 {
   gap: 12px;
   margin: 0 0 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #f1f2f4;
+  border-bottom: 1px solid var(--app-border-soft, #f1f2f4);
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.2px;

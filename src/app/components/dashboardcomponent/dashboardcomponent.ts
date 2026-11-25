@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { Chart } from 'chart.js';
+import { Subscription } from 'rxjs';
 import { Menucomponent } from '../menucomponent/menucomponent';
 import { ReportCountClinicalRecordsByMedicalCondition } from './report-count-clinical-records-by-medical-condition/report-count-clinical-records-by-medical-condition';
 import { ReportCountEmergencyContactsByRelationship } from './report-count-emergency-contacts-by-relationship/report-count-emergency-contacts-by-relationship';
@@ -12,6 +14,7 @@ import { ReportCountFamilyRelationshipsByProfile } from './report-count-family-r
 import { ReportCountFamilyRelationshipsByType } from './report-count-family-relationships-by-type/report-count-family-relationships-by-type';
 import { CountclinicalrecordsbymedicalconditionDTO } from '../../model/CountclinicalrecordsbymedicalconditionDTO';
 import { ReportCountEmergencyContactsByProfile } from './report-count-emergency-contacts-by-profile/report-count-emergency-contacts-by-profile';
+import { Themeservice } from '../../services/themeservice';
 
 @Component({
   selector: 'app-dashboardcomponent',
@@ -32,7 +35,7 @@ import { ReportCountEmergencyContactsByProfile } from './report-count-emergency-
   templateUrl: './dashboardcomponent.html',
   styleUrl: './dashboardcomponent.css',
 })
-export class Dashboardcomponent {
+export class Dashboardcomponent implements OnInit, OnDestroy {
   // Tarjetas de resumen: se llenan con lo que informa el reporte de historiales
   resumen = { total: 0, condiciones: 0, principal: '—' };
 
@@ -52,7 +55,30 @@ export class Dashboardcomponent {
   @ViewChild(ReportCountFamilyRelationshipsByType)
   reporteFamiliaTipo?: ReportCountFamilyRelationshipsByType;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  private themeSubscription?: Subscription;
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private tema: Themeservice,
+  ) {}
+
+  ngOnInit(): void {
+    this.themeSubscription = this.tema.modoOscuro$.subscribe((oscuro) => {
+      const color = oscuro ? '#aab4c2' : '#6b7280';
+      const gridColor = oscuro ? '#374151' : '#e5e7eb';
+
+      Chart.defaults.color = color;
+      Chart.defaults.borderColor = gridColor;
+      Chart.defaults.scale.grid.color = gridColor;
+      Chart.defaults.plugins.legend.labels.color = color;
+
+      Object.values(Chart.instances).forEach((chart) => chart.update('none'));
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.themeSubscription?.unsubscribe();
+  }
 
   alCargarCondiciones(datos: CountclinicalrecordsbymedicalconditionDTO[]): void {
     this.resumen.total = datos.reduce((suma, d) => suma + d.totalRecords, 0);

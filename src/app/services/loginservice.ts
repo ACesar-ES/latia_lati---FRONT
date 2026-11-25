@@ -25,9 +25,12 @@ export class Loginservice {
         }
 
         if (this.isBrowser) {
-          sessionStorage.setItem('token', response.token);
-          sessionStorage.setItem('email', response.email ?? '');
-//          sessionStorage.setItem('roles', JSON.stringify(response.roles ?? []));
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('email', response.email ?? '');
+          sessionStorage.removeItem('token');
+          sessionStorage.removeItem('email');
+          sessionStorage.removeItem('roles');
+//          localStorage.setItem('roles', JSON.stringify(response.roles ?? []));
         }
       })
     );
@@ -38,7 +41,7 @@ export class Loginservice {
       return null;
     }
 
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     if (!token) {
       return null;
     }
@@ -60,7 +63,7 @@ export class Loginservice {
       return '';
     }
 
-    return sessionStorage.getItem('email') ?? '';
+    return localStorage.getItem('email') ?? '';
   }
 
   getRoles(): string[] {
@@ -68,7 +71,7 @@ export class Loginservice {
       return [];
     }
 
-    const value = sessionStorage.getItem('roles');
+    const value = localStorage.getItem('roles');
     if (!value) {
       return [];
     }
@@ -80,11 +83,11 @@ export class Loginservice {
         return roles;
       }
     } catch {
-      sessionStorage.removeItem('roles');
+      localStorage.removeItem('roles');
       return [];
     }
 
-    sessionStorage.removeItem('roles');
+    localStorage.removeItem('roles');
     return [];
   }
 
@@ -98,6 +101,9 @@ export class Loginservice {
 
   logout(): void {
     if (this.isBrowser) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('email');
+      localStorage.removeItem('roles');
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('email');
       sessionStorage.removeItem('roles');

@@ -1,0 +1,57 @@
+@if (family.fase === 'error') {
+  <div class="card" role="alert">No se pudieron cargar tus perfiles.
+    <button matButton="text" type="button" (click)="loadProfiles(true)">Reintentar</button>
+  </div>
+} @else if (family.fase === 'sinSesion') {
+  <div class="card">Inicia sesión para consultar tus documentos. <a routerLink="/login">Ir al inicio de sesión</a></div>
+} @else if (family.fase !== 'listo') {
+  <p class="card" role="status">Cargando tus perfiles…</p>
+} @else if (!family.perfiles.length) {
+  <div class="card">Todavía no tienes perfiles activos. <a routerLink="/perfil">Ver mis perfiles</a></div>
+} @else {
+  <section class="card filter-card" aria-label="Perfil y filtros de evolución">
+    <div class="profile-row">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Perfil de salud</mat-label>
+        <mat-select [value]="family.idActivo()" (selectionChange)="selectProfile($event.value)">
+          @for (profile of family.ordenados(); track profile.idHealthProfile) {
+            <mat-option [value]="profile.idHealthProfile">{{ family.nombre(profile.idHealthProfile) }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      @if (showTimeline && family.idActivo()) {
+        <a matButton="outlined" routerLink="/documentos/insertar" [queryParams]="{ volver: 'evolucion' }">
+          Registrar documento
+        </a>
+      }
+    </div>
+    @if (family.idActivo()) {
+      <app-evolution-filters [period]="period" (applied)="applyFilters($event)" />
+    } @else { <p>Elige el perfil que deseas consultar.</p> }
+  </section>
+
+  @if (family.idActivo(); as id) {
+    <section class="card" aria-label="Reporte mensual">
+      <div class="eyebrow">{{ family.nombre(id) }}</div>
+      <h2>Documentos por mes</h2>
+      <p class="hint">Se cuentan según la fecha del documento.</p>
+      @if (loadingReport) { <p role="status">Cargando el reporte…</p> }
+      @else if (reportError) {
+        <p role="alert">{{ reportError }} <button matButton="text" type="button" (click)="refresh()">Reintentar</button></p>
+      } @else { <app-report-documents-by-month [period]="period" [rows]="months" /> }
+      @if (!showTimeline) { <a class="more" routerLink="/evolucion">Ver la línea de tiempo de este perfil</a> }
+    </section>
+
+    @if (showTimeline) {
+      <section class="card" aria-label="Línea de tiempo">
+        <h2>Línea de tiempo</h2>
+        <p class="hint">Documentos de {{ family.nombre(id) }}, del más reciente al más antiguo.</p>
+        @if (loadingTimeline) { <p role="status">Cargando los documentos…</p> }
+        @else if (timelineError) {
+          <p role="alert">{{ timelineError }} <button matButton="text" type="button" (click)="refresh()">Reintentar</button></p>
+        } @else if (documents.length) { <app-document-timeline [documents]="documents" /> }
+        @else { <p>No se encontraron documentos. Prueba otro periodo o registra el primero.</p> }
+      </section>
+    }
+  }
+}

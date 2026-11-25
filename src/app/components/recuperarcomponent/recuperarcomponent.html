@@ -9,22 +9,22 @@
 
         <!-- Tarjeta del formulario -->
         <section class="login-card">
-            
+
             <!-- Selector de modo: Recuperar o Cambiar directamente -->
             <div class="mode-selector">
-                <button type="button" 
-                        [class.active]="modo === 'recuperar'" 
+                <button type="button"
+                        [class.active]="modo === 'recuperar'"
                         (click)="cambiarModo('recuperar')">
                     Recuperar por correo
                 </button>
-                <button type="button" 
-                        [class.active]="modo === 'cambiar'" 
+                <button type="button"
+                        [class.active]="modo === 'cambiar'"
                         (click)="cambiarModo('cambiar')">
                     Cambiar directamente
                 </button>
             </div>
 
-            <!-- OPINIÓN A: Formulario para Recuperar por correo -->
+            <!-- OPCIÓN A: Formulario para Recuperar por correo -->
             @if (modo === 'recuperar') {
                 <div class="form-section">
                     <div class="icon-container">
@@ -73,10 +73,29 @@
 
                         <div class="field">
                             <label for="nuevaClave">Nueva contraseña</label>
-                            <input id="nuevaClave" type="password" formControlName="newPassword" placeholder="••••••••"
-                                [class.invalid]="formCambiar.get('newPassword')?.touched && formCambiar.get('newPassword')?.invalid" />
+                            <div class="password-wrapper">
+                                <input
+                                    id="nuevaClave"
+                                    [type]="mostrarPassword ? 'text' : 'password'"
+                                    formControlName="newPassword"
+                                    placeholder="••••••••"
+                                    autocomplete="new-password"
+                                    [class.invalid]="formCambiar.get('newPassword')?.touched && formCambiar.get('newPassword')?.invalid"
+                                />
+                                <button
+                                    type="button"
+                                    class="toggle-password-btn"
+                                    (click)="alternarPassword()"
+                                    [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                                    [title]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                                >
+                                    <mat-icon>{{ mostrarPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                </button>
+                            </div>
                             @if (formCambiar.get('newPassword')?.touched && formCambiar.get('newPassword')?.hasError('required')) {
                                 <small class="error">Ingresa la nueva contraseña.</small>
+                            } @else if (formCambiar.get('newPassword')?.touched && formCambiar.get('newPassword')?.hasError('minlength')) {
+                                <small class="error">Mínimo 6 caracteres.</small>
                             }
                         </div>
 
@@ -97,7 +116,7 @@
             </button>
         </section>
 
-        <!-- Panel de bienvenida lateral (El que ya tienes) -->
+        <!-- Panel de bienvenida lateral -->
         <aside class="brand-panel">
             <mat-icon class="brand-icon">monitor_heart</mat-icon>
             <h2>Tu salud, cerca.</h2>

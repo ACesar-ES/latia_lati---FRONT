@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { UsersService } from '../../services/usuarioservice';
 import { UsersRequestDTO } from '../../model/UsersRequestDTO';
 
-
 @Component({
   selector: 'app-recuperarcomponent',
   standalone: true,
@@ -15,18 +14,19 @@ import { UsersRequestDTO } from '../../model/UsersRequestDTO';
 })
 export class RecuperarComponent {
   modo: 'recuperar' | 'cambiar' = 'recuperar';
-  
+  mostrarPassword = false;
+
   formRecuperar: FormGroup;
   formCambiar: FormGroup;
-  
+
   cargando = false;
   mensajeRecuperar = '';
   mensajeCambiar = '';
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private router: Router,
-    private uS: UsersService // Inyectamos tu servicio de usuarios
+    private uS: UsersService
   ) {
     // Formulario opción 1: Solo pedir correo para enviar instrucciones
     this.formRecuperar = this.fb.group({
@@ -40,8 +40,13 @@ export class RecuperarComponent {
     });
   }
 
+  alternarPassword(): void {
+    this.mostrarPassword = !this.mostrarPassword;
+  }
+
   cambiarModo(nuevoModo: 'recuperar' | 'cambiar') {
     this.modo = nuevoModo;
+    this.mostrarPassword = false;
     this.mensajeRecuperar = '';
     this.mensajeCambiar = '';
   }
@@ -51,12 +56,11 @@ export class RecuperarComponent {
       this.formRecuperar.markAllAsTouched();
       return;
     }
-    
+
     this.cargando = true;
     this.mensajeRecuperar = '';
     const email = this.formRecuperar.value.email;
-    
-    // Simulación o llamada al endpoint de envío de correo de recuperación
+
     setTimeout(() => {
       this.cargando = false;
       this.mensajeRecuperar = `Se han enviado las instrucciones de recuperación a: ${email}`;
@@ -73,24 +77,20 @@ export class RecuperarComponent {
     this.mensajeCambiar = '';
     const { email, newPassword } = this.formCambiar.value;
 
-    // 1. Buscamos al usuario en el backend por su correo electrónico usando el nuevo endpoint
     this.uS.getUserByEmail(email).subscribe({
       next: (usuarioEncontrado) => {
-        // 2. Construimos el DTO con sus datos actuales y asignamos la nueva contraseña
         const userUpdate = new UsersRequestDTO();
         userUpdate.idUser = usuarioEncontrado.idUser;
         userUpdate.firstName = usuarioEncontrado.firstName;
         userUpdate.lastName = usuarioEncontrado.lastName;
         userUpdate.username = usuarioEncontrado.username;
         userUpdate.email = usuarioEncontrado.email;
-        userUpdate.passwordHash = newPassword; // El backend aplicará el encoder automáticamente
+        userUpdate.passwordHash = newPassword;
         userUpdate.active = usuarioEncontrado.active;
 
-        // 3. Ejecutamos el método updateUser para guardar los cambios
         this.uS.updateUser(userUpdate).subscribe({
           next: () => {
             this.cargando = false;
-            // Redirigimos al login tras actualizar con éxito
             this.router.navigate(['/login']);
           },
           error: (err) => {
@@ -99,9 +99,8 @@ export class RecuperarComponent {
           }
         });
       },
-      error: (err) => {
+      error: () => {
         this.cargando = false;
-        // Si el correo no existe en la base de datos (404 Not Found)
         this.mensajeCambiar = 'No existe una cuenta registrada con este correo.';
       }
     });

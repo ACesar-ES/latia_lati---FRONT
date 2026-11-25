@@ -1,0 +1,21 @@
+@if (total > 0) {
+  <p><strong>{{ total }}</strong> {{ total === 1 ? 'documento en el periodo' : 'documentos en el periodo' }}.</p>
+  <div class="plot">
+    <canvas baseChart [type]="'bar'" [data]="chartData" [options]="chartOptions"
+            role="img" aria-label="Documentos por mes. Los valores también están en la tabla."></canvas>
+  </div>
+  <details>
+    <summary>Ver cantidades por mes</summary>
+    <table>
+      <caption>Documentos por mes del periodo seleccionado</caption>
+      <thead><tr><th scope="col">Mes</th><th scope="col">Documentos</th></tr></thead>
+      <tbody>
+        @for (month of series; track month.key) {
+          <tr><th scope="row">{{ month.label }}</th><td>{{ month.total }}</td></tr>
+        }
+      </tbody>
+    </table>
+  </details>
+} @else {
+  <p>No hay documentos para este perfil con los filtros elegidos.</p>
+}

@@ -1,0 +1,5 @@
+.evolution-page { box-sizing: border-box; width: 100%; max-width: 74rem; margin: 0 auto; padding: clamp(1rem, 3vw, 2.2rem); }
+header { margin-bottom: 1.3rem; }
+header p { margin: .4rem 0 0; color: var(--latia-muted, #5e6570); }
+header .label { font-size: .72rem; letter-spacing: .12em; font-weight: 800; }
+h1 { margin: .25rem 0; font-size: clamp(1.8rem, 3vw, 2.35rem); line-height: 1.15; }

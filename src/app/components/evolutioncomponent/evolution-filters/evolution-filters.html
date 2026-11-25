@@ -1,0 +1,28 @@
+<form [formGroup]="form" (ngSubmit)="apply()" aria-label="Filtrar documentos">
+  <mat-form-field appearance="outline">
+    <mat-label>Periodo del documento</mat-label>
+    <mat-date-range-input [rangePicker]="calendar">
+      <input matStartDate formControlName="start" placeholder="Desde" aria-label="Fecha inicial" />
+      <input matEndDate formControlName="end" placeholder="Hasta" aria-label="Fecha final" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matIconSuffix [for]="calendar"></mat-datepicker-toggle>
+    <mat-date-range-picker #calendar></mat-date-range-picker>
+    <mat-hint>Incluye ambas fechas.</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Tipo de documento</mat-label>
+    <input matInput formControlName="documentType" maxlength="50" placeholder="Ej. receta o laboratorio" />
+    <mat-hint>Déjalo vacío para ver todos.</mat-hint>
+  </mat-form-field>
+  <div class="actions">
+    <button matButton="filled" type="submit">Aplicar</button>
+    <button matButton="text" type="button" (click)="reset()">Últimos 12 meses</button>
+  </div>
+  @if (form.invalid && form.touched) {
+    <p class="error" role="alert">
+      @if (form.hasError('tooLong')) { Elige un intervalo de hasta 60 meses. }
+      @else if (form.hasError('reversed')) { La fecha final debe ser igual o posterior a la inicial. }
+      @else { Selecciona dos fechas válidas en el calendario. }
+    </p>
+  }
+</form>

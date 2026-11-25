@@ -38,6 +38,10 @@ export class Profileswitchcomponent implements OnInit {
 
   // Elige el perfil y vuelve a Familia o al Historial
   abrir(id: number): void {
+    if (this.route.snapshot.queryParamMap.get('volver') === 'evolucion') {
+      if (this.fcS.seleccionar(id)) this.router.navigate(['/evolucion']);
+      return;
+    }
     if (!this.fcS.seleccionar(id)) return;
     const volver = this.route.snapshot.queryParamMap.get('volver');
     const destino =

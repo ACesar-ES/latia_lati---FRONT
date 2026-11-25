@@ -1,0 +1,22 @@
+.filtro {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.filtro input {
+  padding: 8px 12px;
+  border: 1px solid #d9dce1;
+  border-radius: 8px;
+  font-family: inherit;
+}
+.filtro button {
+  padding: 8px 14px;
+  border: 1px solid #d9dce1;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+}

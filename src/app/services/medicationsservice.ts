@@ -29,4 +29,18 @@ export class Medicationsservice {
   updateMedication(dto: MedicationsDTO): Observable<MedicationsDTO> {
     return this.http.put<MedicationsDTO>(this.apiURL, dto);
   }
+
+  searchByName(name: string): Observable<MedicationsDTO[]> {
+    return this.http.get<MedicationsDTO[]>(`${this.apiURL}/name`, {
+    params: { name: name },
+  });
+}
+
+searchByDosageForm(dosageForm: string): Observable<MedicationsDTO[]> {
+  return this.http.get<MedicationsDTO[]>(`${this.apiURL}/dosageForm`, {
+    params: { dosageForm: dosageForm },
+  });
+}
+
+
 }

@@ -8,7 +8,7 @@ import { MedicaldocumentsDTO } from '../model/MedicaldocumentsDTO';
   providedIn: 'root',
 })
 export class Medicaldocumentsservice {
-  private apiURL = `${environment.base}/api/medical-documents`;
+  private apiURL = `${environment.base}/api/medicaldocuments`;
 
   constructor(private http: HttpClient) {}
 
@@ -28,4 +28,15 @@ export class Medicaldocumentsservice {
     updateMedicalDocument(dto: MedicaldocumentsDTO): Observable<MedicaldocumentsDTO> {
       return this.http.put<MedicaldocumentsDTO>(this.apiURL, dto);
     }
+      searchByDate(documentDate: string): Observable<MedicaldocumentsDTO[]> {
+    return this.http.get<MedicaldocumentsDTO[]>(`${this.apiURL}/fecha`, {
+      params: { documentDate: documentDate },
+    });
+  }
+
+  searchByUser(userId: number): Observable<MedicaldocumentsDTO[]> {
+    return this.http.get<MedicaldocumentsDTO[]>(`${this.apiURL}/doc-por-usuario`, {
+      params: { userId: userId },
+    });
+  }
 }

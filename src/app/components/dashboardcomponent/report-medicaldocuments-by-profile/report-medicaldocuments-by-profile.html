@@ -1,0 +1,13 @@
+<div class="container">
+  <h2>Documentos médicos por perfil</h2>
+
+  <div class="filtro">
+    <label for="userDoc">Filtrar por ID de usuario:</label>
+    <input id="userDoc" type="number" min="1" [value]="userId ?? ''" (change)="alCambiarUsuario($event)" />
+    <button type="button" (click)="limpiar()">Ver todos</button>
+  </div>
+
+  <div class="grafico">
+    <canvas baseChart [type]="chartType" [data]="chartData" [options]="chartOptions"></canvas>
+  </div>
+</div>

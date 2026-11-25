@@ -12,7 +12,10 @@ import { ReportCountFamilyRelationshipsByProfile } from './report-count-family-r
 import { ReportCountFamilyRelationshipsByType } from './report-count-family-relationships-by-type/report-count-family-relationships-by-type';
 import { CountclinicalrecordsbymedicalconditionDTO } from '../../model/CountclinicalrecordsbymedicalconditionDTO';
 import { ReportCountEmergencyContactsByProfile } from './report-count-emergency-contacts-by-profile/report-count-emergency-contacts-by-profile';
-
+import { ReportMedicationsByName } from './report-medications-by-name/report-medications-by-name';
+import { ReportMedicationByDosageform } from './report-medication-by-dosageform/report-medication-by-dosageform';
+import { ReportMedicalDocumentsByDay } from './report-medicaldocuments-by-day/report-medicaldocuments-by-day';
+import { ReportMedicalDocumentsByProfile } from './report-medicaldocuments-by-profile/report-medicaldocuments-by-profile';
 @Component({
   selector: 'app-dashboardcomponent',
   imports: [
@@ -28,6 +31,11 @@ import { ReportCountEmergencyContactsByProfile } from './report-count-emergency-
     ReportCountEmergencyContactsByRelationship,
     ReportCountFamilyRelationshipsByProfile,
     ReportCountFamilyRelationshipsByType,
+    ReportMedicationsByName,
+    ReportMedicationByDosageform,
+    ReportMedicalDocumentsByDay,
+    ReportMedicalDocumentsByProfile,
+
   ],
   templateUrl: './dashboardcomponent.html',
   styleUrl: './dashboardcomponent.css',
@@ -52,6 +60,18 @@ export class Dashboardcomponent {
   @ViewChild(ReportCountFamilyRelationshipsByType)
   reporteFamiliaTipo?: ReportCountFamilyRelationshipsByType;
 
+  @ViewChild(ReportMedicationsByName)
+  reporteMedNombre?: ReportMedicationsByName;
+
+  @ViewChild(ReportMedicationByDosageform)
+  reporteMedForma?: ReportMedicationByDosageform;
+
+  @ViewChild(ReportMedicalDocumentsByDay)
+  reporteDocDia?: ReportMedicalDocumentsByDay;
+
+  @ViewChild(ReportMedicalDocumentsByProfile)
+  reporteDocPerfil?: ReportMedicalDocumentsByProfile;
+
   constructor(private cdr: ChangeDetectorRef) {}
 
   alCargarCondiciones(datos: CountclinicalrecordsbymedicalconditionDTO[]): void {
@@ -71,5 +91,9 @@ export class Dashboardcomponent {
     this.reporteContactosParentesco?.obtenerReporte();
     this.reporteFamiliaPerfil?.obtenerReporte();
     this.reporteFamiliaTipo?.obtenerReporte();
+    this.reporteMedNombre?.obtenerReporte();
+    this.reporteMedForma?.obtenerReporte();
+    this.reporteDocDia?.obtenerReporte();
+    this.reporteDocPerfil?.obtenerReporte();
   }
 }

@@ -1,0 +1,13 @@
+<div class="container">
+  <h2>Documentos médicos por día</h2>
+
+  <div class="filtro">
+    <label for="fechaDoc">Filtrar por fecha:</label>
+    <input id="fechaDoc" type="date" [value]="fecha" (change)="alCambiarFecha($event)" />
+    <button type="button" (click)="limpiar()">Ver todos</button>
+  </div>
+
+  <div class="grafico">
+    <canvas baseChart [type]="chartType" [data]="chartData" [options]="chartOptions"></canvas>
+  </div>
+</div>

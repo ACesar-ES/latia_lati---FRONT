@@ -100,6 +100,52 @@
                 </div>
             </mat-tab>
 
+                        <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>medication</mat-icon>
+                    <span class="tab-text">Medicamentos</span>
+                </ng-template>
+
+                <mat-tab-group class="sub-tabs" animationDuration="200ms" preserveContent>
+                    <mat-tab label="Por nombre">
+                        <div class="reports-grid single">
+                            <app-report-medications-by-name class="report-slot">
+                            </app-report-medications-by-name>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab label="Por forma de dosificación">
+                        <div class="reports-grid single">
+                            <app-report-medication-by-dosageform class="report-slot">
+                            </app-report-medication-by-dosageform>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>description</mat-icon>
+                    <span class="tab-text">Documentos</span>
+                </ng-template>
+
+                <mat-tab-group class="sub-tabs" animationDuration="200ms" preserveContent>
+                    <mat-tab label="Por día">
+                        <div class="reports-grid single">
+                            <app-report-medical-documents-by-day class="report-slot">
+                            </app-report-medical-documents-by-day>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab label="Por perfil">
+                        <div class="reports-grid single">
+                            <app-report-medical-documents-by-profile class="report-slot">
+                            </app-report-medical-documents-by-profile>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-tab>
+
         </mat-tab-group>
     </div>
 </app-menucomponent>

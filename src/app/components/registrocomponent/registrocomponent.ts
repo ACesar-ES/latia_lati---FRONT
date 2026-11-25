@@ -5,13 +5,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { UsersService } from '../../services/usuarioservice';
 import { UsersRequestDTO } from '../../model/UsersRequestDTO';
 
-
 @Component({
   selector: 'app-registrocomponent',
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, MatIconModule],
   templateUrl: './registrocomponent.html',
-  styleUrls: ['./registrocomponent.css']
+  styleUrls: ['./registrocomponent.css'],
 })
 export class RegistroComponent {
   formRegistro: FormGroup;
@@ -20,25 +19,31 @@ export class RegistroComponent {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private router: Router,
-    private uS: UsersService 
+    private uS: UsersService,
   ) {
     this.formRegistro = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       username: ['', [Validators.required]], // Añadido campo obligatorio para la entidad
       email: ['', [Validators.required, Validators.email]],
-      passwordHash: ['', [Validators.required, Validators.minLength(6)]]
+      passwordHash: ['', [Validators.required, Validators.minLength(6)]],
     });
+  }
+
+  mostrarPassword = false;
+
+  alternarPassword(): void {
+    this.mostrarPassword = !this.mostrarPassword;
   }
 
   registrar() {
     if (this.formRegistro.invalid) {
-  this.formRegistro.markAllAsTouched();
-  this.mensaje = 'Completa todos los campos correctamente.';
-  return;
-}
+      this.formRegistro.markAllAsTouched();
+      this.mensaje = 'Completa todos los campos correctamente.';
+      return;
+    }
 
     this.cargando = true;
     this.mensaje = '';
@@ -50,19 +55,20 @@ export class RegistroComponent {
     nuevoUsuario.username = this.formRegistro.value.username;
     nuevoUsuario.email = this.formRegistro.value.email;
     nuevoUsuario.passwordHash = this.formRegistro.value.passwordHash;
-    nuevoUsuario.active = true; 
+    nuevoUsuario.active = true;
 
     // Llamada real al servicio backend
     this.uS.insertUser(nuevoUsuario).subscribe({
-  next: () => {
-    this.cargando = false;
-    this.router.navigate(['/login']);
-  },
-  error: (err) => {
-    this.cargando = false;
-    this.mensaje = err.error?.message || 'Ocurrió un error al registrar la cuenta. Inténtalo de nuevo.';
-    this.cdr.detectChanges();
-  }
-});
+      next: () => {
+        this.cargando = false;
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this.cargando = false;
+        this.mensaje =
+          err.error?.message || 'Ocurrió un error al registrar la cuenta. Inténtalo de nuevo.';
+        this.cdr.detectChanges();
+      },
+    });
   }
 }

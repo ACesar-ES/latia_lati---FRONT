@@ -95,16 +95,27 @@
 
         <div class="field">
           <label for="clave">Contraseña</label>
-          <input
-            id="clave"
-            type="password"
-            formControlName="passwordHash"
-            placeholder="••••••••"
-            autocomplete="new-password"
-            [class.invalid]="
-              formRegistro.get('passwordHash')?.touched && formRegistro.get('passwordHash')?.invalid
-            "
-          />
+          <div class="password-wrapper">
+            <input
+              id="clave"
+              [type]="mostrarPassword ? 'text' : 'password'"
+              formControlName="passwordHash"
+              placeholder="••••••••"
+              autocomplete="new-password"
+              [class.invalid]="
+                formRegistro.get('passwordHash')?.touched && formRegistro.get('passwordHash')?.invalid
+              "
+            />
+            <button
+              type="button"
+              class="toggle-password-btn"
+              (click)="alternarPassword()"
+              [attr.aria-label]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+              [title]="mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              <mat-icon>{{ mostrarPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
           @if (
             formRegistro.get('passwordHash')?.touched &&
             formRegistro.get('passwordHash')?.hasError('required')

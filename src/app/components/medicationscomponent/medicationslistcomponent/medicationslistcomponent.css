@@ -1,8 +1,9 @@
 .med-page {
-  --med-primary: #b5294a;
-  --med-soft: #fde8ec;
-  --med-border: #e6e8ec;
-  --med-muted: #6b7280;
+  --med-primary: var(--app-primary, #b5294a);
+  --med-soft: var(--app-primary-soft, #fde8ec);
+  --med-border: var(--app-border, #e6e8ec);
+  --med-muted: var(--app-muted, #6b7280);
+  color: var(--app-text, #1f2a37);
 
   max-width: 1100px;
   margin: 0 auto;
@@ -72,6 +73,7 @@
 
 .med-chip:hover {
   border-color: var(--med-primary);
+  background: var(--app-hover, #fafafa);
 }
 
 .med-chip.active {
@@ -88,6 +90,14 @@
   padding: 8px 14px;
   border: 1px solid var(--med-border);
   border-radius: 12px;
+  background: var(--app-surface, #ffffff);
+  color: var(--app-text, #1f2a37);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.med-search:focus-within {
+  border-color: var(--med-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--med-primary) 25%, transparent);
 }
 
 .med-search input {
@@ -120,11 +130,14 @@
   border: 1px solid var(--med-border);
   border-top: 4px solid var(--med-primary);
   border-radius: 16px;
+  background: var(--app-surface, #ffffff);
+  color: var(--app-text, #1f2a37);
   transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .med-card:hover {
   transform: translateY(-3px);
+  background: var(--app-hover, #fafafa);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -192,7 +205,7 @@
 }
 
 .med-danger {
-  color: #c62828;
+  color: var(--app-danger, #c62828);
 }
 
 /* Vacío y mensajes */

@@ -1,10 +1,16 @@
 .container {
-  padding: 8px 0;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 24px;
+  background: var(--app-surface, #ffffff);
+  border: 1px solid var(--app-border, #e5e7eb);
+  border-radius: 18px;
+  color: var(--app-text, #1f2a37);
 }
 
 .subtitulo {
   margin: 4px 0 16px;
-  color: #667580;
+  color: var(--app-muted, #667580);
 }
 
 .grafico {
@@ -15,5 +21,5 @@
 
 .vacio {
   padding: 24px 0;
-  color: #667580;
+  color: var(--app-muted, #667580);
 }

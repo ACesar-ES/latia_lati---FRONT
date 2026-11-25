@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { Themeservice } from '../../services/themeservice';
+import { Loginservice } from '../../services/loginservice';
 
 @Component({
   imports: [RouterLink, MatIconModule],
@@ -12,8 +13,15 @@ import { Themeservice } from '../../services/themeservice';
 export class Landingcomponent {
   anio: number = new Date().getFullYear();
 
-  constructor(private tema: Themeservice) {
+  constructor(
+    private tema: Themeservice,
+    private auth: Loginservice,
+  ) {
     this.tema.inicializar();
+  }
+
+  get sesionIniciada(): boolean {
+    return this.auth.isAuthenticated();
   }
 
   get modoOscuro(): boolean {

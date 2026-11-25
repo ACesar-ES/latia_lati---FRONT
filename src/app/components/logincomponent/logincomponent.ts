@@ -46,7 +46,7 @@ export class Logincomponent {
         const destination =
           returnUrl?.startsWith('/') && !returnUrl.startsWith('//') && returnUrl !== '/'
             ? returnUrl
-            : '/historial';
+            : '/inicio';
 
         void this.router.navigateByUrl(destination);
       },

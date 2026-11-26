@@ -28,7 +28,20 @@
           <span class="conversation-label">Conversación de {{ nombrePerfilActivo }}</span>
         </header>
 
-        <div class="conversation-space" role="log" aria-live="polite"></div>
+        <div class="conversation-space" role="log" aria-live="polite" aria-relevant="additions">
+          @if (mensajes.length === 0) {
+            <p class="conversation-empty">Escribe una pregunta para comenzar la conversación.</p>
+          }
+          @for (mensaje of mensajes; track mensaje.id) {
+            <article class="message" [class.user-message]="mensaje.role === 'user'">
+              <span class="message-author">{{ mensaje.role === 'user' ? 'Tú' : 'Lati' }}</span>
+              <p>{{ mensaje.content }}</p>
+            </article>
+          }
+          @if (enviando) {
+            <p class="assistant-typing" role="status">Lati está preparando una respuesta…</p>
+          }
+        </div>
 
         <div class="composer">
           @if (mostrarInstrucciones) {
@@ -41,37 +54,7 @@
             </aside>
           }
 
-          @if (adjuntos.length) {
-            <div class="attachment-list" aria-label="Archivos seleccionados">
-              @for (archivo of adjuntos; track $index) {
-                <span class="attachment-chip">
-                  <mat-icon>attach_file</mat-icon>
-                  <span>{{ archivo.name }}</span>
-                  <button
-                    type="button"
-                    (click)="eliminarAdjunto($index)"
-                    [attr.aria-label]="'Quitar ' + archivo.name"
-                  >
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </span>
-              }
-            </div>
-          }
-
           <div class="composer-tools">
-            <input
-              #selectorArchivos
-              class="visually-hidden"
-              type="file"
-              accept=".pdf,.png,.jpg,.jpeg"
-              multiple
-              (change)="seleccionarAdjuntos($event)"
-            />
-            <button type="button" class="tool-button" (click)="selectorArchivos.click()">
-              <mat-icon>attach_file</mat-icon>
-              <span>Adjuntar</span>
-            </button>
             <button
               type="button"
               class="tool-button"
@@ -93,8 +76,10 @@
               </button>
               @if (mostrarMas) {
                 <div class="more-menu">
-                  <button type="button" (click)="limpiarBorrador()">Limpiar borrador</button>
-                  <p>La conversación se conectará a la IA más adelante.</p>
+                  <button type="button" (click)="limpiarConversacion()" [disabled]="enviando">
+                    Limpiar conversación
+                  </button>
+                  <p>El historial de este perfil se conserva solo mientras esta página está abierta.</p>
                 </div>
               }
             </div>
@@ -106,19 +91,28 @@
               rows="1"
               [value]="mensaje"
               (input)="actualizarMensaje($event)"
+              (keydown)="enviarConTecla($event)"
+              maxlength="4000"
               placeholder="Escribe lo que te gustaría preguntar..."
               aria-label="Escribe tu pregunta"
             ></textarea>
             <button
               type="button"
               class="send-button"
-              disabled
+              [disabled]="!puedeEnviar"
+              (click)="enviarMensaje()"
               aria-label="Enviar mensaje"
-              title="El envío estará disponible al conectar la API"
+              title="Enviar pregunta"
             >
               <mat-icon>arrow_forward</mat-icon>
             </button>
           </div>
+          @if (errorEnvio) {
+            <p class="send-error" role="alert">
+              {{ errorEnvio }}
+              <button type="button" (click)="enviarMensaje()" [disabled]="!puedeEnviar">Reintentar</button>
+            </p>
+          }
           <p class="health-disclaimer">
             Lati te ayuda a comprender. Las decisiones de salud se revisan con un profesional.
           </p>
@@ -131,7 +125,11 @@
         <span class="profile-tag">{{ parentescoPerfilActivo }}</span>
 
         <h3>Contexto de esta conversación</h3>
-        <p>Documentos, antecedentes y preguntas de esta persona.</p>
+        <p>
+          Al enviar una pregunta, se comparte con Google Gemini la información estructurada del
+          perfil activo, incluidos registros médicos y contactos. No se envía el contenido de
+          archivos ni la información médica de otros perfiles.
+        </p>
 
         <a class="context-action" routerLink="/historial">
           <mat-icon>folder_open</mat-icon>

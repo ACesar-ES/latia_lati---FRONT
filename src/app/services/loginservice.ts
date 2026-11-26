@@ -67,27 +67,30 @@ export class Loginservice {
   }
 
   getRoles(): string[] {
-    if (!this.isBrowser || !this.isAuthenticated()) {
-      return [];
-    }
-
-    const value = localStorage.getItem('roles');
-    if (!value) {
+    const token = this.getToken();
+    if (!this.isBrowser || !token) {
       return [];
     }
 
     try {
-      const roles: unknown = JSON.parse(value);
+      const payloadPart = token.split('.')[1];
+      if (!payloadPart) return [];
 
-      if (Array.isArray(roles) && roles.every((role) => typeof role === 'string')) {
-        return roles;
+      const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+      const payload: unknown = JSON.parse(
+        atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')),
+      );
+      if (payload === null || typeof payload !== 'object' || !('roles' in payload)) return [];
+
+      const roles = payload.roles;
+      if (typeof roles === 'string') {
+        return roles.split(',').map((role) => role.trim()).filter(Boolean);
       }
+      if (Array.isArray(roles) && roles.every((role) => typeof role === 'string')) return roles;
     } catch {
-      localStorage.removeItem('roles');
       return [];
     }
 
-    localStorage.removeItem('roles');
     return [];
   }
 

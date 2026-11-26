@@ -5,11 +5,13 @@
 
     <!-- Logo y Eslogan -->
     <div class="sidebar-top">
-      <div class="sidebar-logo">
-        <mat-icon>monitor_heart</mat-icon>
-        <span class="logo-text">Latia</span>
-      </div>
-      <p class="logo-subtitle">Tu salud, cerca.</p>
+      <a class="sidebar-brand" routerLink="/" aria-label="Ir a la página de inicio de Latia">
+        <div class="sidebar-logo">
+          <mat-icon>monitor_heart</mat-icon>
+          <span class="logo-text">Latia</span>
+        </div>
+        <p class="logo-subtitle">Tu salud, cerca.</p>
+      </a>
 
       <!-- Enlaces de Navegación -->
       <mat-nav-list class="nav-list">
@@ -66,19 +68,23 @@
 
     <!-- Parte Inferior: Tarjeta Lati y Perfil -->
     <div class="sidebar-footer">
-      <div class="lati-prompt-card">
+      <a
+        class="lati-prompt-card"
+        routerLink="/lati"
+        aria-label="Abrir el chat de Lati"
+      >
         <div class="prompt-header">
           <mat-icon>monitor_heart</mat-icon>
           <span class="prompt-title">Aquí puedes preguntar</span>
         </div>
         <p class="prompt-subtitle">Lati te acompaña, paso a paso.</p>
-      </div>
+      </a>
 
       <a class="user-profile" routerLink="/perfil" routerLinkActive="active" aria-label="Ir a mi perfil">
         <div class="user-avatar">{{ iniciales }}</div>
         <div class="user-info">
           <span class="user-name">{{ nombre }}</span>
-          <span class="user-role">Cuenta personal</span>
+          <span class="user-role">{{ rolUsuario }}</span>
         </div>
       </a>
     </div>

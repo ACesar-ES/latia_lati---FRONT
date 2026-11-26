@@ -51,4 +51,16 @@ describe('Loginservice', () => {
     expect(localStorage.getItem('token')).toBeNull();
     expect(localStorage.getItem('email')).toBeNull();
   });
+
+  it('reads roles from the signed-in token claims', () => {
+    const tokenWithRoles = `header.${btoa(
+      JSON.stringify({
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        roles: 'ROLE_USER,ROLE_ADMIN',
+      }),
+    )}.signature`;
+    localStorage.setItem('token', tokenWithRoles);
+
+    expect(service.getRoles()).toEqual(['ROLE_USER', 'ROLE_ADMIN']);
+  });
 });

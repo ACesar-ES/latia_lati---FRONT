@@ -34,6 +34,7 @@ export class Menucomponent implements OnInit, OnDestroy {
   nombre: string = 'Mi cuenta';
   primerNombre: string = 'Mi cuenta';
   iniciales: string = '';
+  rolUsuario = 'Rol no disponible';
   modoOscuro = false;
   seccionActual = 'Inicio';
   private sub = new Subscription();
@@ -52,6 +53,7 @@ export class Menucomponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tema.inicializar();
     this.modoOscuro = this.tema.modoOscuro;
+    this.rolUsuario = this.etiquetaRoles(this.lS.getRoles());
     this.actualizarSeccion(this.router.url);
 
     this.sub.add(
@@ -75,6 +77,7 @@ export class Menucomponent implements OnInit, OnDestroy {
         } else {
           this.nombre = this.primerNombre = 'Mi cuenta';
           this.iniciales = '';
+          this.rolUsuario = 'Rol no disponible';
         }
         this.cdr.detectChanges();
       }),
@@ -134,5 +137,12 @@ export class Menucomponent implements OnInit, OnDestroy {
     };
 
     this.seccionActual = secciones[ruta] ?? 'Inicio';
+  }
+
+  private etiquetaRoles(roles: string[]): string {
+    const normalizados = roles.map((role) => role.replace(/^ROLE_/i, '').toUpperCase());
+    if (normalizados.includes('ADMIN')) return 'Administrador';
+    if (normalizados.includes('USER')) return 'Usuario';
+    return roles.length ? roles.join(', ') : 'Rol no disponible';
   }
 }

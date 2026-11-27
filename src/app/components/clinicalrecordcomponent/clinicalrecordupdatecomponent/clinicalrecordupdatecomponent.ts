@@ -13,6 +13,9 @@ import { Familycontextservice } from '../../../services/familycontextservice';
 import { ClinicalrecordDTO } from '../../../model/ClinicalrecordDTO';
 import { Medicalconditionservice } from '../../../services/medicalconditionservice';
 import { MedicalconditionDTO } from '../../../model/MedicalconditionDTO';
+import { Loginservice } from '../../../services/loginservice';
+import { Healthprofileservice } from '../../../services/healthprofileservice';
+import { UsersService } from '../../../services/usuarioservice';
 
 @Component({
   imports: [
@@ -36,15 +39,14 @@ export class Clinicalrecordupdatecomponent implements OnInit {
   mensaje: string = '';
   hoy: Date = new Date(); // no permite fechas futuras
   perfilCargado: number | null = null; // perfil al que pertenece el historial
+  nombrePerfilAdmin: string = ''; // nombre de la persona dueña del historial (solo administrador)
   guardando: boolean = false;
   condiciones: MedicalconditionDTO[] = [];
 
   tiposDocumento: string[] = [
-    'Examen de laboratorio',
-    'Receta médica',
-    'Imagen e informe',
-    'Resumen de consulta',
-    'Orden médica',
+    'Consulta',
+    'Laboratorio',
+    'Control'
   ];
 
   constructor(
@@ -55,7 +57,27 @@ export class Clinicalrecordupdatecomponent implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef,
     public fcS: Familycontextservice,
+    private loginService: Loginservice,
+    private hpS: Healthprofileservice,
+    private uS: UsersService,
   ) {}
+
+  // Igual que en la lista de riegos: el rol se consulta en el servicio de login
+  get esAdmin(): boolean {
+    return this.loginService.hasAnyRole(['ADMIN']);
+  }
+
+  // Perfil al que pertenece el historial. El administrador ve el nombre de la persona dueña del historial.
+  get nombrePerfil(): string {
+    const id = this.perfilCargado;
+    if (id === null) {
+      return '';
+    }
+    if (this.esAdmin) {
+      return this.nombrePerfilAdmin || 'Perfil #' + id;
+    }
+    return this.fcS.nombre(id);
+  }
 
   ngOnInit(): void {
     // Recuperar ID desde la URL: /historial/editar/:id
@@ -78,12 +100,18 @@ export class Clinicalrecordupdatecomponent implements OnInit {
 
     this.cargarCondiciones();
 
+    // El administrador puede editar cualquier historial, sin depender del perfil elegido
+    if (this.esAdmin) {
+      this.buscarPorId();
+      return;
+    }
+
     // Primero se cargan los perfiles para saber cuál está elegido
     this.fcS.cargar().subscribe({
       next: () => this.buscarPorId(),
       error: (err) => {
         console.log('Ocurrió un error al cargar los perfiles', err);
-        this.mensaje = 'No se pudieron cargar los perfiles!!';
+        this.mensaje = 'No se pudieron cargar los perfiles.';
         this.cdr.detectChanges();
       },
     });
@@ -105,13 +133,16 @@ export class Clinicalrecordupdatecomponent implements OnInit {
   buscarPorId(): void {
     this.crS.listId(this.idClinicalRecord).subscribe({
       next: (data: ClinicalrecordDTO) => {
-        // Solo se edita si el historial es del perfil elegido
-        if (data.idHealthProfile !== this.fcS.idActivo()) {
+        // El usuario solo edita historiales del perfil elegido; el administrador, cualquiera
+        if (!this.esAdmin && data.idHealthProfile !== this.fcS.idActivo()) {
           this.mensaje = 'Este documento no está disponible en el perfil activo.';
           this.cdr.detectChanges();
           return;
         }
         this.perfilCargado = data.idHealthProfile;
+        if (this.esAdmin) {
+          this.cargarNombrePerfil(data.idHealthProfile);
+        }
         this.formClinicalRecord.patchValue({
           codigo: data.idClinicalRecord,
           tipo: data.recordType,
@@ -124,23 +155,60 @@ export class Clinicalrecordupdatecomponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error al buscar !!!', error);
-        this.mensaje = 'No se encontró el historial !!!';
+        console.error('Error al buscar el historial', error);
+        this.mensaje = 'No se encontró el historial.';
         this.cdr.detectChanges();
       },
     });
   }
 
+  // El perfil no guarda nombres: se toma el del titular (o, si no tiene cuenta, el del dueño del perfil)
+  private cargarNombrePerfil(idPerfil: number): void {
+    this.hpS.list().subscribe({
+      next: (perfiles) => {
+        const perfil = perfiles.find((p) => p.idHealthProfile === idPerfil);
+        if (perfil === undefined) {
+          return;
+        }
+        const tieneTitular = perfil.idHolderUser !== null;
+        const idUsuario = perfil.idHolderUser !== null ? perfil.idHolderUser : perfil.idOwnerUser;
+        this.cargarNombreUsuario(idUsuario, tieneTitular);
+      },
+      error: (err) => {
+        console.log('Ocurrió un error al buscar el perfil del historial', err);
+      },
+    });
+  }
+
+  private cargarNombreUsuario(idUsuario: number, tieneTitular: boolean): void {
+    this.uS.listId(idUsuario).subscribe({
+      next: (usuario) => {
+        const nombre = usuario.firstName + ' ' + usuario.lastName;
+        this.nombrePerfilAdmin = tieneTitular ? nombre : 'Perfil de ' + nombre;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.log('Ocurrió un error al buscar el nombre del usuario', err);
+      },
+    });
+  }
+
   actualizarHistorial(): void {
+    const idPerfil = this.perfilCargado;
+    if (idPerfil === null) {
+      this.mensaje = 'El historial todavía no se ha cargado.';
+      return;
+    }
     if (this.formClinicalRecord.invalid) {
       this.formClinicalRecord.markAllAsTouched();
-      this.mensaje = 'Por favor, complete todos los campos correctamente!!';
+      this.mensaje = 'Por favor, complete todos los campos correctamente.';
       return;
     }
 
+    // El historial conserva el perfil al que ya pertenecía, también cuando lo edita el administrador
     const dto: ClinicalrecordDTO = {
       idClinicalRecord: this.formClinicalRecord.value.codigo,
-      idHealthProfile: this.perfilCargado!,
+      idHealthProfile: idPerfil,
       recordType: this.formClinicalRecord.value.tipo,
       title: this.formClinicalRecord.value.titulo,
       description: this.formClinicalRecord.value.descripcion,
@@ -153,14 +221,14 @@ export class Clinicalrecordupdatecomponent implements OnInit {
     this.crS.updateClinicalRecord(dto).subscribe({
       next: () => {
         this.guardando = false;
-        this.mensaje = 'Actualizado correctamente!!';
+        this.mensaje = 'Actualizado correctamente.';
         this.cdr.detectChanges();
         this.router.navigate(['/historial/listar']);
       },
       error: (error) => {
         console.error(error);
         this.guardando = false;
-        this.mensaje = 'Error al actualizar!!';
+        this.mensaje = 'Error al actualizar.';
         this.cdr.detectChanges();
       },
     });

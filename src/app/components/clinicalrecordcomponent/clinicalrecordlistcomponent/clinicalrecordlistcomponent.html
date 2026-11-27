@@ -2,7 +2,11 @@
   <!-- Encabezado -->
   <header class="header-section">
     <div class="header-titles">
-      <h1>{{ primerNombre ? 'La historia de ' + primerNombre + ', en un lugar' : 'Historial clínico' }}</h1>
+      <h1>
+        {{
+          primerNombre ? 'La historia de ' + primerNombre + ', en un lugar' : 'Historial clínico'
+        }}
+      </h1>
       <p>Encuentra documentos, recetas y exámenes cuando los necesites.</p>
     </div>
 
@@ -61,20 +65,30 @@
           mat-button
           type="button"
           class="tab-btn"
-          [class.active]="filtroActivo === 'examen'"
-          (click)="cambiarFiltro('examen')"
+          [class.active]="filtroActivo === 'consulta'"
+          (click)="cambiarFiltro('consulta')"
         >
-          Exámenes
+          Consulta
         </button>
 
         <button
           mat-button
           type="button"
           class="tab-btn"
-          [class.active]="filtroActivo === 'receta'"
-          (click)="cambiarFiltro('receta')"
+          [class.active]="filtroActivo === 'laboratorio'"
+          (click)="cambiarFiltro('laboratorio')"
         >
-          Recetas
+          Laboratorio
+        </button>
+
+        <button
+          mat-button
+          type="button"
+          class="tab-btn"
+          [class.active]="filtroActivo === 'control'"
+          (click)="cambiarFiltro('control')"
+        >
+          Control
         </button>
 
         <label class="search-box">
@@ -101,7 +115,7 @@
         <span class="sort-pill">Más recientes primero</span>
       </div>
 
-      @if (historialesFiltrados.length > 0) {
+      @if (dataSource.length > 0) {
         <div class="table-wrapper">
           <table mat-table [dataSource]="dataSource" class="records-table">
             <!-- C1: Documento (ícono + título + descripción) -->
@@ -166,7 +180,7 @@
                     type="button"
                     title="Eliminar"
                     aria-label="Eliminar historial"
-                    (click)="eliminarHistorial(element.idClinicalRecord!)"
+                    (click)="eliminarHistorial(element.idClinicalRecord)"
                   >
                     <mat-icon>delete</mat-icon>
                   </button>
@@ -185,10 +199,28 @@
               </td>
             </ng-container>
 
+            <ng-container matColumnDef="C7">
+              <th mat-header-cell *matHeaderCellDef>Perfil</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="professional">Perfil #{{ element.idHealthProfile }}</span>
+              </td>
+            </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
         </div>
+
+        <mat-paginator
+          [length]="historialesFiltrados.length"
+          [pageIndex]="pageIndex"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+          (page)="onPageChange($event)"
+          aria-label="Seleccionar página de documentos"
+        >
+        </mat-paginator>
       } @else if (cargando) {
         <p class="empty-state" role="status">Cargando historial…</p>
       } @else if (!aviso) {
@@ -207,15 +239,6 @@
           <button mat-button type="button" (click)="listarHistoriales()">Reintentar</button>
         </p>
       }
-
-      <mat-paginator
-        [length]="historialesFiltrados.length"
-        [pageSize]="5"
-        [pageSizeOptions]="[5, 10, 20]"
-        showFirstLastButtons
-        (page)="onPageChange($event)"
-      >
-      </mat-paginator>
     </section>
   }
 </div>

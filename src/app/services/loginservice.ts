@@ -30,7 +30,7 @@ export class Loginservice {
           sessionStorage.removeItem('token');
           sessionStorage.removeItem('email');
           sessionStorage.removeItem('roles');
-//          localStorage.setItem('roles', JSON.stringify(response.roles ?? []));
+          localStorage.setItem('roles', JSON.stringify(response.roles ?? []));
         }
       })
     );

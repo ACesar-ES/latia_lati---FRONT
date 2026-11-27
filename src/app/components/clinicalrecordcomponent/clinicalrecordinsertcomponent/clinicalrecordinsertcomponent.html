@@ -27,6 +27,29 @@
       }
     </mat-form-field>
 
+    <!-- Pegar al inicio del formulario, antes del campo "Tipo". Solo lo ve el administrador. -->
+    @if (esAdmin) {
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Perfil del paciente</mat-label>
+        <mat-icon matPrefix>person_search</mat-icon>
+        <mat-select formControlName="perfil">
+          @for (g of grupos; track g.idDueno) {
+            <mat-optgroup [label]="g.dueno">
+              @for (p of g.perfiles; track p.idHealthProfile) {
+                <mat-option [value]="p.idHealthProfile">{{ nombrePerfil(p) }}</mat-option>
+              }
+            </mat-optgroup>
+          } @empty {
+            <mat-option disabled>No hay perfiles registrados</mat-option>
+          }
+        </mat-select>
+        <mat-hint>El historial se guardará en el perfil que elijas.</mat-hint>
+        @if (formClinicalRecord.controls.perfil.hasError('required')) {
+          <mat-error>Elige el perfil al que pertenece el historial.</mat-error>
+        }
+      </mat-form-field>
+    }
+
     <mat-form-field appearance="outline">
       <mat-label>Tipo de documento</mat-label>
       <mat-select formControlName="tipo">

@@ -203,7 +203,7 @@ export class Userupdatecomponent implements OnInit {
     this.guardando = false;
     this.mensaje = 'Usuario actualizado correctamente.';
     this.cdr.detectChanges();
-    this.router.navigate(['/usuarios']);
+    this.router.navigate(['/usuario']);
   }
 
   // Deshace los cambios y vuelve a los datos guardados

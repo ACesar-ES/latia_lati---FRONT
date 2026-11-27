@@ -1,0 +1,127 @@
+<div class="clinical-container">
+
+  <!-- Encabezado -->
+  <header class="header-section">
+    <div class="header-titles">
+      <h1>Usuarios</h1>
+      <p>Administra las cuentas y los roles de quienes usan Latia.</p>
+    </div>
+
+    <div class="header-actions">
+      <button matButton="filled" class="upload-btn" type="button" routerLink="/usuario/insertar">
+        <mat-icon>person_add</mat-icon>
+        Agregar usuario
+      </button>
+    </div>
+  </header>
+
+  <!-- Filtros -->
+  <div class="filters-bar">
+    <mat-button-toggle-group aria-label="Filtrar por estado" [value]="filtroEstado"
+      (change)="cambiarFiltro($event.value)">
+      <mat-button-toggle value="todos">Todos</mat-button-toggle>
+      <mat-button-toggle value="activos">Activos</mat-button-toggle>
+      <mat-button-toggle value="inactivos">Inactivos</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <label class="search-box">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Buscar usuario" [value]="busqueda"
+        (input)="actualizarBusqueda($any($event.target).value)" />
+      @if (busqueda) {
+        <button matIconButton class="clear-btn" type="button" aria-label="Limpiar búsqueda"
+          (click)="actualizarBusqueda('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </label>
+  </div>
+
+  <!-- Contenedor con las tarjetas -->
+  <section class="records-card">
+    <div class="records-header">
+      <h2>{{ usuariosFiltrados.length }} usuarios</h2>
+      <span class="sort-pill">Orden alfabético</span>
+    </div>
+
+    @if (cargando) {
+      <mat-progress-bar mode="indeterminate" role="status" aria-label="Cargando usuarios"></mat-progress-bar>
+    }
+
+    @if (usuariosPagina.length > 0) {
+      <div class="cards-grid">
+        @for (u of usuariosPagina; track u.idUser) {
+          <mat-card appearance="outlined" class="user-card">
+            <mat-card-header>
+              <div mat-card-avatar class="user-avatar">{{ iniciales(u) }}</div>
+              <mat-card-title class="user-title">{{ u.firstName }} {{ u.lastName }}</mat-card-title>
+              <mat-card-subtitle class="user-subtitle">&#64;{{ u.username }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="user-email">
+                <mat-icon>mail</mat-icon>
+                {{ u.email }}
+              </p>
+
+              <mat-chip-set aria-label="Estado y roles">
+                <mat-chip class="status-chip" [class.inactive]="!u.active">
+                  {{ u.active ? 'Activo' : 'Inactivo' }}
+                </mat-chip>
+                @for (rol of rolesDe(u); track rol) {
+                  <mat-chip class="role-chip">{{ rol }}</mat-chip>
+                } @empty {
+                  <mat-chip class="role-chip none">Sin rol</mat-chip>
+                }
+              </mat-chip-set>
+
+              @if (u.createdAt) {
+                <p class="user-date">Registrado el {{ u.createdAt | date: 'dd MMM yyyy' }}</p>
+              }
+            </mat-card-content>
+
+            <mat-card-actions class="row-actions">
+              <button matIconButton class="icon-btn" type="button" title="Editar usuario y roles"
+                aria-label="Editar usuario" [routerLink]="['/usuario/actualizar', u.idUser]">
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              @if (!esUsuarioActual(u)) {
+                <button matIconButton class="icon-btn danger" type="button" title="Eliminar usuario"
+                  aria-label="Eliminar usuario" (click)="eliminarUsuario(u)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+
+      <mat-paginator
+        [length]="usuariosFiltrados.length"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        showFirstLastButtons
+        (page)="onPageChange($event)"
+        aria-label="Seleccionar página de usuarios">
+      </mat-paginator>
+    } @else if (!cargando && !aviso) {
+      <p class="empty-state">
+        <mat-icon>group_off</mat-icon>
+        {{ busqueda || filtroEstado !== 'todos' ? 'No hay coincidencias.' : 'Todavía no hay usuarios registrados.' }}
+      </p>
+    }
+
+    @if (aviso) {
+      <p class="empty-state error" role="alert">
+        <mat-icon>error</mat-icon>
+        {{ aviso }}
+        <button matButton="outlined" class="retry-btn" type="button" (click)="listarUsuarios()">
+          <mat-icon>refresh</mat-icon>
+          Reintentar
+        </button>
+      </p>
+    }
+  </section>
+</div>

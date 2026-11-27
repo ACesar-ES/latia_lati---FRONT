@@ -46,7 +46,7 @@ export class Medicalconditionupdatecomponent implements OnInit {
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     if (!Number.isInteger(this.id) || this.id <= 0) {
-      this.router.navigate(['/condicionmedica']);
+      this.router.navigate(['/condiciones']);
       return;
     }
     this.cargarCondicion();
@@ -65,7 +65,7 @@ export class Medicalconditionupdatecomponent implements OnInit {
       },
       error: (err) => {
         console.log('Ocurrió un error al obtener la condición médica', err);
-        this.mensaje = 'No se pudo cargar la condición médica!!';
+        this.mensaje = 'No se pudo cargar la condición médica.';
         this.cargando = false;
         this.cdr.detectChanges();
       },
@@ -75,25 +75,25 @@ export class Medicalconditionupdatecomponent implements OnInit {
   actualizarCondicion(): void {
     if (this.formMedicalCondition.invalid) {
       this.formMedicalCondition.markAllAsTouched();
-      this.mensaje = 'Por favor, complete todos los campos correctamente!!';
+      this.mensaje = 'Por favor, complete todos los campos correctamente.';
       return;
     }
 
     const dto: MedicalconditionDTO = {
       idMedicalCondition: this.id,
-      nameMedicalCondition: (this.formMedicalCondition.value.nombre ?? '').trim(),
-      descriptionMedicalCondition: (this.formMedicalCondition.value.descripcion ?? '').trim(),
+      nameMedicalCondition: (this.formMedicalCondition.value.nombre || '').trim(),
+      descriptionMedicalCondition: (this.formMedicalCondition.value.descripcion || '').trim(),
     };
 
     this.mcS.updateMedicalCondition(dto).subscribe({
       next: () => {
-        this.mensaje = 'Condición médica actualizada correctamente!!';
+        this.mensaje = 'Condición médica actualizada correctamente.';
         this.cdr.detectChanges();
-        this.router.navigate(['/condicionmedica']);
+        this.router.navigate(['/condiciones']);
       },
       error: (error) => {
         console.error(error);
-        this.mensaje = 'Error al actualizar la condición médica!!';
+        this.mensaje = 'Error al actualizar la condición médica.';
         this.cdr.detectChanges();
       },
     });
@@ -102,8 +102,8 @@ export class Medicalconditionupdatecomponent implements OnInit {
   // Deshace los cambios y vuelve a los datos guardados
   restablecer(): void {
     this.formMedicalCondition.reset({
-      nombre: this.original?.nameMedicalCondition ?? '',
-      descripcion: this.original?.descriptionMedicalCondition ?? '',
+      nombre: this.original ? this.original.nameMedicalCondition : '',
+      descripcion: this.original ? this.original.descriptionMedicalCondition : '',
     });
     this.mensaje = '';
   }

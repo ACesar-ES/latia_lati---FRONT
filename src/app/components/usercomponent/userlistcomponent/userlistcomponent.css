@@ -1,0 +1,389 @@
+:host {
+  --latia-primary: #b8324f;
+  --latia-primary-dark: #a22b45;
+  --latia-primary-soft: #fbe9ec;
+  --latia-bg: #f6f7f9;
+  --latia-surface: #ffffff;
+  --latia-text: #1f2a37;
+  --latia-muted: #6b7280;
+  --latia-border: #e5e7eb;
+  --latia-lilac: #efeaf5;
+  --latia-lilac-text: #6b5b8a;
+  display: block;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  color: var(--latia-text);
+
+  /* Barra de progreso y tarjetas Material con la paleta Latia */
+  --mat-progress-bar-active-indicator-color: var(--latia-primary);
+  --mat-progress-bar-track-color: var(--latia-primary-soft);
+  --mat-card-outlined-container-color: var(--latia-surface);
+  --mat-card-outlined-outline-color: var(--latia-border);
+  --mat-card-outlined-container-shape: 12px;
+}
+
+.clinical-container {
+  padding: 32px 36px 40px;
+  box-sizing: border-box;
+}
+
+/* Encabezado */
+.header-section {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.header-titles h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.header-titles p {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--latia-muted);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.upload-btn,
+.retry-btn {
+  height: 38px;
+  border-radius: 10px;
+  padding: 0 20px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.upload-btn mat-icon,
+.retry-btn mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.upload-btn {
+  --mat-button-filled-container-color: var(--latia-primary);
+  --mat-button-filled-label-text-color: #fff;
+  --mat-button-filled-container-shape: 10px;
+}
+
+.upload-btn:hover {
+  --mat-button-filled-container-color: var(--latia-primary-dark);
+}
+
+.retry-btn {
+  --mat-button-outlined-outline-color: var(--latia-primary);
+  --mat-button-outlined-label-text-color: var(--latia-primary);
+  background: var(--latia-surface);
+}
+
+.retry-btn:hover {
+  background: var(--latia-primary-soft);
+}
+
+/* Barra de búsqueda */
+.filters-bar {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--latia-border);
+  border-radius: 10px;
+  background: var(--latia-surface);
+  cursor: text;
+}
+
+.search-box:focus-within {
+  border-color: var(--latia-primary);
+}
+
+.search-box mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  color: #4b5563;
+}
+
+.search-box input {
+  width: 200px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--latia-text);
+}
+
+.search-box input::placeholder {
+  color: #4b5563;
+}
+
+.clear-btn {
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  color: #4b5563;
+}
+
+.clear-btn mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+
+/* Contenedor de la lista */
+.records-card {
+  margin-top: 24px;
+  background: var(--latia-surface);
+  border: 1px solid var(--latia-border);
+  border-radius: 16px;
+  padding: 24px 20px 20px;
+}
+
+.records-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 16px;
+}
+
+.records-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.sort-pill {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #f1f2f4;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--latia-muted);
+}
+
+/* Tarjetas de condiciones (mat-card) */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  padding: 0 8px 8px;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  color: #4b5563;
+}
+
+.icon-btn mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.icon-btn:hover {
+  background: var(--latia-primary-soft);
+  color: var(--latia-primary);
+}
+
+.icon-btn.danger:hover {
+  background: #fdecec;
+  color: #c62828;
+}
+
+/* Estados vacíos y errores */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 40px 0 32px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--latia-muted);
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+.empty-state mat-icon {
+  width: 36px;
+  height: 36px;
+  font-size: 36px;
+  color: var(--latia-primary);
+}
+
+.empty-state.error mat-icon {
+  color: #c62828;
+}
+
+@media (max-width: 800px) {
+  .clinical-container {
+    padding: 20px 16px;
+  }
+
+  .header-actions,
+  .header-actions button {
+    width: 100%;
+  }
+
+  .search-box,
+  .search-box input {
+    width: 100%;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Filtro de estado (mat-button-toggle) */
+mat-button-toggle-group {
+  --mat-button-toggle-shape: 10px;
+  --mat-button-toggle-height: 38px;
+  --mat-button-toggle-selected-state-background-color: var(--latia-primary-soft);
+  --mat-button-toggle-selected-state-text-color: var(--latia-primary);
+  --mat-button-toggle-text-color: #374151;
+  --mat-button-toggle-background-color: var(--latia-surface);
+  --mat-button-toggle-divider-color: var(--latia-border);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Tarjeta de usuario (mat-card) */
+.user-card {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  font-family: inherit;
+}
+
+.user-card:hover {
+  background-color: #fafafa;
+}
+
+.user-card mat-card-content {
+  flex: 1;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--latia-primary-soft);
+  color: var(--latia-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.user-title {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--latia-text);
+}
+
+.user-subtitle {
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--latia-muted);
+}
+
+.user-email {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 12px;
+  font-size: 12px;
+  color: var(--latia-muted);
+  overflow-wrap: anywhere;
+}
+
+.user-email mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.user-date {
+  margin: 12px 0 0;
+  font-size: 11px;
+  color: var(--latia-muted);
+}
+
+/* Chips de estado y roles */
+.status-chip {
+  --mat-chip-elevated-container-color: #e7f6ec;
+  --mat-chip-label-text-color: #1b7a3d;
+  --mat-chip-label-text-font: 'Nunito', 'Segoe UI', sans-serif;
+  --mat-chip-label-text-size: 11px;
+  --mat-chip-label-text-weight: 700;
+}
+
+.status-chip.inactive {
+  --mat-chip-elevated-container-color: #f1f2f4;
+  --mat-chip-label-text-color: var(--latia-muted);
+}
+
+.role-chip {
+  --mat-chip-elevated-container-color: var(--latia-lilac);
+  --mat-chip-label-text-color: var(--latia-lilac-text);
+  --mat-chip-label-text-font: 'Nunito', 'Segoe UI', sans-serif;
+  --mat-chip-label-text-size: 11px;
+  --mat-chip-label-text-weight: 700;
+}
+
+.role-chip.none {
+  --mat-chip-elevated-container-color: #fdecec;
+  --mat-chip-label-text-color: #c62828;
+}
+
+/* Paginador */
+mat-paginator {
+  margin-top: 16px;
+  border-top: 1px solid var(--latia-border);
+  --mat-paginator-container-background-color: transparent;
+  --mat-paginator-container-text-color: var(--latia-muted);
+  --mat-paginator-container-text-font: 'Nunito', 'Segoe UI', sans-serif;
+  --mat-paginator-container-text-size: 12px;
+}

@@ -52,6 +52,10 @@ import { Medicalconditioncomponent } from './components/medicalconditioncomponen
 import { Medicalconditionlistcomponent } from './components/medicalconditioncomponent/medicalconditionlistcomponent/medicalconditionlistcomponent';
 import { Medicalconditioninsertcomponent } from './components/medicalconditioncomponent/medicalconditioninsertcomponent/medicalconditioninsertcomponent';
 import { Medicalconditionupdatecomponent } from './components/medicalconditioncomponent/medicalconditionupdatecomponent/medicalconditionupdatecomponent';
+import { Userlistcomponent } from './components/usercomponent/userlistcomponent/userlistcomponent';
+import { Userinsertcomponent } from './components/usercomponent/userinsertcomponent/userinsertcomponent';
+import { Userupdatecomponent } from './components/usercomponent/userupdatecomponent/userupdatecomponent';
+import { Usercomponent } from './components/usercomponent/usercomponent';
 
 export const routes: Routes = [
   // 1. Rutas públicas
@@ -80,6 +84,18 @@ export const routes: Routes = [
     path: 'inicio',
     component: Homecomponent,
     canActivate: [authGuard],
+  },
+  {
+    path: 'usuario',
+    component: Usercomponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
+    children: [
+      { path: '', redirectTo: 'listar', pathMatch: 'full' },
+      { path: 'listar', component: Userlistcomponent },
+      { path: 'insertar', component: Userinsertcomponent },
+      { path: 'actualizar/:id', component: Userupdatecomponent },
+    ],
   },
   {
     path: 'historial',

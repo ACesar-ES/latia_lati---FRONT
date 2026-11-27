@@ -50,7 +50,7 @@ export class Medicalconditionlistcomponent implements OnInit {
       error: (err) => {
         console.log('Ocurrió un error al obtener las condiciones médicas', err);
         this.dataSource = [];
-        this.aviso = 'Error al obtener las condiciones médicas!!';
+        this.aviso = 'Error al obtener las condiciones médicas.';
         this.cargando = false;
         this.cdr.detectChanges();
       },
@@ -64,13 +64,14 @@ export class Medicalconditionlistcomponent implements OnInit {
       .filter(
         (c) =>
           !q ||
-          (c.nameMedicalCondition ?? '').toLowerCase().includes(q) ||
-          (c.descriptionMedicalCondition ?? '').toLowerCase().includes(q),
+          (c.nameMedicalCondition || '').toLowerCase().includes(q) ||
+          (c.descriptionMedicalCondition || '').toLowerCase().includes(q),
       )
       .sort((a, b) => a.nameMedicalCondition.localeCompare(b.nameMedicalCondition));
   }
 
-  eliminarCondicion(id: number): void {
+  eliminarCondicion(id?: number): void {
+    if (id === undefined) return;
     if (!confirm('¿Eliminar esta condición médica?')) return;
     this.mcS.deleteMedicalCondition(id).subscribe({
       next: () => {
@@ -78,7 +79,7 @@ export class Medicalconditionlistcomponent implements OnInit {
       },
       error: (err) => {
         console.log('Ocurrió un error al eliminar la condición', err);
-        this.aviso = 'Error al eliminar!!';
+        this.aviso = 'Error al eliminar.';
         this.cdr.detectChanges();
       },
     });

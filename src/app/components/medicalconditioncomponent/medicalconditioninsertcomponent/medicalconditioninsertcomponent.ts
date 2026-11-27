@@ -45,8 +45,8 @@ export class Medicalconditioninsertcomponent {
     }
 
     const dto: MedicalconditionDTO = {
-      nameMedicalCondition: (this.formMedicalCondition.value.nombre ?? '').trim(),
-      descriptionMedicalCondition: (this.formMedicalCondition.value.descripcion ?? '').trim(),
+      nameMedicalCondition: (this.formMedicalCondition.value.nombre || '').trim(),
+      descriptionMedicalCondition: (this.formMedicalCondition.value.descripcion || '').trim(),
     };
 
     this.mcS.insertMedicalCondition(dto).subscribe({

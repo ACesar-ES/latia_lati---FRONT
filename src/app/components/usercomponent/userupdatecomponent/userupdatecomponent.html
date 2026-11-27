@@ -1,0 +1,140 @@
+<div class="clinical-container">
+
+  <!-- Encabezado -->
+  <header class="header-section">
+    <div class="header-titles">
+      <h1>Actualizar usuario</h1>
+      <p>Corrige los datos de la cuenta, su estado y sus roles.</p>
+    </div>
+  </header>
+
+  <!-- Formulario -->
+  <section class="form-card">
+    @if (cargando) {
+      <mat-progress-bar mode="indeterminate" role="status" aria-label="Cargando usuario"></mat-progress-bar>
+    }
+
+    <form [formGroup]="formUser" (ngSubmit)="actualizarUsuario()" novalidate>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombres</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput type="text" formControlName="firstName" maxlength="100" autocomplete="off" />
+          @if (formUser.controls.firstName.hasError('required')) {
+            <mat-error>Ingresa los nombres.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Apellidos</mat-label>
+          <input matInput type="text" formControlName="lastName" maxlength="100" autocomplete="off" />
+          @if (formUser.controls.lastName.hasError('required')) {
+            <mat-error>Ingresa los apellidos.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Usuario</mat-label>
+          <mat-icon matPrefix>alternate_email</mat-icon>
+          <input matInput type="text" formControlName="username" maxlength="50" autocomplete="off" />
+          @if (formUser.controls.username.hasError('required')) {
+            <mat-error>Ingresa un nombre de usuario.</mat-error>
+          } @else if (formUser.controls.username.hasError('pattern')) {
+            <mat-error>No puede tener espacios.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Correo electrónico</mat-label>
+          <mat-icon matPrefix>mail</mat-icon>
+          <input matInput type="email" formControlName="email" maxlength="150" autocomplete="off" />
+          @if (formUser.controls.email.hasError('required')) {
+            <mat-error>Ingresa el correo electrónico.</mat-error>
+          } @else if (formUser.controls.email.hasError('email')) {
+            <mat-error>Escribe un correo válido.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Nueva contraseña (opcional)</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput [type]="verClave ? 'text' : 'password'" formControlName="password"
+            maxlength="72" autocomplete="new-password" />
+          <button matIconButton matSuffix type="button" (click)="verClave = !verClave"
+            [attr.aria-label]="verClave ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            [attr.aria-pressed]="verClave">
+            <mat-icon>{{ verClave ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-hint>Déjala vacía para mantener la actual.</mat-hint>
+          @if (formUser.controls.password.hasError('minlength')) {
+            <mat-error>Debe tener al menos 8 caracteres.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Confirmar nueva contraseña</mat-label>
+          <mat-icon matPrefix>lock_reset</mat-icon>
+          <input matInput [type]="verClave ? 'text' : 'password'" formControlName="confirmar"
+            maxlength="72" autocomplete="new-password" />
+          @if (formUser.controls.confirmar.hasError('noCoinciden')) {
+            <mat-error>Las contraseñas no coinciden.</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Roles</mat-label>
+        <mat-icon matPrefix>admin_panel_settings</mat-icon>
+        <mat-select formControlName="roles" multiple>
+          @for (rol of rolesDisponibles; track rol) {
+            <mat-option [value]="rol">{{ rol }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint>
+          {{ esCuentaPropia
+            ? 'Es tu cuenta: no puedes quitarte el rol de administrador.'
+            : 'Los cambios se aplican la próxima vez que el usuario inicie sesión.' }}
+        </mat-hint>
+        @if (formUser.controls.roles.hasError('required')) {
+          <mat-error>Elige al menos un rol.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-slide-toggle formControlName="active" class="active-toggle">
+        Cuenta activa
+      </mat-slide-toggle>
+      @if (esCuentaPropia) {
+        <p class="field-note">No puedes desactivar tu propia cuenta.</p>
+      }
+
+      @if (mensaje) {
+        <p class="form-error" role="alert">
+          <mat-icon>error</mat-icon>
+          {{ mensaje }}
+        </p>
+      }
+
+      <div class="form-actions">
+        <button matButton="outlined" class="cancel-btn" type="button" routerLink="/usuarios">
+          Cancelar
+        </button>
+
+        <button matButton="outlined" class="cancel-btn" type="button" [disabled]="!original"
+          (click)="restablecer()">
+          <mat-icon>undo</mat-icon>
+          Restablecer
+        </button>
+
+        <button matButton="filled" class="save-btn" type="submit" [disabled]="cargando || guardando || !original">
+          <mat-icon>save</mat-icon>
+          {{ guardando ? 'Guardando…' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

@@ -8,7 +8,7 @@
     </div>
 
     <div class="header-actions">
-      <button matButton="filled" class="upload-btn" type="button" routerLink="/condicionmedica/insertar">
+      <button matButton="filled" class="upload-btn" type="button" routerLink="/condiciones/insertar">
         <mat-icon>add</mat-icon>
         Agregar condición
       </button>
@@ -59,12 +59,12 @@
             <mat-card-actions class="row-actions">
               <button matIconButton class="icon-btn" type="button" title="Actualizar"
                 aria-label="Actualizar condición"
-                [routerLink]="['/condicionmedica/actualizar', c.idMedicalCondition]">
+                [routerLink]="['/condiciones/actualizar', c.idMedicalCondition]">
                 <mat-icon>edit</mat-icon>
               </button>
 
               <button matIconButton class="icon-btn danger" type="button" title="Eliminar"
-                aria-label="Eliminar condición" (click)="eliminarCondicion(c.idMedicalCondition!)">
+                aria-label="Eliminar condición" (click)="eliminarCondicion(c.idMedicalCondition)">
                 <mat-icon>delete</mat-icon>
               </button>
             </mat-card-actions>
